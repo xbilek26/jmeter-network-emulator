@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "gradle",
+			"id": "/home/bilek/jmeter-network-emulator",
+			"script": "build",
+			"description": "Assembles and tests this project.",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"project": "jmeter-network-emulator",
+			"buildFile": "/home/bilek/jmeter-network-emulator/build.gradle",
+			"rootProject": "jmeter-network-emulator",
+			"projectFolder": "/home/bilek/jmeter-network-emulator",
+			"workspaceFolder": "/home/bilek/jmeter-network-emulator",
+			"args": "",
+			"javaDebug": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"label": "gradle: build"
+		}
+	]
+}
