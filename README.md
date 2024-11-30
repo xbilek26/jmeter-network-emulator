@@ -7,23 +7,23 @@ Network emulator plugin for JMeter.
 Clone the project
 
 ~~~bash
-  git clone https://github.com/xbilek26/jmeter-network-emulator.git
+git clone https://github.com/xbilek26/jmeter-network-emulator.git
 ~~~
 
 Go to the project directory
 
 ~~~bash
-  cd jmeter-network-emulator
+cd jmeter-network-emulator
 ~~~
 
 Build using gradle
 
 ~~~bash
-  ./gradlew build
+./gradlew build
 ~~~
 
 Copy JAR to JMeter
 
 ~~~bash
-  cp build/libs/jmeter-network-emulator.jar ~/jmeter/location/lib/ext
+cp build/libs/jmeter-network-emulator.jar ~/jmeter/location/lib/ext
 ~~~
