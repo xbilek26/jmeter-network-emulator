@@ -25,18 +25,6 @@ public class NetworkEmulator extends AbstractTestElement {
         return addedInterfaces;
     }
 
-    public void addInterface(String networkInterface) {
-        if (!addedInterfaces.contains(networkInterface)) {
-            addedInterfaces.add(networkInterface);
-        }
-    }
-
-    public void removeInterface(String networkInterface) {
-        if (addedInterfaces.contains(networkInterface)) {
-            addedInterfaces.remove(networkInterface);
-        }
-    }
-
     public boolean isInterfaceAdded(String networkInterface) {
         return addedInterfaces.contains(networkInterface);
     }

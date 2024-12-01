@@ -14,14 +14,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
+import org.apache.jmeter.util.JMeterUtils;
+
 import com.google.auto.service.AutoService;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.gui.control.NetworkEmulatorConfigGui;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
 
 @AutoService(NetworkEmulatorGui.class)
@@ -31,10 +36,10 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private NetworkEmulator networkEmulator;
 
     public NetworkEmulatorGui() {
-        registerIcon();
-        init();
         networkEmulatorController = new NetworkEmulatorController();
         networkEmulator = new NetworkEmulator();
+        registerIcon();
+        init();
     }
 
     @Override
@@ -94,14 +99,41 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private void init() {
         setLayout(new BorderLayout(0, 5));
-        setBorder(makeBorder());
-        Box box = Box.createVerticalBox();
-        box.add(makeTitlePanel());
-        add(box, BorderLayout.NORTH);
+        setBorder(BorderFactory.createEmptyBorder());
 
-        JPanel emulatorPropsPanel = new JPanel(new MigLayout("fillx, wrap 2", "[][fill,grow]"));
-        emulatorPropsPanel.setBorder(BorderFactory.createTitledBorder("Emulator parameters"));
+        JTabbedPane tabbedPane = createTabbedConfigPane();
 
-        add(emulatorPropsPanel, BorderLayout.CENTER);
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBorder(makeBorder());
+        wrapper.add(makeTitlePanel(), BorderLayout.CENTER);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, wrapper, tabbedPane);
+        splitPane.setBorder(BorderFactory.createEmptyBorder());
+        splitPane.setOneTouchExpandable(true);
+        add(splitPane);
+    }
+    
+    protected JTabbedPane createTabbedConfigPane() {
+        final JTabbedPane tabbedPane = new JTabbedPane();
+
+        // URL CONFIG
+        ArrayList<NetworkEmulatorConfigGui> guis = createNetworkEmulatorConfigGuis();
+        
+        for (NetworkEmulatorConfigGui gui : guis) {
+            tabbedPane.add(gui.getNetworkInterfaceName(), gui);
+        }
+
+        return tabbedPane;
+    }
+
+    protected ArrayList<NetworkEmulatorConfigGui> createNetworkEmulatorConfigGuis() {
+        ArrayList<NetworkEmulatorConfigGui> guis = new ArrayList<>();
+        ArrayList<String> availableInterfaces = networkEmulator.getAvailableNetworkInterfaces();
+        for (String networkInterface : availableInterfaces) {
+            NetworkEmulatorConfigGui gui = new NetworkEmulatorConfigGui(networkInterface);
+            gui.setBorder(makeBorder());
+            guis.add(gui);
+        }
+        return guis;
     }
 }

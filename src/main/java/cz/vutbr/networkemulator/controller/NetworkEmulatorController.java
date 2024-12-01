@@ -17,7 +17,7 @@ public class NetworkEmulatorController {
     public NetworkEmulatorController() {
         try {
             loadNetworkInterfaces();
-            log.info("Network interfaces succesfully loaded.");
+            log.info("Network interfaces succesfully loaded." + networkInterfaces.toString());
         } catch (SocketException e) {
             log.error("Error loading network interfaces: " + e.getMessage());
         }
