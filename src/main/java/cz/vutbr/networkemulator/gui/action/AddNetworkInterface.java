@@ -53,7 +53,7 @@ public class AddNetworkInterface extends AddToTree {
         boolean exists = networkInterfaceNodes.stream().anyMatch(node -> node.getTestElement().equals(testElement));
 
         if (exists) {
-            log.error("Network interface already exists with the same TestElement");
+            log.error("Network interface already exists with the same TestElement!");
             return;
         }
         
