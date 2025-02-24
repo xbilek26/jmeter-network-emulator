@@ -21,7 +21,7 @@ public class NetworkEmulatorController implements Serializable {
         ArrayList<String> networkInterfacesNames = new ArrayList<>();
         while (networkInterfaces.hasMoreElements()) {
             NetworkInterface networkInterface = networkInterfaces.nextElement();
-            // uncomment in future
+            // uncomment in the future
             //if (networkInterface.isUp() && !networkInterface.isLoopback()) {
                 networkInterfacesNames.add(networkInterface.getName());
             //}
