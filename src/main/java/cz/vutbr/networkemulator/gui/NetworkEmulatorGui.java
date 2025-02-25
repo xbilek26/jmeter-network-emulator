@@ -1,8 +1,6 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -81,22 +79,22 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
     protected JTabbedPane createTabbedConfigPane() {
         final JTabbedPane tabbedPane = new JTabbedPane();
     
-        ArrayList<NetworkInterfaceConfigGui> guis = createNetworkInterfaceConfigGuis();
+        ArrayList<NetworkInterfaceGui> guis = createNetworkInterfaceConfigGuis();
     
-        for (NetworkInterfaceConfigGui gui : guis) {
+        for (NetworkInterfaceGui gui : guis) {
             tabbedPane.add(gui.getName(), gui);
         }
     
         return tabbedPane;
     }
     
-    protected ArrayList<NetworkInterfaceConfigGui> createNetworkInterfaceConfigGuis() {
+    protected ArrayList<NetworkInterfaceGui> createNetworkInterfaceConfigGuis() {
         
-        ArrayList<NetworkInterfaceConfigGui> guis = new ArrayList<>();
+        ArrayList<NetworkInterfaceGui> guis = new ArrayList<>();
         ArrayList<String> availableInterfaces = networkEmulator.getAvailableNetworkInterfaces();
     
         for (String networkInterface : availableInterfaces) {
-            NetworkInterfaceConfigGui gui = new NetworkInterfaceConfigGui(networkInterface);
+            NetworkInterfaceGui gui = new NetworkInterfaceGui(networkInterface);
             gui.setBorder(makeBorder());
             guis.add(gui);
         }
