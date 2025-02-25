@@ -1,16 +1,23 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
@@ -19,17 +26,23 @@ import org.apache.jmeter.testelement.TestElement;
 
 import com.google.auto.service.AutoService;
 
+import cz.vutbr.networkemulator.linux.CommandOutput;
+import cz.vutbr.networkemulator.linux.CommandRunner;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @AutoService(NetworkEmulatorGui.class)
-public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
+public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements ActionListener {
 
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
     private NetworkEmulator networkEmulator = new NetworkEmulator();
+
+    private boolean running = false;
+    JButton button;
+    JLabel state;
 
     public NetworkEmulatorGui() {
         registerIcon();
@@ -56,7 +69,10 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         wrapper.setBorder(makeBorder());
         wrapper.add(makeTitlePanel(), BorderLayout.CENTER);
 
+        JPanel statePanel = createStatePanel();
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, wrapper, tabbedPane);
+
+        // JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, wrapper, subPlane);
         splitPane.setBorder(BorderFactory.createEmptyBorder());
         splitPane.setOneTouchExpandable(true);
         add(splitPane);
@@ -85,6 +101,27 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
             guis.add(gui);
         }
         return guis;
+    }
+
+    private JPanel createStatePanel() {
+        JPanel statePanel = new JPanel();
+        JTextArea currentSettings = new JTextArea();
+        CommandRunner runner = new CommandRunner();
+        CommandOutput output = runner.runCommand("tc qdisc");
+        currentSettings.setText("Current settings..." + output.getOutputString());
+
+        button = new JButton("Start Emulation");
+        button.addActionListener(this);
+        button.setFocusable(false);
+
+        state = new JLabel("Emulation is stopped.");
+
+        statePanel.add(currentSettings);
+        statePanel.add(button);
+        statePanel.add(state);
+
+        return statePanel;
+
     }
     
 
@@ -115,6 +152,18 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         MenuFactory.addEditMenu(pop, true);
 
         return pop;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        running = !running;
+        if (running) {
+            button.setText("Stop Emulation");
+            state.setText("Emulation is running!");
+        } else {
+            button.setText("Start Emulation");
+            state.setText("Emulation is stopped.");
+        }
     }
 
 }
