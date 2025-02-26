@@ -1,6 +1,10 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -13,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -39,8 +44,9 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
     private NetworkEmulator networkEmulator = new NetworkEmulator();
 
     private boolean running = false;
-    JButton button;
-    JLabel state;
+    JButton startButton;
+    JButton refreshButton;
+    JLabel emulatorState;
 
     public NetworkEmulatorGui() {
         registerIcon();
@@ -61,24 +67,28 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
         setLayout(new BorderLayout(0, 5));
         setBorder(BorderFactory.createEmptyBorder());
 
-        JTabbedPane tabbedPane = createTabbedConfigPane();
-
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBorder(makeBorder());
-        wrapper.add(makeTitlePanel(), BorderLayout.CENTER);
 
-        JPanel statePanel = createStatePanel();
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, wrapper, tabbedPane);
+        JSplitPane mainPanel = createMainPanel();
 
-        // JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, wrapper, subPlane);
-        splitPane.setBorder(BorderFactory.createEmptyBorder());
-        splitPane.setOneTouchExpandable(true);
-        add(splitPane);
+        JTabbedPane interfaces = createInterfacesTabs();
+        interfaces.setBorder(BorderFactory.createTitledBorder("Interfaces"));
+
+        Container titlePanel = makeTitlePanel();
+        JSplitPane emulatorPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, mainPanel, interfaces);
+        emulatorPanel.setBorder(BorderFactory.createEmptyBorder());
+        emulatorPanel.setResizeWeight(0.6);
+        emulatorPanel.setOneTouchExpandable(true);
+        emulatorPanel.setDividerLocation(0.6);
+        
+        wrapper.add(titlePanel, BorderLayout.NORTH);
+        wrapper.add(emulatorPanel, BorderLayout.CENTER);
+        add(wrapper);
     }
     
-    protected JTabbedPane createTabbedConfigPane() {
-        final JTabbedPane tabbedPane = new JTabbedPane();
-    
+    protected JTabbedPane createInterfacesTabs() {
+        JTabbedPane tabbedPane = new JTabbedPane();
         ArrayList<NetworkInterfaceGui> guis = createNetworkInterfaceConfigGuis();
     
         for (NetworkInterfaceGui gui : guis) {
@@ -98,30 +108,66 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
             gui.setBorder(makeBorder());
             guis.add(gui);
         }
+
         return guis;
     }
 
     private JPanel createStatePanel() {
-        JPanel statePanel = new JPanel();
+        JPanel statePanel = new JPanel(new BorderLayout());
+        statePanel.setBorder(BorderFactory.createTitledBorder("Current Settings"));
+        
         JTextArea currentSettings = new JTextArea();
+        currentSettings.setBackground(new Color(0x000000));
+        currentSettings.setForeground(new Color(0x00ff00));
+        currentSettings.setFont(new Font("", Font.PLAIN, 14));
+        currentSettings.setEditable(false);
+        
+        JScrollPane scrollPane = new JScrollPane(currentSettings);
+        currentSettings.setLineWrap(true);
+        currentSettings.setWrapStyleWord(true);
+        
         CommandRunner runner = new CommandRunner();
         CommandOutput output = runner.runCommand("tc qdisc");
-        currentSettings.setText("Current settings..." + output.getOutputString());
-
-        button = new JButton("Start Emulation");
-        button.addActionListener(this);
-        button.setFocusable(false);
-
-        state = new JLabel("Emulation is stopped.");
-
-        statePanel.add(currentSettings);
-        statePanel.add(button);
-        statePanel.add(state);
-
+        currentSettings.setText(output.getOutputString());
+        
+        statePanel.add(scrollPane, BorderLayout.CENTER);
+    
         return statePanel;
+    }
 
+    private JPanel createControlPanel() {
+        JPanel controlPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+        controlPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
+    
+        startButton = new JButton("Start Emulation");
+        startButton.addActionListener(this);
+        startButton.setFocusable(false);
+    
+        refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(this);
+        refreshButton.setFocusable(false);
+    
+        emulatorState = new JLabel("Emulation is stopped.", JLabel.CENTER);
+    
+        controlPanel.add(startButton);
+        controlPanel.add(refreshButton);
+        controlPanel.add(emulatorState);
+    
+        return controlPanel;
     }
     
+
+    private JSplitPane createMainPanel() {
+        JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createStatePanel(), createControlPanel());
+        mainPanel.setResizeWeight(0.98);
+        mainPanel.setDividerLocation(0.98);
+        mainPanel.setOneTouchExpandable(false);
+        mainPanel.setDividerSize(0);
+
+        mainPanel.setBorder(BorderFactory.createTitledBorder("Main Panel"));
+    
+        return mainPanel;
+    }
 
     @Override
     public Collection<String> getMenuCategories() {
@@ -156,11 +202,11 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
     public void actionPerformed(ActionEvent e) {
         running = !running;
         if (running) {
-            button.setText("Stop Emulation");
-            state.setText("Emulation is running!");
+            startButton.setText("Stop Emulation");
+            emulatorState.setText("Emulation is running!");
         } else {
-            button.setText("Start Emulation");
-            state.setText("Emulation is stopped.");
+            startButton.setText("Start Emulation");
+            emulatorState.setText("Emulation is stopped.");
         }
     }
 
