@@ -1,36 +1,41 @@
 package cz.vutbr.networkemulator.gui;
 import javax.swing.*;
 
-import org.apache.jmeter.gui.util.HorizontalPanel;
-import org.apache.jorphan.gui.JLabeledTextField;
+import cz.vutbr.networkemulator.verification.*;
 
 import java.awt.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NetworkInterfaceGui extends JPanel {
+
+    @SuppressWarnings("unused")
+    private static final Logger log = LoggerFactory.getLogger(NetworkInterfaceGui.class);
 
     private String name;
 
     JButton button;
     JLabel label;
 
-    private JLabeledTextField srcAddress;
-    private JLabeledTextField srcPort;
-    private JLabeledTextField dstAddress;
-    private JLabeledTextField dstPort;
-    private JLabeledTextField delay;
-    private JLabeledTextField drop;
+    private JTextField srcAddress;
+    private JTextField srcPort;
+    private JTextField dstAddress;
+    private JTextField dstPort;
+    private JTextField delayValue;
+    private JTextField dropValue;
 
-    private JLabeledTextField rate;
-    private JLabeledTextField loss;
-    private JLabeledTextField reordering;
-    private JLabeledTextField duplication;
-    private JLabeledTextField corruption;
+    private JTextField rateValue;
+    private JTextField lossValue;
+    private JTextField reorderingValue;
+    private JTextField duplicationValue;
+    private JTextField corruptionValue;
 
-    private JLabeledTextField delayCorrelation;
-    private JLabeledTextField dropCorrelation;
-    private JLabeledTextField duplicationCorrelation;
-    private JLabeledTextField reorderingCorrelation;
-    private JLabeledTextField jitter;
+    private JTextField delayCorrelation;
+    private JTextField dropCorrelation;
+    private JTextField duplicationCorrelation;
+    private JTextField reorderingCorrelation;
+    private JTextField jitterValue;
 
     public String getName() {
         return name;
@@ -38,7 +43,7 @@ public class NetworkInterfaceGui extends JPanel {
 
     public NetworkInterfaceGui(String name) {
         super();
-        this.name = String.format("'%s'", name);
+        this.name = String.format("%s", name);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -70,100 +75,199 @@ public class NetworkInterfaceGui extends JPanel {
     }
 
     private JPanel getFilterPanel() {
-        JPanel filterPanel = new JPanel(new BorderLayout());
-        filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
-    
-        dstAddress = new JLabeledTextField("Dst Address:", 20);
-        dstPort = new JLabeledTextField("Dst Port:", 7);
-        srcAddress = new JLabeledTextField("Src Address:", 20);
-        srcPort = new JLabeledTextField("Src Port:", 7);
-    
-        JPanel addressPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-        addressPanel.add(dstAddress);
-        addressPanel.add(dstPort);
-        addressPanel.add(srcAddress);
-        addressPanel.add(srcPort);
-    
-        JPanel protocolPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel protocolsLabel = new JLabel("Protocol:");
+        dstAddress = new JTextField(20);
+        dstPort = new JTextField(7);
+        srcAddress = new JTextField(20);
+        srcPort = new JTextField(7);
+
         String[] protocols = {"ICMP", "DNS", "FTP"};
         JComboBox<String> protocolsBox = new JComboBox<>(protocols);
+
+        JLabel dstAddressLabel = new JLabel("Dst Address:");
+        dstAddressLabel.setLabelFor(dstAddress);
+        JLabel dstPortLabel = new JLabel("Dst Port:");
+        dstPortLabel.setLabelFor(dstAddress);
+        JLabel srcAddressLabel = new JLabel("Src Address:");
+        srcAddressLabel.setLabelFor(dstAddress);
+        JLabel srcPortLabel = new JLabel("Src Port:");
+        srcPortLabel.setLabelFor(dstAddress);
+        JLabel protocolsLabel = new JLabel("Protocol:");
         protocolsLabel.setLabelFor(protocolsBox);
-        protocolPanel.add(protocolsLabel);
-        protocolPanel.add(protocolsBox);
-    
-        JPanel fieldsPanel = new JPanel(new BorderLayout());
-        fieldsPanel.add(addressPanel, BorderLayout.CENTER);
-        fieldsPanel.add(protocolPanel, BorderLayout.EAST);
-    
-        filterPanel.add(fieldsPanel, BorderLayout.CENTER);
+
+        dstAddress.setInputVerifier(new IpAddressVerifier());
+        dstPort.setInputVerifier(new RangeVerifier(0, 1024));
+        srcAddress.setInputVerifier(new IpAddressVerifier());
+        srcPort.setInputVerifier(new RangeVerifier(0, 1024));
+
+        JPanel dstPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        dstPanel.add(dstAddressLabel);
+        dstPanel.add(dstAddress);
+        dstPanel.add(dstPortLabel);
+        dstPanel.add(dstPort);
+
+        JPanel srcPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        srcPanel.add(srcAddressLabel);
+        srcPanel.add(srcAddress);
+        srcPanel.add(srcPortLabel);
+        srcPanel.add(srcPort);
+        srcPanel.add(protocolsLabel);
+        srcPanel.add(protocolsBox);
+
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
+        filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
+        filterPanel.add(dstPanel);
+        filterPanel.add(srcPanel);
+
         return filterPanel;
     }
     
-    
     private JPanel getDelayPanel() {
-        delay = new JLabeledTextField("Delay (ms):", 7);
-        jitter = new JLabeledTextField("Jitter (ms):", 7);
-        delayCorrelation = new JLabeledTextField("Correlation (%):", 7);
-        JPanel delayPanel = new HorizontalPanel();
+        delayValue = new JTextField(10);
+        jitterValue = new JTextField(10);
+        delayCorrelation = new JTextField(10);
+
+        String[] distributions = {"Uniform", "Normal", "Pareto Normal"};
+        JComboBox<String> distributionsBox = new JComboBox<>(distributions);
+
+        JLabel delayValueLabel = new JLabel("Delay (ms):");
+        delayValueLabel.setLabelFor(delayValue);
+        JLabel jitterValueLabel = new JLabel("Jitter (ms):");
+        jitterValueLabel.setLabelFor(jitterValue);
+        JLabel delayCorrelationLabel = new JLabel("Correlation (%):");
+        delayCorrelationLabel.setLabelFor(delayCorrelation);
+        JLabel distributionsLabel = new JLabel("Distribution:");
+        distributionsLabel.setLabelFor(distributionsBox);
+
+        delayValue.setInputVerifier(new RangeVerifier(0, 10000));
+        jitterValue.setInputVerifier(new RangeVerifier(0, 10000));        
+        delayCorrelation.setInputVerifier(new RangeVerifier(0, 100));
+    
+        JPanel delayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         delayPanel.setBorder(BorderFactory.createTitledBorder("Delay"));
-        delayPanel.add(delay);
-        delayPanel.add(jitter);
+        delayPanel.add(delayValueLabel);
+        delayPanel.add(delayValue);
+        delayPanel.add(jitterValueLabel);
+        delayPanel.add(jitterValue);
+        delayPanel.add(delayCorrelationLabel);
         delayPanel.add(delayCorrelation);
+        delayPanel.add(distributionsLabel);
+        delayPanel.add(distributionsBox);
+            
         return delayPanel;
     }
 
     private JPanel getDropPanel() {
-        drop = new JLabeledTextField("Packet Drop (%)", 7);
-        dropCorrelation = new JLabeledTextField("Correlation (%)", 7);
-        JPanel dropPanel = new HorizontalPanel();
+        dropValue = new JTextField(10);
+        dropCorrelation = new JTextField(10);
+
+        JLabel dropValueLabel = new JLabel("Packet Drop (%):");
+        dropValueLabel.setLabelFor(dropValue);
+        JLabel dropCorrelationLabel = new JLabel("Correlation (%):");
+        dropCorrelationLabel.setLabelFor(dropCorrelation);
+
+        dropValue.setInputVerifier(new RangeVerifier(0, 100));
+        dropCorrelation.setInputVerifier(new RangeVerifier(0, 100));
+
+        JPanel dropPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         dropPanel.setBorder(BorderFactory.createTitledBorder("Packet Drop"));
-        dropPanel.add(drop);
+        dropPanel.add(dropValueLabel);
+        dropPanel.add(dropValue);
+        dropPanel.add(dropCorrelationLabel);
         dropPanel.add(dropCorrelation);
+
         return dropPanel;
     }
 
     private JPanel getRatePanel() {
-        rate = new JLabeledTextField("Rate (bps):", 7);
-        JPanel ratePanel = new HorizontalPanel();
+        rateValue = new JTextField(10);
+
+        JLabel rateLabel = new JLabel("Rate (bps):");
+        rateLabel.setLabelFor(rateLabel);
+
+        rateValue.setInputVerifier(new RangeVerifier(0, 100000));
+
+        JPanel ratePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         ratePanel.setBorder(BorderFactory.createTitledBorder("Rate"));
-        ratePanel.add(rate);
+        ratePanel.add(rateLabel);
+        ratePanel.add(rateValue);
+
         return ratePanel;
     }
 
     private JPanel getLossPanel() {
-        loss = new JLabeledTextField("Loss (%):", 7);
-        JPanel lossPanel = new HorizontalPanel();
+        lossValue = new JTextField(10);
+
+        JLabel lossLabel = new JLabel("Loss (%):");
+        lossLabel.setLabelFor(lossValue);
+
+        lossValue.setInputVerifier(new RangeVerifier(0, 100));
+
+        JPanel lossPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         lossPanel.setBorder(BorderFactory.createTitledBorder("Loss"));
-        lossPanel.add(loss);
+        lossPanel.add(lossLabel);
+        lossPanel.add(lossValue);
+
         return lossPanel;
     }
 
     private JPanel getReorderingPanel() {
-        reordering = new JLabeledTextField("Reordering (%):", 7);
-        reorderingCorrelation = new JLabeledTextField("Correlation (%):", 7);
-        JPanel reorderingPanel = new HorizontalPanel();
+        reorderingValue = new JTextField(10);
+        reorderingCorrelation = new JTextField(10);
+
+        JLabel reorderingValueLabel = new JLabel("Reordering (%):");
+        reorderingValueLabel.setLabelFor(reorderingValue);
+        JLabel reorderingCorrelationLabel = new JLabel("Correlation (%):");
+        reorderingCorrelationLabel.setLabelFor(reorderingCorrelation);
+
+        reorderingValue.setInputVerifier(new RangeVerifier(0, 100));
+        reorderingCorrelation.setInputVerifier(new RangeVerifier(0, 100));
+
+        JPanel reorderingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         reorderingPanel.setBorder(BorderFactory.createTitledBorder("Reordering"));
-        reorderingPanel.add(reordering);
+        reorderingPanel.add(reorderingValueLabel);
+        reorderingPanel.add(reorderingValue);
+        reorderingPanel.add(reorderingCorrelationLabel);
         reorderingPanel.add(reorderingCorrelation);
+
         return reorderingPanel;
     }
 
     private JPanel getDuplicationPanel() {
-        duplication = new JLabeledTextField("Duplication (%):", 7);
-        duplicationCorrelation = new JLabeledTextField("Correlation (%):", 7);
-        JPanel duplicationPanel = new HorizontalPanel();
+        duplicationValue = new JTextField(10);
+        duplicationCorrelation = new JTextField(10);
+
+        JLabel duplicationValueLabel = new JLabel("Duplication (%):");
+        duplicationValueLabel.setLabelFor(duplicationValue);
+        JLabel duplicationCorrelationLabel = new JLabel("Correlation (%):");
+        duplicationCorrelationLabel.setLabelFor(duplicationCorrelation);
+
+        duplicationValue.setInputVerifier(new RangeVerifier(0, 100));
+        duplicationCorrelation.setInputVerifier(new RangeVerifier(0, 100));
+
+        JPanel duplicationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         duplicationPanel.setBorder(BorderFactory.createTitledBorder("Duplication"));
-        duplicationPanel.add(duplication);
+        duplicationPanel.add(duplicationValueLabel);
+        duplicationPanel.add(duplicationValue);
+        duplicationPanel.add(duplicationCorrelationLabel);
         duplicationPanel.add(duplicationCorrelation);
+
         return duplicationPanel;
     }
 
     private JPanel getCorruptionPanel() {
-        corruption = new JLabeledTextField("Corruption (%):", 7);
-        JPanel corruptionPanel = new HorizontalPanel();
+        corruptionValue = new JTextField(10);
+
+        JLabel corruptionValueLabel = new JLabel("Corruption (%):");
+        corruptionValueLabel.setLabelFor(corruptionValue);
+
+        corruptionValue.setInputVerifier(new RangeVerifier(0, 100));
+
+        JPanel corruptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         corruptionPanel.setBorder(BorderFactory.createTitledBorder("Corruption:"));
-        corruptionPanel.add(corruption);
+        corruptionPanel.add(corruptionValueLabel);
+        corruptionPanel.add(corruptionValue);
+
         return corruptionPanel;
     }
 
