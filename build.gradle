@@ -7,6 +7,7 @@ repositories {
 }
 
 jar {
+    archiveBaseName.set("NetworkEmulator")
     manifest {
         attributes(
             'JMeter-Skip-Class-Scanning': 'true',
@@ -38,7 +39,7 @@ java {
 
 task copyJar(type: Copy) {
     dependsOn build
-    from "$buildDir/libs/jmeter-network-emulator.jar"
+    from "$buildDir/libs/NetworkEmulator.jar"
     into file(System.getProperty("user.home") + "/apache-jmeter-5.6.3/lib/ext")
 }
 
