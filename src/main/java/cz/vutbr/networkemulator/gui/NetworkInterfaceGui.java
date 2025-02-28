@@ -1,14 +1,18 @@
 package cz.vutbr.networkemulator.gui;
+
 import javax.swing.*;
 
+import cz.vutbr.networkemulator.gui.util.ProtocolPortMapper;
 import cz.vutbr.networkemulator.verification.*;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NetworkInterfaceGui extends JPanel {
+public class NetworkInterfaceGui extends JPanel implements ItemListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkInterfaceGui.class);
@@ -80,57 +84,57 @@ public class NetworkInterfaceGui extends JPanel {
         srcAddress = new JTextField(20);
         srcPort = new JTextField(7);
 
-        String[] protocols = {"ICMP", "DNS", "FTP"};
-        JComboBox<String> protocolsBox = new JComboBox<>(protocols);
+        JComboBox<String> protocolsBox = new JComboBox<>(ProtocolPortMapper.getProtocolsNames());
+        protocolsBox.addItemListener(this);
 
+        JLabel srcAddressLabel = new JLabel("Src Address:");
+        srcAddressLabel.setLabelFor(srcAddress);
+        JLabel srcPortLabel = new JLabel("Src Port:");
+        srcPortLabel.setLabelFor(srcPort);
         JLabel dstAddressLabel = new JLabel("Dst Address:");
         dstAddressLabel.setLabelFor(dstAddress);
         JLabel dstPortLabel = new JLabel("Dst Port:");
-        dstPortLabel.setLabelFor(dstAddress);
-        JLabel srcAddressLabel = new JLabel("Src Address:");
-        srcAddressLabel.setLabelFor(dstAddress);
-        JLabel srcPortLabel = new JLabel("Src Port:");
-        srcPortLabel.setLabelFor(dstAddress);
-        JLabel protocolsLabel = new JLabel("Protocol:");
-        protocolsLabel.setLabelFor(protocolsBox);
+        dstPortLabel.setLabelFor(dstPort);
+        JLabel protocolLabel = new JLabel("Protocol:");
+        protocolLabel.setLabelFor(protocolsBox);
 
         dstAddress.setInputVerifier(new IpAddressVerifier());
         dstPort.setInputVerifier(new RangeVerifier(0, 1024));
         srcAddress.setInputVerifier(new IpAddressVerifier());
         srcPort.setInputVerifier(new RangeVerifier(0, 1024));
 
-        JPanel dstPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dstPanel.add(dstAddressLabel);
-        dstPanel.add(dstAddress);
-        dstPanel.add(dstPortLabel);
-        dstPanel.add(dstPort);
-
         JPanel srcPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         srcPanel.add(srcAddressLabel);
         srcPanel.add(srcAddress);
         srcPanel.add(srcPortLabel);
         srcPanel.add(srcPort);
-        srcPanel.add(protocolsLabel);
-        srcPanel.add(protocolsBox);
+
+        JPanel dstPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        dstPanel.add(dstAddressLabel);
+        dstPanel.add(dstAddress);
+        dstPanel.add(dstPortLabel);
+        dstPanel.add(dstPort);
+        dstPanel.add(protocolLabel);
+        dstPanel.add(protocolsBox);
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
-        filterPanel.add(dstPanel);
         filterPanel.add(srcPanel);
+        filterPanel.add(dstPanel);
 
         return filterPanel;
     }
-    
+
     private JPanel getDelayPanel() {
         delayValue = new JTextField(10);
         jitterValue = new JTextField(10);
         delayCorrelation = new JTextField(10);
 
-        String[] distributions = {"Uniform", "Normal", "Pareto Normal"};
+        String[] distributions = { "Uniform", "Normal", "Pareto Normal" };
         JComboBox<String> distributionsBox = new JComboBox<>(distributions);
 
-        JLabel delayValueLabel = new JLabel("Delay (ms):");
+        JLabel delayValueLabel = new JLabel("Startup Delay (ms):");
         delayValueLabel.setLabelFor(delayValue);
         JLabel jitterValueLabel = new JLabel("Jitter (ms):");
         jitterValueLabel.setLabelFor(jitterValue);
@@ -140,9 +144,9 @@ public class NetworkInterfaceGui extends JPanel {
         distributionsLabel.setLabelFor(distributionsBox);
 
         delayValue.setInputVerifier(new RangeVerifier(0, 10000));
-        jitterValue.setInputVerifier(new RangeVerifier(0, 10000));        
+        jitterValue.setInputVerifier(new RangeVerifier(0, 10000));
         delayCorrelation.setInputVerifier(new RangeVerifier(0, 100));
-    
+
         JPanel delayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         delayPanel.setBorder(BorderFactory.createTitledBorder("Delay"));
         delayPanel.add(delayValueLabel);
@@ -153,7 +157,7 @@ public class NetworkInterfaceGui extends JPanel {
         delayPanel.add(delayCorrelation);
         delayPanel.add(distributionsLabel);
         delayPanel.add(distributionsBox);
-            
+
         return delayPanel;
     }
 
@@ -269,6 +273,23 @@ public class NetworkInterfaceGui extends JPanel {
         corruptionPanel.add(corruptionValue);
 
         return corruptionPanel;
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent item) {
+        Object source = item.getSource();
+        String value = "";
+
+        if (source instanceof JComboBox) {
+            value = (String) ((JComboBox) source).getSelectedItem();
+        }
+
+        Integer port = ProtocolPortMapper.getPort(value);
+        if (port != null) {
+            dstPort.setText(port.toString());
+        } else {
+            dstPort.setText("Invalid Protocol");
+        }
     }
 
 }
