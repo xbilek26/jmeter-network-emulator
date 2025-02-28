@@ -1,9 +1,7 @@
 package cz.vutbr.networkemulator.gui.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 public class ProtocolPortMapper {
