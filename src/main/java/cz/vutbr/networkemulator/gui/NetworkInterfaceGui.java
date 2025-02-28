@@ -275,6 +275,7 @@ public class NetworkInterfaceGui extends JPanel implements ItemListener {
         return corruptionPanel;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void itemStateChanged(ItemEvent item) {
         Object source = item.getSource();
