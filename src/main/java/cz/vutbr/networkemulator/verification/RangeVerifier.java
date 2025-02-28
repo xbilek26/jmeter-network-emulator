@@ -2,8 +2,10 @@ package cz.vutbr.networkemulator.verification;
 
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,19 +22,39 @@ public class RangeVerifier extends InputVerifier {
     }
 
     @Override
-    public boolean verify(JComponent input) {
-        if (input instanceof JTextField field) {
+    public boolean verify(JComponent source) {
+        if (source instanceof JTextField field) {
 
-            String text = field.getText().trim();
+            String input = field.getText().trim();
 
-            if (text.isEmpty()) {
+            if (input.isEmpty()) {
                 return true;    
             }
 
             try {
-                int value = Integer.parseInt(field.getText());
-                return value >= min && value <= max;
+                int value = Integer.parseInt(input);
+                boolean isInRange = value >= min && value <= max;
+
+                if (isInRange) {
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        String.format("Enter a value between %d and %d.", min, max),
+                        JMeterUtils.getLocaleString("Bad Value"),
+                        JOptionPane.ERROR_MESSAGE
+                    );
+
+                    return false;
+                }
             } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    String.format("Enter a number.", min, max),
+                    JMeterUtils.getLocaleString("Bad Value"),
+                    JOptionPane.ERROR_MESSAGE
+                );
+                
                 return false;
             }
         }
