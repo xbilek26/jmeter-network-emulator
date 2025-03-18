@@ -24,14 +24,17 @@ import javax.swing.JTextArea;
 
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
+import org.apache.jmeter.gui.util.JMeterToolBar;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
+import org.apache.jmeter.util.JMeterUtils;
 
 import com.google.auto.service.AutoService;
 
 import cz.vutbr.networkemulator.linux.CommandOutput;
 import cz.vutbr.networkemulator.linux.CommandRunner;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
+import net.sf.saxon.functions.ConstantFunction.False;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +48,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
 
     private boolean running = false;
     JButton startButton;
-    JButton refreshButton;
+    JButton stopButton;
     JLabel emulatorState;
 
     public NetworkEmulatorGui() {
         registerIcon();
+        registerDisabledIcon();
         init();
         log.info("Network Emulator Successfully initialized.");
     }
@@ -61,6 +65,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
 
     @Override
     public void modifyTestElement(TestElement testElement) {
+        super.modifyTestElement(testElement);
     }
 
     private void init() {
@@ -81,28 +86,28 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
         emulatorPanel.setResizeWeight(0.6);
         emulatorPanel.setOneTouchExpandable(true);
         emulatorPanel.setDividerLocation(0.6);
-        
+
         wrapper.add(titlePanel, BorderLayout.NORTH);
         wrapper.add(emulatorPanel, BorderLayout.CENTER);
         add(wrapper);
     }
-    
+
     protected JTabbedPane createInterfacesTabs() {
         JTabbedPane tabbedPane = new JTabbedPane();
         ArrayList<NetworkInterfaceGui> guis = createNetworkInterfaceConfigGuis();
-    
+
         for (NetworkInterfaceGui gui : guis) {
             tabbedPane.add(gui.getName(), gui);
         }
-    
+
         return tabbedPane;
     }
-    
+
     protected ArrayList<NetworkInterfaceGui> createNetworkInterfaceConfigGuis() {
-        
+
         ArrayList<NetworkInterfaceGui> guis = new ArrayList<>();
         ArrayList<String> availableInterfaces = networkEmulator.getAvailableNetworkInterfaces();
-    
+
         for (String networkInterface : availableInterfaces) {
             NetworkInterfaceGui gui = new NetworkInterfaceGui(networkInterface);
             gui.setBorder(makeBorder());
@@ -115,47 +120,54 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
     private JPanel createStatePanel() {
         JPanel statePanel = new JPanel(new BorderLayout());
         statePanel.setBorder(BorderFactory.createTitledBorder("Current Settings"));
-        
+
         JTextArea currentSettings = new JTextArea();
         currentSettings.setBackground(new Color(0x000000));
         currentSettings.setForeground(new Color(0x00ff00));
         currentSettings.setFont(new Font("", Font.PLAIN, 14));
         currentSettings.setEditable(false);
-        
+
         JScrollPane scrollPane = new JScrollPane(currentSettings);
         currentSettings.setLineWrap(true);
         currentSettings.setWrapStyleWord(true);
-        
+
         CommandRunner runner = new CommandRunner();
         CommandOutput output = runner.runCommand("tc qdisc");
         currentSettings.setText(output.getOutputString());
-        
+
         statePanel.add(scrollPane, BorderLayout.CENTER);
-    
+
         return statePanel;
     }
 
     private JPanel createControlPanel() {
         JPanel controlPanel = new JPanel(new GridLayout(0, 1, 5, 5));
         controlPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
-    
-        startButton = new JButton("Start Emulation");
+
+        String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
+                JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE);
+        ImageIcon startImage = JMeterUtils.getImage("toolbar/" + iconSize + "/arrow-right-3.png");
+        startButton = new JButton("Start");
+        startButton.setIcon(startImage);
         startButton.addActionListener(this);
         startButton.setFocusable(false);
-    
-        refreshButton = new JButton("Refresh");
-        refreshButton.addActionListener(this);
-        refreshButton.setFocusable(false);
-    
+        startButton.setEnabled(true);
+
+        stopButton = new JButton("Stop");
+        ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
+        stopButton.setIcon(stopImage);
+        stopButton.addActionListener(this);
+        stopButton.setFocusable(false);
+        stopButton.setEnabled(false);
+
         emulatorState = new JLabel("Emulation is stopped.", JLabel.CENTER);
-    
+
         controlPanel.add(startButton);
-        controlPanel.add(refreshButton);
+        controlPanel.add(stopButton);
         controlPanel.add(emulatorState);
-    
+
         return controlPanel;
     }
-    
 
     private JSplitPane createMainPanel() {
         JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createStatePanel(), createControlPanel());
@@ -165,7 +177,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
         mainPanel.setDividerSize(0);
 
         mainPanel.setBorder(BorderFactory.createTitledBorder("Main Panel"));
-    
+
         return mainPanel;
     }
 
@@ -190,6 +202,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
         GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
     }
 
+    public static void registerDisabledIcon() {
+        String iconPath = "/cz/vutbr/networkemulator/images/network_emulator_disabled.gif";
+        ImageIcon icon = new ImageIcon(NetworkEmulatorGui.class.getResource(iconPath));
+        GUIFactory.registerDisabledIcon(NetworkEmulatorGui.class.getName(), icon);
+    }
+
     @Override
     public JPopupMenu createPopupMenu() {
         JPopupMenu pop = new JPopupMenu();
@@ -201,13 +219,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent implements Ac
     @Override
     public void actionPerformed(ActionEvent e) {
         running = !running;
+
         if (running) {
-            startButton.setText("Stop Emulation");
             emulatorState.setText("Emulation is running!");
         } else {
-            startButton.setText("Start Emulation");
             emulatorState.setText("Emulation is stopped.");
         }
+        startButton.setEnabled(!running);
+        stopButton.setEnabled(running);
     }
 
 }
