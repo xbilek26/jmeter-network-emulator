@@ -6,9 +6,15 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.model.utils.NetworkEmulatorConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class IpAddressVerifier extends InputVerifier {
+
+    @SuppressWarnings("unused")
+    private static final Logger log = LoggerFactory.getLogger(IpAddressVerifier.class);
 
     private static final Pattern IPV4_PATTERN = createIpv4Pattern();
     private static final Pattern IPV6_PATTERN = createIpv6Pattern();
