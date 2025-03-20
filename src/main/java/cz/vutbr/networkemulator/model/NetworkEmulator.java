@@ -1,21 +1,35 @@
 package cz.vutbr.networkemulator.model;
 
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.jmeter.testelement.AbstractTestElement;
-import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NetworkEmulator extends AbstractTestElement {
+public class NetworkEmulator {
 
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulator.class);
 
-    public static final String NETWORK_INTERFACES = "NetworkEmulatorTestElement.networkInterfaces";
-    public static final String TRAFFIC_CLASSES = "NetworkEmulatorTestElement.trafficClasses";
+    private List<NetworkInterface> networkInterfaces;
 
+    public NetworkEmulator() {
+        this.networkInterfaces = new ArrayList<>();
+        log.info("Created network emulator");
+    }
+
+    public List<NetworkInterface> getNetworkInterfaces() {
+        return networkInterfaces;
+    }
+
+    public void addNetworkInterface(String name) {
+        networkInterfaces.add(new NetworkInterface(name));
+    }
+
+    public void removeNetworkInterface(String name) {
+        networkInterfaces.removeIf(ni -> ni.getName().equals(name));
+    }
+
+    public void clearNetworkInterfaces() {
+        networkInterfaces.clear();
+    }
 }
