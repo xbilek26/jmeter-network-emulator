@@ -23,10 +23,12 @@ import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
 
+import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
+import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.linux.CommandOutput;
 import cz.vutbr.networkemulator.linux.CommandRunner;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
-import cz.vutbr.networkemulator.model.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,46 +38,50 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
-    NetworkEmulator networkEmulator;
+    private NetworkEmulator networkEmulator;
+    private NetworkEmulatorController networkEmulatorController;
 
-    private ConfigurationPanel configPanel;
-    private JButton startButton;
-    private JButton stopButton;
-    private JLabel emulatorState;
+    private ConfigurationPanel configurationPanel;
+    private JButton btnStart;
+    private JButton btnStop;
+    private JLabel lblEmulatorState;
 
     public NetworkEmulatorGui() {
+        if (networkEmulator == null) {
+            networkEmulator = new NetworkEmulator();
+        }
+
+        if (networkEmulatorController == null) {
+            networkEmulatorController = new NetworkEmulatorController(networkEmulator);
+        }
         init();
     }
 
     @Override
     public TestElement makeTestElement() {
-        networkEmulator = new NetworkEmulator();
-        modifyTestElement(networkEmulator);
-        return networkEmulator;
+        return new NetworkEmulatorTestElement();
     }
 
     @Override
     public void modifyTestElement(TestElement element) {
         super.modifyTestElement(element);
-        configPanel.modifyTestElement(element);
+        configurationPanel.modifyTestElement(element);
     }
 
     @Override
     public void configure(TestElement element) {
         super.configure(element);
-        configPanel.configure(element);
+        configurationPanel.configure(element);
     }
 
     private void init() {
         registerIcon();
         registerDisabledIcon();
+
         setLayout(new BorderLayout(0, 5));
         setBorder(makeBorder());
-
         add(makeTitlePanel(), BorderLayout.NORTH);
-
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createMainPanel(), createConfigurationPanel());
-
         add(splitPane, BorderLayout.CENTER);
     }
 
@@ -90,23 +96,26 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private ConfigurationPanel createConfigurationPanel() {
-        if (configPanel == null) {
-            configPanel = new ConfigurationPanel();
-        }
-
-        return configPanel;
+        configurationPanel = new ConfigurationPanel(networkEmulatorController);
+        return configurationPanel;
     }
 
     private void startEmulation() {
-        startButton.setEnabled(false);
-        stopButton.setEnabled(true);
-        emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
+        configurationPanel.collectAndApplySettings();
+        networkEmulatorController.runEmulation();
+
+        log.info("EMULATION STARTED");
+        networkEmulatorController.printNetworkConfiguration();
+
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(true);
+        lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
     }
 
     private void stopEmulation() {
-        startButton.setEnabled(true);
-        stopButton.setEnabled(false);
-        emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
+        lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
     }
 
     private JPanel createStatePanel() {
@@ -114,7 +123,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
         JTextArea currentSettings = new JTextArea();
         currentSettings.setBackground(new Color(0x000000));
-        currentSettings.setForeground(new Color(0x00ff00));
+        currentSettings.setForeground(new Color(0xffffff));
         currentSettings.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(currentSettings);
@@ -136,24 +145,24 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
                 JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE);
         ImageIcon startImage = JMeterUtils.getImage("toolbar/" + iconSize + "/arrow-right-3.png");
-        startButton = new JButton("Start");
-        startButton.setIcon(startImage);
-        startButton.addActionListener(e -> startEmulation());
-        startButton.setFocusable(false);
-        startButton.setEnabled(true);
+        btnStart = new JButton(NetworkEmulatorConstants.BTN_START_EMULATION);
+        btnStart.setIcon(startImage);
+        btnStart.addActionListener(e -> startEmulation());
+        btnStart.setFocusable(false);
+        btnStart.setEnabled(true);
 
-        stopButton = new JButton("Stop");
+        btnStop = new JButton(NetworkEmulatorConstants.BTN_STOP_EMULATION);
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
-        stopButton.setIcon(stopImage);
-        stopButton.addActionListener(e -> stopEmulation());
-        stopButton.setFocusable(false);
-        stopButton.setEnabled(false);
+        btnStop.setIcon(stopImage);
+        btnStop.addActionListener(e -> stopEmulation());
+        btnStop.setFocusable(false);
+        btnStop.setEnabled(false);
 
-        emulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
+        lblEmulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
 
-        controlPanel.add(startButton);
-        controlPanel.add(stopButton);
-        controlPanel.add(emulatorState);
+        controlPanel.add(btnStart);
+        controlPanel.add(btnStop);
+        controlPanel.add(lblEmulatorState);
 
         return controlPanel;
     }
