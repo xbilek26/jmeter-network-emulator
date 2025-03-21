@@ -1,6 +1,7 @@
 package cz.vutbr.networkemulator.verification;
 
 import java.util.regex.Pattern;
+
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
