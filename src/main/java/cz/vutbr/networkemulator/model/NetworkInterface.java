@@ -12,7 +12,7 @@ public class NetworkInterface {
     private static final Logger log = LoggerFactory.getLogger(NetworkInterface.class);
 
     private String name;
-    private List<TrafficClass> trafficClasses;
+    private final List<TrafficClass> trafficClasses;
 
     public NetworkInterface(String name) {
         this.name = name;
