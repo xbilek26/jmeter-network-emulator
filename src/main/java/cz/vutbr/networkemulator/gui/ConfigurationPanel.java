@@ -42,9 +42,9 @@ public class ConfigurationPanel extends JPanel {
 
     private JPanel buttonPanel;
     private JPanel rightPanel;
-    private Map<String, TrafficClassPanel> tcPanels = new HashMap<>();
+    private final Map<String, TrafficClassPanel> tcPanels = new HashMap<>();
 
-    private NetworkEmulatorController controller;
+    private final NetworkEmulatorController controller;
 
     public ConfigurationPanel(NetworkEmulatorController networkEmulatorController) {
         this.controller = networkEmulatorController;
@@ -249,7 +249,7 @@ public class ConfigurationPanel extends JPanel {
         int interfaceIndex = 0;
         while (true) {
             String interfaceName = testElement.getPropertyAsString("interface_" + interfaceIndex);
-            if (interfaceName == null || interfaceName.isEmpty()) {
+            if (interfaceName.isEmpty()) {
                 break;
             }
 
@@ -257,7 +257,7 @@ public class ConfigurationPanel extends JPanel {
             rootNode.add(interfaceNode);
 
             String trafficClasses = testElement.getPropertyAsString("classes_" + interfaceIndex);
-            if (trafficClasses != null && !trafficClasses.isEmpty()) {
+            if (!trafficClasses.isEmpty()) {
                 String[] tcNames = trafficClasses.split(",");
                 for (String tcName : tcNames) {
 
@@ -269,8 +269,8 @@ public class ConfigurationPanel extends JPanel {
                             key -> new TrafficClassPanel());
 
                     JMeterProperty parameters = testElement.getProperty(tcPanelName);
-                    if (parameters instanceof CollectionProperty) {
-                        tcPanel.setNetworkParameters((CollectionProperty) parameters);
+                    if (parameters instanceof CollectionProperty collectionProperty) {
+                        tcPanel.setNetworkParameters(collectionProperty);
                     } else {
                         tcPanel.setNetworkParameters(new CollectionProperty());
                     }
