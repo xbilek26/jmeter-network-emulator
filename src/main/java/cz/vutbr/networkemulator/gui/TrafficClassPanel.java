@@ -22,7 +22,7 @@ public class TrafficClassPanel extends JPanel {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(TrafficClassPanel.class);
 
-    private String[] distributions = { "Uniform", "Normal", "Pareto Normal" };
+    private final String[] distributions = { "Uniform", "Normal", "Pareto Normal" };
 
     private JTextField srcAddressField;
     private JTextField srcPortField;
