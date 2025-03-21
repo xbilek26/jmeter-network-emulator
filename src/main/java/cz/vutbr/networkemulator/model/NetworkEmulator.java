@@ -10,7 +10,7 @@ public class NetworkEmulator {
 
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulator.class);
 
-    private List<NetworkInterface> networkInterfaces;
+    private final List<NetworkInterface> networkInterfaces;
 
     public NetworkEmulator() {
         this.networkInterfaces = new ArrayList<>();
