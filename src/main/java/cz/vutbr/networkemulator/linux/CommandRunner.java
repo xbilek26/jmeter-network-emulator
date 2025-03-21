@@ -1,6 +1,7 @@
 package cz.vutbr.networkemulator.linux;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +18,8 @@ public class CommandRunner {
             ProcessBuilder processBuilder = new ProcessBuilder(commandList);
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "start";
-            
+
+            String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }
@@ -26,8 +27,7 @@ public class CommandRunner {
             process.waitFor();
             return new CommandOutput(output.toString().trim());
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
             System.out.println("error");
         }
 
