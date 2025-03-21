@@ -34,10 +34,11 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
+    @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
     private NetworkEmulator networkEmulator;
-    private NetworkEmulatorController networkEmulatorController;
+    private NetworkEmulatorController controller;
 
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
@@ -49,8 +50,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
             networkEmulator = new NetworkEmulator();
         }
 
-        if (networkEmulatorController == null) {
-            networkEmulatorController = new NetworkEmulatorController(networkEmulator);
+        if (controller == null) {
+            controller = new NetworkEmulatorController(networkEmulator);
         }
         init();
     }
@@ -94,16 +95,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private ConfigurationPanel createConfigurationPanel() {
-        configurationPanel = new ConfigurationPanel(networkEmulatorController);
+        configurationPanel = new ConfigurationPanel(controller);
         return configurationPanel;
     }
 
     private void startEmulation() {
         configurationPanel.collectAndApplySettings();
-        networkEmulatorController.runEmulation();
-
-        log.info("EMULATION STARTED");
-        networkEmulatorController.printNetworkConfiguration();
+        controller.runEmulation();
+        controller.printNetworkConfiguration();
 
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);

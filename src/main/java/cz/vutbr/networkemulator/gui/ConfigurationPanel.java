@@ -46,8 +46,8 @@ public class ConfigurationPanel extends JPanel {
 
     private final NetworkEmulatorController controller;
 
-    public ConfigurationPanel(NetworkEmulatorController networkEmulatorController) {
-        this.controller = networkEmulatorController;
+    public ConfigurationPanel(NetworkEmulatorController controller) {
+        this.controller = controller;
         init();
     }
 

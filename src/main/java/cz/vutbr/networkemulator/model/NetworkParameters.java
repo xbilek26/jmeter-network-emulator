@@ -70,8 +70,8 @@ public class NetworkParameters {
         return jitter;
     }
 
-    public void setJitter(int jitterValue) {
-        this.jitter = jitterValue;
+    public void setJitter(int jitter) {
+        this.jitter = jitter;
     }
 
     public int getDelayCorrelation() {
