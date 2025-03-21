@@ -89,17 +89,17 @@ public class NetworkEmulatorController {
                     System.out.println("      Dst Address: " + parameters.getDstAddress());
                     System.out.println("      Dst Port: " + parameters.getDstPort());
                     System.out.println("      Delay Value: " + parameters.getDelayValue());
-                    System.out.println("      Drop Value: " + parameters.getDropValue());
-                    System.out.println("      Rate Value: " + parameters.getRateValue());
-                    System.out.println("      Loss Value: " + parameters.getLossValue());
-                    System.out.println("      Reordering Value: " + parameters.getReorderingValue());
-                    System.out.println("      Duplication Value: " + parameters.getDuplicationValue());
-                    System.out.println("      Corruption Value: " + parameters.getCorruptionValue());
+                    System.out.println("      Jitter: " + parameters.getJitter());
                     System.out.println("      Delay Correlation: " + parameters.getDelayCorrelation());
+                    System.out.println("      Drop Value: " + parameters.getDropValue());
                     System.out.println("      Drop Correlation: " + parameters.getDropCorrelation());
-                    System.out.println("      Duplication Correlation: " + parameters.getDuplicationCorrelation());
+                    System.out.println("      Rate: " + parameters.getRate());
+                    System.out.println("      Loss: " + parameters.getLoss());
+                    System.out.println("      Reordering Value: " + parameters.getReorderingValue());
                     System.out.println("      Reordering Correlation: " + parameters.getReorderingCorrelation());
-                    System.out.println("      Jitter Value: " + parameters.getJitterValue());
+                    System.out.println("      Duplication Value: " + parameters.getDuplicationValue());
+                    System.out.println("      Duplication Correlation: " + parameters.getDuplicationCorrelation());
+                    System.out.println("      Corruption Value: " + parameters.getCorruption());
                 } else {
                     System.out.println("    No parameters set for this traffic class.");
                 }
@@ -109,8 +109,6 @@ public class NetworkEmulatorController {
     
 
     public void runEmulation() {
-        // TODO Auto-generated method stub
-        // throw new UnsupportedOperationException("Unimplemented method 'runEmulation'");
     }
 
 }
