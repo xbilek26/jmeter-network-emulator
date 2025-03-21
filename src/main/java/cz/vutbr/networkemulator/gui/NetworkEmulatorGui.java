@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
-    @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
     private NetworkEmulator networkEmulator;
@@ -169,12 +168,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     @Override
     public String getLabelResource() {
-        return "network_emulator_title";
+        return NetworkEmulatorConstants.NETWORK_EMULATOR_LABEL_RESOURCE;
     }
 
     @Override
     public String getStaticLabel() {
-        return NetworkEmulatorConstants.EMULATOR_NAME;
+        return NetworkEmulatorConstants.NETWORK_EMULATOR_STATIC_LABEL;
     }
 
     public static void registerIcon() {
