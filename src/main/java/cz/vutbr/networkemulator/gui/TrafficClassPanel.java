@@ -9,136 +9,84 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.jmeter.config.Argument;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class TrafficClassPanel extends JPanel {
 
+    @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(TrafficClassPanel.class);
 
-    private static final String SRC_ADDRESS = "srcAddress";
-    private static final String SRC_PORT = "srcPort";
-    private static final String DST_ADDRESS = "dstAddress";
-    private static final String DST_PORT = "dstPort";
-    private static final String DELAY_VALUE = "delayValue";
-    private static final String DROP_VALUE = "dropValue";
-    private static final String RATE_VALUE = "rateValue";
-    private static final String LOSS_VALUE = "lossValue";
-    private static final String REORDERING_VALUE = "reorderingValue";
-    private static final String DUPLICATION_VALUE = "duplicationValue";
-    private static final String CORRUPTION_VALUE = "corruptionValue";
-    private static final String DELAY_CORRELATION = "delayCorrelation";
-    private static final String DROP_CORRELATION = "dropCorrelation";
-    private static final String DUPLICATION_CORRELATION = "duplicationCorrelation";
-    private static final String REORDERING_CORRELATION = "reorderingCorrelation";
-    private static final String JITTER_VALUE = "jitterValue";
+    private String[] distributions = { "Uniform", "Normal", "Pareto Normal" };
 
     private JTextField srcAddressField;
     private JTextField srcPortField;
     private JTextField dstAddressField;
     private JTextField dstPortField;
     private JTextField delayValueField;
+    private JTextField jitterField;
+    private JTextField delayCorrelationField;
+    private JComboBox<String> distributionsBox;
     private JTextField dropValueField;
-    private JTextField rateValueField;
+    private JTextField dropCorrelationField;
+    private JTextField rateField;
     private JTextField lossValueField;
     private JTextField reorderingValueField;
-    private JTextField duplicationValueField;
-    private JTextField corruptionValueField;
-    private JTextField delayCorrelationField;
-    private JTextField dropCorrelationField;
-    private JTextField duplicationCorrelationField;
     private JTextField reorderingCorrelationField;
-    private JTextField jitterValueField;
+    private JTextField duplicationValueField;
+    private JTextField duplicationCorrelationField;
+    private JTextField corruptionField;
 
     public TrafficClassPanel() {
         init();
     }
 
     public CollectionProperty getNetworkParameters() {
-        CollectionProperty propertyParameters = new CollectionProperty();
-        propertyParameters.addItem(new Argument(SRC_ADDRESS, srcAddressField.getText()));
-        propertyParameters.addItem(new Argument(SRC_PORT, srcPortField.getText()));
-        propertyParameters.addItem(new Argument(DST_ADDRESS, dstAddressField.getText()));
-        propertyParameters.addItem(new Argument(DST_PORT, dstPortField.getText()));
-        propertyParameters.addItem(new Argument(DELAY_VALUE, delayValueField.getText()));
-        propertyParameters.addItem(new Argument(DROP_VALUE, dropValueField.getText()));
-        propertyParameters.addItem(new Argument(RATE_VALUE, rateValueField.getText()));
-        propertyParameters.addItem(new Argument(LOSS_VALUE, lossValueField.getText()));
-        propertyParameters.addItem(new Argument(REORDERING_VALUE, reorderingValueField.getText()));
-        propertyParameters.addItem(new Argument(DUPLICATION_VALUE, duplicationValueField.getText()));
-        propertyParameters.addItem(new Argument(CORRUPTION_VALUE, corruptionValueField.getText()));
-        propertyParameters.addItem(new Argument(DELAY_CORRELATION, delayCorrelationField.getText()));
-        propertyParameters.addItem(new Argument(DROP_CORRELATION, dropCorrelationField.getText()));
-        propertyParameters.addItem(new Argument(DUPLICATION_CORRELATION, duplicationCorrelationField.getText()));
-        propertyParameters.addItem(new Argument(REORDERING_CORRELATION, reorderingCorrelationField.getText()));
-        propertyParameters.addItem(new Argument(JITTER_VALUE, jitterValueField.getText()));
-    
-        return propertyParameters;
+        CollectionProperty parameters = new CollectionProperty();
+        parameters.addItem(srcAddressField.getText());
+        parameters.addItem(srcPortField.getText());
+        parameters.addItem(dstAddressField.getText());
+        parameters.addItem(dstPortField.getText());
+        parameters.addItem(delayValueField.getText());
+        parameters.addItem(jitterField.getText());
+        parameters.addItem(delayCorrelationField.getText());
+        // TODO: Distribution
+        parameters.addItem(dropValueField.getText());
+        parameters.addItem(dropCorrelationField.getText());
+        parameters.addItem(rateField.getText());
+        parameters.addItem(lossValueField.getText());
+        parameters.addItem(reorderingValueField.getText());
+        parameters.addItem(reorderingCorrelationField.getText());
+        parameters.addItem(duplicationValueField.getText());
+        parameters.addItem(duplicationCorrelationField.getText());
+        parameters.addItem(corruptionField.getText());
+
+        return parameters;
     }
 
-    public void setNetworkParameters(CollectionProperty propertyParameters) {
-        for (int i = 0; i < propertyParameters.size(); i++) {
-            Argument argument = (Argument) propertyParameters.get(i).getObjectValue();
-            String name = argument.getName();
-            String value = argument.getValue();
-            switch (name) {
-                case "srcAddress":
-                    srcAddressField.setText(value);
-                    break;
-                case "srcPort":
-                    srcPortField.setText(value);
-                    break;
-                case "dstAddress":
-                    dstAddressField.setText(value);
-                    break;
-                case "dstPort":
-                    dstPortField.setText(value);
-                    break;
-                case "delayValue":
-                    delayValueField.setText(value);
-                    break;
-                case "dropValue":
-                    dropValueField.setText(value);
-                    break;
-                case "rateValue":
-                    rateValueField.setText(value);
-                    break;
-                case "lossValue":
-                    lossValueField.setText(value);
-                    break;
-                case "reorderingValue":
-                    reorderingValueField.setText(value);
-                    break;
-                case "duplicationValue":
-                    duplicationValueField.setText(value);
-                    break;
-                case "corruptionValue":
-                    corruptionValueField.setText(value);
-                    break;
-                case "delayCorrelation":
-                    delayCorrelationField.setText(value);
-                    break;
-                case "dropCorrelation":
-                    dropCorrelationField.setText(value);
-                    break;
-                case "duplicationCorrelation":
-                    duplicationCorrelationField.setText(value);
-                    break;
-                case "reorderingCorrelation":
-                    reorderingCorrelationField.setText(value);
-                    break;
-                case "jitterValue":
-                    jitterValueField.setText(value);
-                    break;
-                default:
-                    log.warn("Unknown parameter: " + name);
-            }
-        }
+    public void setNetworkParameters(CollectionProperty parameters) {
+        srcAddressField.setText(parameters.get(0).getStringValue());
+        srcPortField.setText(parameters.get(1).getStringValue());
+        dstAddressField.setText(parameters.get(2).getStringValue());
+        dstPortField.setText(parameters.get(3).getStringValue());
+        delayValueField.setText(parameters.get(4).getStringValue());
+        jitterField.setText(parameters.get(5).getStringValue());
+        delayCorrelationField.setText(parameters.get(6).getStringValue());
+        // TODO: Distribution
+        dropValueField.setText(parameters.get(7).getStringValue());
+        dropCorrelationField.setText(parameters.get(8).getStringValue());
+        rateField.setText(parameters.get(9).getStringValue());
+        lossValueField.setText(parameters.get(10).getStringValue());
+        reorderingValueField.setText(parameters.get(11).getStringValue());
+        reorderingCorrelationField.setText(parameters.get(12).getStringValue());
+        duplicationValueField.setText(parameters.get(13).getStringValue());
+        duplicationCorrelationField.setText(parameters.get(14).getStringValue());
+        corruptionField.setText(parameters.get(15).getStringValue());
     }
 
     private void init() {
@@ -159,13 +107,13 @@ public class TrafficClassPanel extends JPanel {
         srcAddressField = new JTextField(20);
         srcPortField = new JTextField(7);
 
-        JLabel srcAddressLabel = new JLabel("Src Address:");
+        JLabel srcAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_ADDRESS);
         srcAddressLabel.setLabelFor(srcAddressField);
-        JLabel srcPortLabel = new JLabel("Src Port:");
+        JLabel srcPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT);
         srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstAddressLabel = new JLabel("Dst Address:");
+        JLabel dstAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_ADDRESS);
         dstAddressLabel.setLabelFor(dstAddressField);
-        JLabel dstPortLabel = new JLabel("Dst Port:");
+        JLabel dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
         dstPortLabel.setLabelFor(dstPortField);
 
         dstAddressField.setInputVerifier(new IpAddressVerifier());
@@ -187,7 +135,7 @@ public class TrafficClassPanel extends JPanel {
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
-        filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
+        filterPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_FILTER_PANEL));
         filterPanel.add(srcPanel);
         filterPanel.add(dstPanel);
 
@@ -196,31 +144,29 @@ public class TrafficClassPanel extends JPanel {
 
     private JPanel createDelayPanel() {
         delayValueField = new JTextField(10);
-        jitterValueField = new JTextField(10);
+        jitterField = new JTextField(10);
         delayCorrelationField = new JTextField(10);
+        distributionsBox = new JComboBox<>(distributions);
 
-        String[] distributions = { "Uniform", "Normal", "Pareto Normal" };
-        JComboBox<String> distributionsBox = new JComboBox<>(distributions);
-
-        JLabel delayValueLabel = new JLabel("Startup Delay (ms):");
+        JLabel delayValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_VALUE);
         delayValueLabel.setLabelFor(delayValueField);
-        JLabel jitterValueLabel = new JLabel("Jitter (ms):");
-        jitterValueLabel.setLabelFor(jitterValueField);
-        JLabel delayCorrelationLabel = new JLabel("Correlation (%):");
+        JLabel jitterLabel = new JLabel(NetworkEmulatorConstants.LABEL_JITTER);
+        jitterLabel.setLabelFor(jitterField);
+        JLabel delayCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_CORRELATION);
         delayCorrelationLabel.setLabelFor(delayCorrelationField);
-        JLabel distributionsLabel = new JLabel("Distribution:");
+        JLabel distributionsLabel = new JLabel(NetworkEmulatorConstants.LABEL_DISTRIBUTION);
         distributionsLabel.setLabelFor(distributionsBox);
 
         delayValueField.setInputVerifier(new RangeVerifier(0, 10000));
-        jitterValueField.setInputVerifier(new RangeVerifier(0, 10000));
+        jitterField.setInputVerifier(new RangeVerifier(0, 10000));
         delayCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel delayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        delayPanel.setBorder(BorderFactory.createTitledBorder("Delay"));
+        delayPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DELAY_PANEL));
         delayPanel.add(delayValueLabel);
         delayPanel.add(delayValueField);
-        delayPanel.add(jitterValueLabel);
-        delayPanel.add(jitterValueField);
+        delayPanel.add(jitterLabel);
+        delayPanel.add(jitterField);
         delayPanel.add(delayCorrelationLabel);
         delayPanel.add(delayCorrelationField);
         delayPanel.add(distributionsLabel);
@@ -233,16 +179,16 @@ public class TrafficClassPanel extends JPanel {
         dropValueField = new JTextField(10);
         dropCorrelationField = new JTextField(10);
 
-        JLabel dropValueLabel = new JLabel("Packet Drop (%):");
+        JLabel dropValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DROP_VALUE);
         dropValueLabel.setLabelFor(dropValueField);
-        JLabel dropCorrelationLabel = new JLabel("Correlation (%):");
+        JLabel dropCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DROP_CORRELATION);
         dropCorrelationLabel.setLabelFor(dropCorrelationField);
 
         dropValueField.setInputVerifier(new RangeVerifier(0, 100));
         dropCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel dropPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dropPanel.setBorder(BorderFactory.createTitledBorder("Packet Drop"));
+        dropPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DROP_PANEL));
         dropPanel.add(dropValueLabel);
         dropPanel.add(dropValueField);
         dropPanel.add(dropCorrelationLabel);
@@ -252,17 +198,17 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createRatePanel() {
-        rateValueField = new JTextField(10);
+        rateField = new JTextField(10);
 
-        JLabel rateLabel = new JLabel("Rate (bps):");
+        JLabel rateLabel = new JLabel(NetworkEmulatorConstants.LABEL_RATE);
         rateLabel.setLabelFor(rateLabel);
 
-        rateValueField.setInputVerifier(new RangeVerifier(0, 100000));
+        rateField.setInputVerifier(new RangeVerifier(0, 100000));
 
         JPanel ratePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ratePanel.setBorder(BorderFactory.createTitledBorder("Rate"));
+        ratePanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_RATE_PANEL));
         ratePanel.add(rateLabel);
-        ratePanel.add(rateValueField);
+        ratePanel.add(rateField);
 
         return ratePanel;
     }
@@ -270,13 +216,13 @@ public class TrafficClassPanel extends JPanel {
     private JPanel createLossPanel() {
         lossValueField = new JTextField(10);
 
-        JLabel lossLabel = new JLabel("Loss (%):");
+        JLabel lossLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS);
         lossLabel.setLabelFor(lossValueField);
 
         lossValueField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel lossPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        lossPanel.setBorder(BorderFactory.createTitledBorder("Loss"));
+        lossPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_LOSS_PANEL));
         lossPanel.add(lossLabel);
         lossPanel.add(lossValueField);
 
@@ -287,16 +233,16 @@ public class TrafficClassPanel extends JPanel {
         reorderingValueField = new JTextField(10);
         reorderingCorrelationField = new JTextField(10);
 
-        JLabel reorderingValueLabel = new JLabel("Reordering (%):");
+        JLabel reorderingValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_VALUE);
         reorderingValueLabel.setLabelFor(reorderingValueField);
-        JLabel reorderingCorrelationLabel = new JLabel("Correlation (%):");
+        JLabel reorderingCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_CORRELATION);
         reorderingCorrelationLabel.setLabelFor(reorderingCorrelationField);
 
         reorderingValueField.setInputVerifier(new RangeVerifier(0, 100));
         reorderingCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel reorderingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        reorderingPanel.setBorder(BorderFactory.createTitledBorder("Reordering"));
+        reorderingPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_REORDERING_PANEL));
         reorderingPanel.add(reorderingValueLabel);
         reorderingPanel.add(reorderingValueField);
         reorderingPanel.add(reorderingCorrelationLabel);
@@ -309,16 +255,16 @@ public class TrafficClassPanel extends JPanel {
         duplicationValueField = new JTextField(10);
         duplicationCorrelationField = new JTextField(10);
 
-        JLabel duplicationValueLabel = new JLabel("Duplication (%):");
+        JLabel duplicationValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DUPLICATION_VALUE);
         duplicationValueLabel.setLabelFor(duplicationValueField);
-        JLabel duplicationCorrelationLabel = new JLabel("Correlation (%):");
+        JLabel duplicationCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DUPLICATION_CORRELATION);
         duplicationCorrelationLabel.setLabelFor(duplicationCorrelationField);
 
         duplicationValueField.setInputVerifier(new RangeVerifier(0, 100));
         duplicationCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel duplicationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        duplicationPanel.setBorder(BorderFactory.createTitledBorder("Duplication"));
+        duplicationPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DUPLICATION_PANEL));
         duplicationPanel.add(duplicationValueLabel);
         duplicationPanel.add(duplicationValueField);
         duplicationPanel.add(duplicationCorrelationLabel);
@@ -328,17 +274,17 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createCorruptionPanel() {
-        corruptionValueField = new JTextField(10);
+        corruptionField = new JTextField(10);
 
-        JLabel corruptionValueLabel = new JLabel("Corruption (%):");
-        corruptionValueLabel.setLabelFor(corruptionValueField);
+        JLabel corruptionLabel = new JLabel(NetworkEmulatorConstants.LABEL_CORRUPTION);
+        corruptionLabel.setLabelFor(corruptionField);
 
-        corruptionValueField.setInputVerifier(new RangeVerifier(0, 100));
+        corruptionField.setInputVerifier(new RangeVerifier(0, 100));
 
         JPanel corruptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        corruptionPanel.setBorder(BorderFactory.createTitledBorder("Corruption:"));
-        corruptionPanel.add(corruptionValueLabel);
-        corruptionPanel.add(corruptionValueField);
+        corruptionPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_CORRUPTION_PANEL));
+        corruptionPanel.add(corruptionLabel);
+        corruptionPanel.add(corruptionField);
 
         return corruptionPanel;
     }
