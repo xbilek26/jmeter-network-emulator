@@ -13,17 +13,18 @@ public class NetworkParameters {
     private String dstAddress;
     private int dstPort;
     private int delayValue;
+    private int jitter;
     private int delayCorrelation;
+    // TODO: Distribution
     private int dropValue;
     private int dropCorrelation;
-    private int rateValue;
-    private int lossValue;
+    private int rate;
+    private int loss;
     private int reorderingValue;
     private int reorderingCorrelation;
     private int duplicationValue;
     private int duplicationCorrelation;
-    private int corruptionValue;
-    private int jitterValue;
+    private int corruption;
 
     public String getSrcAddress() {
         return srcAddress;
@@ -65,6 +66,14 @@ public class NetworkParameters {
         this.delayValue = delayValue;
     }
 
+    public int getJitter() {
+        return jitter;
+    }
+
+    public void setJitter(int jitterValue) {
+        this.jitter = jitterValue;
+    }
+
     public int getDelayCorrelation() {
         return delayCorrelation;
     }
@@ -72,6 +81,8 @@ public class NetworkParameters {
     public void setDelayCorrelation(int delayCorrelation) {
         this.delayCorrelation = delayCorrelation;
     }
+
+    // TODO: Distribution
 
     public int getDropValue() {
         return dropValue;
@@ -89,20 +100,20 @@ public class NetworkParameters {
         this.dropCorrelation = dropCorrelation;
     }
 
-    public int getRateValue() {
-        return rateValue;
+    public int getRate() {
+        return rate;
     }
 
-    public void setRateValue(int rateValue) {
-        this.rateValue = rateValue;
+    public void setRate(int rateValue) {
+        this.rate = rateValue;
     }
 
-    public int getLossValue() {
-        return lossValue;
+    public int getLoss() {
+        return loss;
     }
 
-    public void setLossValue(int lossValue) {
-        this.lossValue = lossValue;
+    public void setLoss(int lossValue) {
+        this.loss = lossValue;
     }
 
     public int getReorderingValue() {
@@ -137,20 +148,12 @@ public class NetworkParameters {
         this.duplicationCorrelation = duplicationCorrelation;
     }
 
-    public int getCorruptionValue() {
-        return corruptionValue;
+    public int getCorruption() {
+        return corruption;
     }
 
-    public void setCorruptionValue(int corruptionValue) {
-        this.corruptionValue = corruptionValue;
-    }
-
-    public int getJitterValue() {
-        return jitterValue;
-    }
-
-    public void setJitterValue(int jitterValue) {
-        this.jitterValue = jitterValue;
+    public void setCorruption(int corruptionValue) {
+        this.corruption = corruptionValue;
     }
     
 }
