@@ -7,18 +7,9 @@ repositories {
 }
 
 jar {
-    archiveBaseName.set("NetworkEmulator")
     manifest {
         attributes(
-            'JMeter-Skip-Class-Scanning': 'true',
-            'Manifest-Version': '1.0',
-            'Implementation-Title': 'NetworkEmulator',
-            'Implementation-Version': version,
-            'Bundle-License': 'Apache-2.0',
-            'Specification-Title': 'Apache JMeter',
-            'Specification-Vendor': 'Apache Software Foundation',
-            'Implementation-Vendor': 'Apache Software Foundation',
-            'Implementation-Vendor-Id': 'org.apache'
+            'JMeter-Skip-Class-Scanning': 'true'
         )
     }
 }
