@@ -22,6 +22,8 @@ import org.apache.jmeter.gui.util.JMeterToolBar;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
@@ -29,9 +31,6 @@ import cz.vutbr.networkemulator.linux.CommandOutput;
 import cz.vutbr.networkemulator.linux.CommandRunner;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
