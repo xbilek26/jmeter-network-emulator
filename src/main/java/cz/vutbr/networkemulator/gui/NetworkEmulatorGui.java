@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -18,6 +19,8 @@ import javax.swing.JTextArea;
 
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
+import org.apache.jmeter.gui.action.ActionNames;
+import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.JMeterToolBar;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
@@ -188,10 +191,21 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     @Override
     public JPopupMenu createPopupMenu() {
-        JPopupMenu pop = new JPopupMenu();
-        MenuFactory.addEditMenu(pop, true);
+        JPopupMenu menu = new JPopupMenu();
 
-        return pop;
+        JMenuItem remove = MenuFactory.makeMenuItemRes("remove", ActionNames.REMOVE);
+        remove.setAccelerator(KeyStrokes.REMOVE);
+        menu.add(remove);
+
+        JMenuItem savePicture = MenuFactory.makeMenuItemRes("save_as_image", ActionNames.SAVE_GRAPHICS);
+        savePicture.setAccelerator(KeyStrokes.SAVE_GRAPHICS);
+        menu.add(savePicture);
+
+        JMenuItem savePictureAll = MenuFactory.makeMenuItemRes("save_as_image_all", ActionNames.SAVE_GRAPHICS_ALL);
+        savePictureAll.setAccelerator(KeyStrokes.SAVE_GRAPHICS_ALL);
+        menu.add(savePictureAll);
+
+        return menu;
     }
 
     @Override
