@@ -193,14 +193,26 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public JPopupMenu createPopupMenu() {
         JPopupMenu menu = new JPopupMenu();
 
+        JMenuItem cut = MenuFactory.makeMenuItemRes("cut", ActionNames.CUT);
+        cut.setAccelerator(KeyStrokes.CUT);
+        menu.add(cut);
         JMenuItem remove = MenuFactory.makeMenuItemRes("remove", ActionNames.REMOVE);
         remove.setAccelerator(KeyStrokes.REMOVE);
         menu.add(remove);
 
+        menu.addSeparator();
+
+        menu.add(MenuFactory.makeMenuItemRes("open", ActionNames.OPEN));
+        menu.add(MenuFactory.makeMenuItemRes("menu_merge", ActionNames.MERGE));
+        menu.add(MenuFactory.makeMenuItemRes("save_as", ActionNames.SAVE_AS));
+        menu.add(MenuFactory.makeMenuItemRes("save_as_test_fragment", ActionNames.SAVE_AS_TEST_FRAGMENT));
+
+        menu.addSeparator();
+
+        menu.add(MenuFactory.makeMenuItemRes("copy_code", ActionNames.COPY_CODE));
         JMenuItem savePicture = MenuFactory.makeMenuItemRes("save_as_image", ActionNames.SAVE_GRAPHICS);
         savePicture.setAccelerator(KeyStrokes.SAVE_GRAPHICS);
         menu.add(savePicture);
-
         JMenuItem savePictureAll = MenuFactory.makeMenuItemRes("save_as_image_all", ActionNames.SAVE_GRAPHICS_ALL);
         savePictureAll.setAccelerator(KeyStrokes.SAVE_GRAPHICS_ALL);
         menu.add(savePictureAll);
