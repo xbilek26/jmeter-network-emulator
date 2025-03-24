@@ -45,15 +45,15 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
 
     private void registerAddToTreeListener() {
         ActionRouter.getInstance().addPostActionListener(AddToTree.class, (ActionEvent e) -> {
-            GuiPackage guiPackage = GuiPackage.getInstance();
-            List<JMeterTreeNode> networkEmulatorNodes = guiPackage.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
+            GuiPackage guiPack = GuiPackage.getInstance();
+            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
             if (networkEmulatorNodes.size() > 1) {
-                JMeterTreeNode networkEmulator = guiPackage.getTreeListener().getSelectedNodes()[0];
+                JMeterTreeNode networkEmulator = guiPack.getTreeListener().getSelectedNodes()[0];
                 TestElement testElement = networkEmulator.getTestElement();
                 GuiPackage.getInstance().getTreeModel().removeNodeFromParent(networkEmulator);
                 GuiPackage.getInstance().removeNode(testElement);
                 testElement.removed();
-                guiPackage.updateCurrentGui();
+                guiPack.updateCurrentGui();
                 JOptionPane.showMessageDialog(
                         null,
                         NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
