@@ -2,23 +2,34 @@ package cz.vutbr.networkemulator;
 
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JOptionPane;
-import javax.swing.tree.TreePath;
 
-import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.ActionRouter;
+import org.apache.jmeter.gui.action.AddToTree;
 import org.apache.jmeter.gui.action.Copy;
-import org.apache.jmeter.gui.action.Cut;
+import org.apache.jmeter.gui.action.Duplicate;
 import org.apache.jmeter.gui.action.Paste;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.apache.jmeter.testelement.AbstractTestElement;
+import org.apache.jmeter.testelement.TestElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+
+/**
+ * Represents a Network Emulator test element in JMeter. This class ensures that
+ * only one instance of the Network Emulator exists in the test plan by
+ * listening to add, paste, and duplicate actions. If multiple instances are
+ * detected, the additional ones are removed, and a warning message is
+ * displayed.
+ *
+ * @author Frantisek Bilek (xbilek26)
+ */
 public class NetworkEmulatorTestElement extends AbstractTestElement {
 
     @SuppressWarnings("unused")
@@ -27,72 +38,75 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     private static final String NETWORK_EMULATOR_TEST_ELEMENT_NAME = NetworkEmulatorTestElement.class.getSimpleName();
 
     public NetworkEmulatorTestElement() {
-        // registerCopyListeners();
-        // registerCutListeners();
-        // registerPasteListeners();
+        registerAddToTreeListener();
+        registerDuplicateListener();
+        registerPasteListener();
     }
 
-    private void registerPasteListeners() {
-        AtomicBoolean clipboardContainsNetworkEmulator = new AtomicBoolean();
-
-        ActionRouter.getInstance().addPreActionListener(Paste.class, (ActionEvent e) -> {
-            JMeterTreeNode[] copiedNodesBefore = Copy.getCopiedNodes();
-            JMeterTreeNode[] copiedNodesAfter = Arrays.stream(copiedNodesBefore)
-                    .filter(node -> !node.getTestElement().getClass().getSimpleName().equals(NETWORK_EMULATOR_TEST_ELEMENT_NAME))
-                    .toArray(JMeterTreeNode[]::new);
-
-            clipboardContainsNetworkEmulator.set(copiedNodesBefore.length > copiedNodesAfter.length);
-
-            Copy.setCopiedNodes(copiedNodesAfter);
+    private void registerAddToTreeListener() {
+        ActionRouter.getInstance().addPostActionListener(AddToTree.class, (ActionEvent e) -> {
+            GuiPackage guiPackage = GuiPackage.getInstance();
+            List<JMeterTreeNode> networkEmulatorNodes = guiPackage.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
+            if (networkEmulatorNodes.size() > 1) {
+                JMeterTreeNode networkEmulator = guiPackage.getTreeListener().getSelectedNodes()[0];
+                TestElement testElement = networkEmulator.getTestElement();
+                GuiPackage.getInstance().getTreeModel().removeNodeFromParent(networkEmulator);
+                GuiPackage.getInstance().removeNode(testElement);
+                testElement.removed();
+                guiPackage.updateCurrentGui();
+                JOptionPane.showMessageDialog(
+                        null,
+                        NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
+                        NetworkEmulatorConstants.MSG_GENERAL_ERROR,
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         });
+    }
 
+    private void registerDuplicateListener() {
+        ActionRouter.getInstance().addPostActionListener(Duplicate.class, (ActionEvent e) -> {
+            GuiPackage guiPack = GuiPackage.getInstance();
+            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
+            if (networkEmulatorNodes.size() > 1) {
+                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
+                TestElement testElement = networkEmulator.getTestElement();
+                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+                guiPack.removeNode(testElement);
+                testElement.removed();
+                guiPack.updateCurrentGui();
+                JOptionPane.showMessageDialog(
+                        null,
+                        NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
+                        NetworkEmulatorConstants.MSG_GENERAL_ERROR,
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+    }
+
+    private void registerPasteListener() {
         ActionRouter.getInstance().addPostActionListener(Paste.class, (ActionEvent e) -> {
-            if (clipboardContainsNetworkEmulator.get()) {
-                log.warn("Only one instance of Network Emulator node is allowed in JMeter tree.");
-            }
-        });
-    }
-
-    private void registerCopyListeners() {
-        AtomicBoolean clipboardContainsNetworkEmulator = new AtomicBoolean();
-        ActionRouter.getInstance().addPostActionListener(Copy.class, (ActionEvent e) -> {
-            JMeterTreeNode[] copiedNodesBefore = Copy.getCopiedNodes();
-            JMeterTreeNode[] copiedNodesAfter = Arrays.stream(copiedNodesBefore)
-                    .filter(node -> !node.getTestElement().getClass().getSimpleName().equals(NETWORK_EMULATOR_TEST_ELEMENT_NAME))
-                    .toArray(JMeterTreeNode[]::new);
-
-            clipboardContainsNetworkEmulator.set(copiedNodesBefore.length > copiedNodesAfter.length);
-
-            Copy.setCopiedNodes(copiedNodesAfter);
-
-            if (clipboardContainsNetworkEmulator.get()) {
-                log.warn("Only one instance of Network Emulator node is allowed in JMeter tree.");
-            }
-        });
-    }
-
-    private void registerCutListeners() {
-        ActionRouter.getInstance().addPostActionListener(Cut.class, (ActionEvent e) -> {
-
             JMeterTreeNode[] copiedNodes = Copy.getCopiedNodes();
-
-            Optional<JMeterTreeNode> networkEmulatorNodeOptional = Arrays.stream(copiedNodes)
+            Optional<JMeterTreeNode> networkEmulatorOptional = Arrays.stream(copiedNodes)
                     .filter(node -> node.getTestElement().getClass().getSimpleName().equals(NETWORK_EMULATOR_TEST_ELEMENT_NAME))
                     .findFirst();
-
-            if (networkEmulatorNodeOptional.isPresent()) {
+            if (networkEmulatorOptional.isPresent()) {
                 GuiPackage guiPack = GuiPackage.getInstance();
-                JMeterTreeNode networkEmulatorNode = networkEmulatorNodeOptional.get();
-
-                JMeterTreeNode testPlanNode = (JMeterTreeNode) ((JMeterTreeNode) guiPack.getTreeModel().getRoot()).getChildAt(0);
-
-                try {
-                    JMeterTreeNode node = guiPack.getTreeModel().addComponent(networkEmulatorNode.getTestElement(), testPlanNode);
-                    guiPack.getNamingPolicy().nameOnCreation(node);
-                    guiPack.getMainFrame().getTree().setSelectionPath(new TreePath(node.getPath()));
-                    JOptionPane.showMessageDialog(null, "TODO", "TODO", JOptionPane.ERROR_MESSAGE);
-                } catch (IllegalUserActionException iuae) {
-                    log.error("Illegal user action while adding a tree node.", iuae);
+                List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
+                if (networkEmulatorNodes.size() > 1) {
+                    JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
+                    TestElement testElement = networkEmulator.getTestElement();
+                    guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+                    guiPack.removeNode(testElement);
+                    testElement.removed();
+                    guiPack.updateCurrentGui();
+                    JOptionPane.showMessageDialog(
+                            null,
+                            NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
+                            NetworkEmulatorConstants.MSG_GENERAL_ERROR,
+                            JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
         });
