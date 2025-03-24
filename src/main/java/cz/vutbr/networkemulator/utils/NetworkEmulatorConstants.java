@@ -1,13 +1,15 @@
 package cz.vutbr.networkemulator.utils;
 
 public final class NetworkEmulatorConstants {
+
     public static final String BTN_ADD_TRAFFIC_CLASS = "Add Traffic Class";
     public static final String BTN_REMOVE_TRAFFIC_CLASS = "Remove Traffic Class";
     public static final String BTN_REFRESH_INTERFACES = "Refresh Interfaces";
     public static final String NETWORK_EMULATOR_STATIC_LABEL = "Network Emulator";
     public static final String NETWORK_EMULATOR_LABEL_RESOURCE = "network_emulator";
 
-    public static final String MSG_ERROR = "Error";
+    public static final String MSG_GENERAL_ERROR = "Error";
+    public static final String MSG_ONE_INSTANCE_ALLOWED = "Only one instance of Network Emulator is allowed in JMeter Tree.";
     public static final String MSG_NO_INTERFACE_SELECTED = "No Interface Selected!";
     public static final String MSG_EMULATION_RUNNING = "Emulation is Running.";
     public static final String MSG_EMULATION_STOPPED = "Emulation is stopped.";
