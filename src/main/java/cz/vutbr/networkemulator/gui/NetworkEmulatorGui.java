@@ -32,7 +32,7 @@ import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.linux.CommandOutput;
 import cz.vutbr.networkemulator.linux.CommandRunner;
-import cz.vutbr.networkemulator.model.NetworkEmulator;
+import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
@@ -40,7 +40,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
-    private NetworkEmulator networkEmulator;
+    private NetworkEmulatorModel networkEmulator;
     private NetworkEmulatorController controller;
 
     private ConfigurationPanel configurationPanel;
@@ -50,7 +50,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     public NetworkEmulatorGui() {
         if (networkEmulator == null) {
-            networkEmulator = new NetworkEmulator();
+            networkEmulator = new NetworkEmulatorModel();
         }
 
         if (controller == null) {
@@ -78,8 +78,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private void init() {
         registerIcon();
-        registerDisabledIcon();
-
         setLayout(new BorderLayout(0, 5));
         setBorder(makeBorder());
         add(makeTitlePanel(), BorderLayout.NORTH);
@@ -181,12 +179,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         String iconPath = "/cz/vutbr/networkemulator/images/network_emulator.gif";
         ImageIcon icon = new ImageIcon(NetworkEmulatorGui.class.getResource(iconPath));
         GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
-    }
-
-    public static void registerDisabledIcon() {
-        String iconPath = "/cz/vutbr/networkemulator/images/network_emulator_disabled.gif";
-        ImageIcon icon = new ImageIcon(NetworkEmulatorGui.class.getResource(iconPath));
-        GUIFactory.registerDisabledIcon(NetworkEmulatorGui.class.getName(), icon);
     }
 
     @Override
