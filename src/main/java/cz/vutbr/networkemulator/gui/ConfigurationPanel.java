@@ -117,6 +117,7 @@ public class ConfigurationPanel extends JPanel {
                 .map(DefaultMutableTreeNode::new)
                 .forEach(rootNode::add);
         treeModel.reload();
+        jTree.setSelectionPath(new TreePath(rootNode));
     }
 
     private void addTrafficClass() {
