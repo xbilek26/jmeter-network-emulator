@@ -1,16 +1,13 @@
 package cz.vutbr.networkemulator;
 
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.AddToTree;
-import org.apache.jmeter.gui.action.Copy;
 import org.apache.jmeter.gui.action.Duplicate;
 import org.apache.jmeter.gui.action.Paste;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
@@ -35,8 +32,6 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorTestElement.class);
 
-    private static final String NETWORK_EMULATOR_TEST_ELEMENT_NAME = NetworkEmulatorTestElement.class.getSimpleName();
-
     public NetworkEmulatorTestElement() {
         registerAddToTreeListener();
         registerDuplicateListener();
@@ -48,10 +43,10 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
             GuiPackage guiPack = GuiPackage.getInstance();
             List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
             if (networkEmulatorNodes.size() > 1) {
-                JMeterTreeNode networkEmulator = guiPack.getTreeListener().getSelectedNodes()[0];
+                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
                 TestElement testElement = networkEmulator.getTestElement();
-                GuiPackage.getInstance().getTreeModel().removeNodeFromParent(networkEmulator);
-                GuiPackage.getInstance().removeNode(testElement);
+                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+                guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
                 JOptionPane.showMessageDialog(
@@ -87,27 +82,21 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
 
     private void registerPasteListener() {
         ActionRouter.getInstance().addPostActionListener(Paste.class, (ActionEvent e) -> {
-            JMeterTreeNode[] copiedNodes = Copy.getCopiedNodes();
-            Optional<JMeterTreeNode> networkEmulatorOptional = Arrays.stream(copiedNodes)
-                    .filter(node -> node.getTestElement().getClass().getSimpleName().equals(NETWORK_EMULATOR_TEST_ELEMENT_NAME))
-                    .findFirst();
-            if (networkEmulatorOptional.isPresent()) {
-                GuiPackage guiPack = GuiPackage.getInstance();
-                List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
-                if (networkEmulatorNodes.size() > 1) {
-                    JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
-                    TestElement testElement = networkEmulator.getTestElement();
-                    guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
-                    guiPack.removeNode(testElement);
-                    testElement.removed();
-                    guiPack.updateCurrentGui();
-                    JOptionPane.showMessageDialog(
-                            null,
-                            NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
-                            NetworkEmulatorConstants.MSG_GENERAL_ERROR,
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
+            GuiPackage guiPack = GuiPackage.getInstance();
+            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
+            if (networkEmulatorNodes.size() > 1) {
+                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
+                TestElement testElement = networkEmulator.getTestElement();
+                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+                guiPack.removeNode(testElement);
+                testElement.removed();
+                guiPack.updateCurrentGui();
+                JOptionPane.showMessageDialog(
+                        null,
+                        NetworkEmulatorConstants.MSG_ONE_INSTANCE_ALLOWED,
+                        NetworkEmulatorConstants.MSG_GENERAL_ERROR,
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         });
     }
