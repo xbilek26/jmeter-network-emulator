@@ -3,6 +3,11 @@ package cz.vutbr.networkemulator.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents network parameters that can be used for network emulation.
+ *
+ * @author Frantisek Bilek (xbilek26)
+ */
 public class NetworkParameters {
 
     @SuppressWarnings("unused")
@@ -83,7 +88,6 @@ public class NetworkParameters {
     }
 
     // TODO: Distribution
-
     public int getDropValue() {
         return dropValue;
     }
@@ -155,5 +159,5 @@ public class NetworkParameters {
     public void setCorruption(int corruptionValue) {
         this.corruption = corruptionValue;
     }
-    
+
 }
