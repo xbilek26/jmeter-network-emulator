@@ -1,86 +1,114 @@
 package cz.vutbr.networkemulator.controller;
 
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import cz.vutbr.networkemulator.model.NetworkEmulator;
-import cz.vutbr.networkemulator.model.NetworkInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
+import cz.vutbr.networkemulator.model.NetworkInterfaceModel;
 import cz.vutbr.networkemulator.model.NetworkParameters;
-import cz.vutbr.networkemulator.model.TrafficClass;
+import cz.vutbr.networkemulator.model.TrafficClassModel;
 
 public class NetworkEmulatorController {
 
-    private final NetworkEmulator networkEmulator;
+    @SuppressWarnings("unused")
+    private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorController.class);
 
-    public NetworkEmulatorController(NetworkEmulator networkEmulator) {
+    private final NetworkEmulatorModel networkEmulator;
+
+    public NetworkEmulatorController(NetworkEmulatorModel networkEmulator) {
         this.networkEmulator = networkEmulator;
     }
 
     public void refreshInterfaces() {
         networkEmulator.clearNetworkInterfaces();
-        networkEmulator.addNetworkInterface("ens33");
-        networkEmulator.addNetworkInterface("eth0");
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+                String networkInterfaceName = networkInterface.getName();
+
+                if (!networkInterfaceName.equals("lo")) {
+                    networkEmulator.addNetworkInterface(networkInterfaceName);
+                }
+
+            }
+        } catch (SocketException ex) {
+        }
     }
 
-    public NetworkEmulator getNetworkEmulator() {
+    public NetworkEmulatorModel getNetworkEmulator() {
         return networkEmulator;
     }
 
-    public void addNetworkInterface(String name) {
-        if (networkEmulator.getNetworkInterfaces().stream().noneMatch(ni -> ni.getName().equals(name))) {
-            networkEmulator.addNetworkInterface(name);
+    public void addNetworkInterface(String niName) {
+        if (networkEmulator.getNetworkInterfaces().stream().noneMatch(ni -> ni.getName().equals(niName))) {
+            networkEmulator.addNetworkInterface(niName);
         }
     }
 
-    public void removeNetworkInterface(String name) {
-        if (networkEmulator.getNetworkInterfaces().stream().anyMatch(ni -> ni.getName().equals(name))) {
-            networkEmulator.removeNetworkInterface(name);
+    public void removeNetworkInterface(String niName) {
+        if (networkEmulator.getNetworkInterfaces().stream().anyMatch(ni -> ni.getName().equals(niName))) {
+            networkEmulator.removeNetworkInterface(niName);
         }
     }
 
-    public void addTrafficClassToInterface(String interfaceName, String className) {
-        Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
-                .stream()
-                .filter(ni -> ni.getName().equals(interfaceName))
-                .findFirst();
-
-        networkInterface.ifPresent(ni -> ni.addTrafficClass(className));
+    public List<String> getNetworkInterfaces() {
+        return networkEmulator.getNetworkInterfaces().stream()
+                .map(NetworkInterfaceModel::getName)
+                .collect(Collectors.toList());
     }
 
-    public void removeTrafficClassFromInterface(String interfaceName, String className) {
-        Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
+    public void addTrafficClassToInterface(String niName, String tcName) {
+        Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
-                .filter(ni -> ni.getName().equals(interfaceName))
+                .filter(ni -> ni.getName().equals(niName))
                 .findFirst();
 
-        networkInterface.ifPresent(ni -> ni.removeTrafficClass(className));
+        networkInterface.ifPresent(ni -> ni.addTrafficClass(tcName));
     }
 
-    public void setNetworkParameters(String interfaceName, String className, NetworkParameters networkParameters) {
+    public void removeTrafficClassFromInterface(String niName, String tcName) {
+        Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
+                .stream()
+                .filter(ni -> ni.getName().equals(niName))
+                .findFirst();
+
+        networkInterface.ifPresent(ni -> ni.removeTrafficClass(tcName));
+    }
+
+    public void setNetworkParameters(String niName, String tcName, NetworkParameters networkParameters) {
         networkEmulator.getNetworkInterfaces().stream()
-                .filter(ni -> ni.getName().equals(interfaceName))
+                .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(className))
+                .filter(tc -> tc.getName().equals(tcName))
                 .findFirst()
                 .ifPresent(tc -> tc.setNetworkParameters(networkParameters));
     }
 
-    public NetworkParameters getNetworkParameters(String interfaceName, String className) {
+    public NetworkParameters getNetworkParameters(String niName, String tcName) {
         return networkEmulator.getNetworkInterfaces().stream()
-                .filter(ni -> ni.getName().equals(interfaceName))
+                .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(className))
+                .filter(tc -> tc.getName().equals(tcName))
                 .findFirst()
-                .map(TrafficClass::getNetworkParameters)
+                .map(TrafficClassModel::getNetworkParameters)
                 .orElse(null);
     }
 
     public void printNetworkConfiguration() {
         networkEmulator.getNetworkInterfaces().forEach(networkInterface -> {
             System.out.println("Interface: " + networkInterface.getName());
-            
+
             networkInterface.getTrafficClasses().forEach(trafficClass -> {
                 System.out.println("  Traffic Class: " + trafficClass.getName());
-                
+
                 NetworkParameters parameters = trafficClass.getNetworkParameters();
                 if (parameters != null) {
                     System.out.println("    Parameters:");
@@ -106,7 +134,6 @@ public class NetworkEmulatorController {
             });
         });
     }
-    
 
     public void runEmulation() {
     }
