@@ -29,13 +29,13 @@ public class NetworkEmulatorController {
     public void refreshInterfaces() {
         networkEmulator.clearNetworkInterfaces();
         try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-                String networkInterfaceName = networkInterface.getName();
+            Enumeration<NetworkInterface> phyNetworkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (phyNetworkInterfaces.hasMoreElements()) {
+                NetworkInterface phyNetworkInterface = phyNetworkInterfaces.nextElement();
+                String phyNetworkInterfaceName = phyNetworkInterface.getName();
 
-                if (!networkInterfaceName.equals("lo")) {
-                    networkEmulator.addNetworkInterface(networkInterfaceName);
+                if (!phyNetworkInterfaceName.equals("lo")) {
+                    addNetworkInterface(phyNetworkInterfaceName);
                 }
 
             }
