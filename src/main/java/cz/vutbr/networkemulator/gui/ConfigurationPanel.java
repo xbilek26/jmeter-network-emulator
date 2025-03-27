@@ -133,7 +133,8 @@ public class ConfigurationPanel extends JPanel {
         Set<String> phyNetworkInterfaces = controller.getNetworkInterfaces();
         for (String niName : phyNetworkInterfaces) {
             if (!currentNetworkInterfaces.contains(niName)) {
-                ConfigTreeNode niNode = new ConfigTreeNode(networkInterfacePanel);
+                ConfigTreeNode niNode = new ConfigTreeNode();
+                niNode.setUserObject(networkInterfacePanel);
                 niNode.setName(niName);
                 rootNode.add(niNode);
             }
@@ -158,7 +159,8 @@ public class ConfigurationPanel extends JPanel {
         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
         rightPanel.add(tcPanel, tcPanel.getName());
 
-        ConfigTreeNode tcNode = new ConfigTreeNode(tcPanel, false);
+        ConfigTreeNode tcNode = new ConfigTreeNode(false);
+        tcNode.setUserObject(tcPanel);
         tcNode.setName(tcName);
         niNode.add(tcNode);
 
@@ -257,7 +259,8 @@ public class ConfigurationPanel extends JPanel {
         if (niNamesProp instanceof CollectionProperty niNames) {
             for (int i = 0; i < niNames.size(); i++) {
                 String niName = niNames.get(i).getStringValue();
-                ConfigTreeNode niNode = new ConfigTreeNode(networkInterfacePanel);
+                ConfigTreeNode niNode = new ConfigTreeNode();
+                niNode.setUserObject(networkInterfacePanel);
                 niNode.setName(niName);
                 rootNode.add(niNode);
 
@@ -266,10 +269,11 @@ public class ConfigurationPanel extends JPanel {
                     for (int j = 0; j < tcNames.size(); j++) {
                         String tcName = tcNames.get(j).getStringValue();
                         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
-                        ConfigTreeNode tcNode = new ConfigTreeNode(tcPanel, false);
+                        rightPanel.add(tcPanel, tcPanel.getName());
+                        ConfigTreeNode tcNode = new ConfigTreeNode(false);
+                        tcNode.setUserObject(tcPanel);
                         tcNode.setName(tcName);
                         niNode.add(tcNode);
-                        rightPanel.add(tcPanel, tcPanel.getName());
 
                         JMeterProperty parametersProp = te.getProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
                         if (parametersProp instanceof CollectionProperty parameters) {

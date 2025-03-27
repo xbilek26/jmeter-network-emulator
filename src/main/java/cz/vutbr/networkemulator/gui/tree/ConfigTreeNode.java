@@ -14,6 +14,10 @@ public class ConfigTreeNode extends DefaultMutableTreeNode {
         super(userObject, true);
     }
 
+    public ConfigTreeNode(boolean allowsChildren) {
+        super(null, allowsChildren);
+    }
+
     public ConfigTreeNode() {
         super();
     }
