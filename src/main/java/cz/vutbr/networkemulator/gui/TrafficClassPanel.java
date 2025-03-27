@@ -42,7 +42,8 @@ public class TrafficClassPanel extends JPanel {
     private JTextField duplicationCorrelationField;
     private JTextField corruptionField;
 
-    public TrafficClassPanel() {
+    public TrafficClassPanel(String niName, String tcName) {
+        setName(niName + "_" + tcName);
         init();
     }
 
