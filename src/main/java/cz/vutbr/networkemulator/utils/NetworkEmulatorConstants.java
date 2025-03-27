@@ -49,6 +49,10 @@ public final class NetworkEmulatorConstants {
     public static final String LABEL_DUPLICATION_CORRELATION = "Correlation (%):";
     public static final String LABEL_CORRUPTION = "Corruption (%):";
 
+    public static final String PROPERTY_NETWORK_PARAMETERS = "networkParameters_";
+    public static final String PROPERTY_TRAFFIC_CLASSES = "trafficClasses_";
+    public static final String PROPERTY_NETWORK_INTERFACES= "networkInterfaces";
+
     private NetworkEmulatorConstants() {
     }
 }
