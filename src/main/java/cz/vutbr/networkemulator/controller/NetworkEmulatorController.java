@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -22,8 +23,16 @@ public class NetworkEmulatorController {
 
     private final NetworkEmulatorModel networkEmulator;
 
-    public NetworkEmulatorController(NetworkEmulatorModel networkEmulator) {
+    private static class SingletonHolder {
+        private static final NetworkEmulatorController INSTANCE = new NetworkEmulatorController(new NetworkEmulatorModel());
+    }
+
+    private NetworkEmulatorController(NetworkEmulatorModel networkEmulator) {
         this.networkEmulator = networkEmulator;
+    }
+
+    public static NetworkEmulatorController getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     public void refreshInterfaces() {
@@ -59,10 +68,10 @@ public class NetworkEmulatorController {
         }
     }
 
-    public List<String> getNetworkInterfaces() {
+    public Set<String> getNetworkInterfaces() {
         return networkEmulator.getNetworkInterfaces().stream()
                 .map(NetworkInterfaceModel::getName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public void addTrafficClassToInterface(String niName, String tcName) {
@@ -81,6 +90,14 @@ public class NetworkEmulatorController {
                 .findFirst();
 
         networkInterface.ifPresent(ni -> ni.removeTrafficClass(tcName));
+    }
+
+    public List<String> getTrafficClasses(String niName) {
+        return networkEmulator.getNetworkInterfaces().stream()
+                .filter(ni -> ni.getName().equals(niName))
+                .flatMap(ni -> ni.getTrafficClasses().stream())
+                .map(TrafficClassModel::getName)
+                .collect(Collectors.toList());
     }
 
     public void setNetworkParameters(String niName, String tcName, NetworkParameters networkParameters) {
