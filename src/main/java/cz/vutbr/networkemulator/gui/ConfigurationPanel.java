@@ -5,9 +5,9 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
+import cz.vutbr.networkemulator.gui.tree.TreeNodeRenderer;
 import cz.vutbr.networkemulator.model.NetworkParameters;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
@@ -36,18 +38,31 @@ public class ConfigurationPanel extends JPanel {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(ConfigurationPanel.class);
 
-    private DefaultMutableTreeNode rootNode;
+    private final String PROPERTY_NETWORK_INTERFACES = "network_interfaces";
+    private final String PROPERTY_TRAFFIC_CLASSES = "traffic_classes_";
+    private final String PROPERTY_NETWORK_PARAMETERS = "network_parameters_";
+
+    private final String BTN_REFRESH = "refresh";
+    private final String BTN_ADD = "add";
+    private final String BTN_REMOVE = "remove";
+
+    private final String DEFAULT_ROOT_PANEL = "default_root_panel";
+    private final String NETWORK_INTERFACE_PANEL = "network_interface_panel";
+
+    private ConfigTreeNode rootNode;
     private DefaultTreeModel treeModel;
-    private JTree jTree;
+    private JTree tree;
 
     private JPanel buttonPanel;
     private JPanel rightPanel;
-    private final Map<String, TrafficClassPanel> tcPanels = new HashMap<>();
+
+    private DefaultRootPanel defaultRootPanel;
+    private NetworkInterfacePanel networkInterfacePanel;
 
     private final NetworkEmulatorController controller;
 
-    public ConfigurationPanel(NetworkEmulatorController controller) {
-        this.controller = controller;
+    public ConfigurationPanel() {
+        controller = NetworkEmulatorController.getInstance();
         init();
     }
 
@@ -63,30 +78,29 @@ public class ConfigurationPanel extends JPanel {
     }
 
     private JPanel createLeftPanel() {
-        rootNode = new DefaultMutableTreeNode(NetworkEmulatorConstants.ROOT_NODE_NAME);
+        rootNode = new ConfigTreeNode();
+        rootNode.setName(NetworkEmulatorConstants.ROOT_NODE_NAME);
         treeModel = new DefaultTreeModel(rootNode);
-        jTree = new JTree(treeModel);
-        jTree.setRootVisible(true);
-        jTree.setShowsRootHandles(true);
-        jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        jTree.setCellRenderer(new TreeNodeRenderer());
-        jTree.addTreeSelectionListener(e -> updateRightPanel());
-        jTree.addTreeSelectionListener(e -> updateButtonPanel());
+        tree = new JTree(treeModel);
+        tree.setRootVisible(true);
+        tree.setShowsRootHandles(true);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.setCellRenderer(new TreeNodeRenderer());
+        tree.addTreeSelectionListener(this::updateView);
 
-        JButton btnRefreshNetworkInterfaces = new JButton(NetworkEmulatorConstants.BTN_REFRESH_INTERFACES);
-        btnRefreshNetworkInterfaces.addActionListener(e -> refreshInterfaces());
-        JButton btnAddTrafficClass = new JButton(NetworkEmulatorConstants.BTN_ADD_TRAFFIC_CLASS);
-        btnAddTrafficClass.addActionListener(e -> addTrafficClass());
-        JButton btnRemoveTrafficClass = new JButton(NetworkEmulatorConstants.BTN_REMOVE_TRAFFIC_CLASS);
-        btnRemoveTrafficClass.addActionListener(e -> removeTrafficClass());
+        JButton btnRefresh = new JButton(NetworkEmulatorConstants.BTN_REFRESH_INTERFACES);
+        btnRefresh.addActionListener(_ -> refreshInterfaces());
+        JButton btnAdd = new JButton(NetworkEmulatorConstants.BTN_ADD_TRAFFIC_CLASS);
+        btnAdd.addActionListener(_ -> addTrafficClass());
+        JButton btnRemove = new JButton(NetworkEmulatorConstants.BTN_REMOVE_TRAFFIC_CLASS);
+        btnRemove.addActionListener(_ -> removeTrafficClass());
 
         buttonPanel = new JPanel(new CardLayout());
-        buttonPanel.add(btnRefreshNetworkInterfaces, "refresh");
-        buttonPanel.add(btnAddTrafficClass, "add");
-        buttonPanel.add(btnRemoveTrafficClass, "remove");
-        updateButtonPanel();
+        buttonPanel.add(btnRefresh, BTN_REFRESH);
+        buttonPanel.add(btnAdd, BTN_ADD);
+        buttonPanel.add(btnRemove, BTN_REMOVE);
 
-        JScrollPane treeScrollPane = new JScrollPane(jTree);
+        JScrollPane treeScrollPane = new JScrollPane(tree);
         treeScrollPane.setPreferredSize(new Dimension(150, 0));
 
         JPanel leftPanel = new JPanel(new BorderLayout());
@@ -99,214 +113,191 @@ public class ConfigurationPanel extends JPanel {
     private JPanel createRightPanel() {
         rightPanel = new JPanel(new CardLayout());
 
-        NetworkInterfaceStatePanel networkInterfaceStatePanel = new NetworkInterfaceStatePanel();
+        defaultRootPanel = new DefaultRootPanel();
+        rootNode.setUserObject(defaultRootPanel);
+        rightPanel.add(defaultRootPanel, DEFAULT_ROOT_PANEL);
 
-        rightPanel.add(networkInterfaceStatePanel, "network_interface_state");
-        rightPanel.add(new JPanel(), "default_empty");
-        updateRightPanel();
-
+        networkInterfacePanel = new NetworkInterfacePanel();
+        rightPanel.add(networkInterfacePanel, NETWORK_INTERFACE_PANEL);
         return rightPanel;
     }
 
     private void refreshInterfaces() {
-        controller.refreshInterfaces();
-        rootNode.removeAllChildren();
+        Set<String> currentNetworkInterfaces = new HashSet<>();
+        for (int i = 0; i < rootNode.getChildCount(); i++) {
+            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            currentNetworkInterfaces.add(niNode.getName());
+        }
 
-        List<String> networkInterfaces = controller.getNetworkInterfaces();
-        networkInterfaces.stream()
-                .map(DefaultMutableTreeNode::new)
-                .forEach(rootNode::add);
+        controller.refreshInterfaces();
+        Set<String> phyNetworkInterfaces = controller.getNetworkInterfaces();
+        for (String niName : phyNetworkInterfaces) {
+            if (!currentNetworkInterfaces.contains(niName)) {
+                ConfigTreeNode niNode = new ConfigTreeNode(networkInterfacePanel);
+                niNode.setName(niName);
+                rootNode.add(niNode);
+            }
+        }
         treeModel.reload();
-        jTree.setSelectionPath(new TreePath(rootNode));
+        tree.setSelectionPath(new TreePath(rootNode));
     }
 
     private void addTrafficClass() {
-        Enumeration<TreePath> expandedEnum = jTree.getExpandedDescendants(new TreePath(jTree.getModel().getRoot()));
+        Enumeration<TreePath> expandedEnum = tree.getExpandedDescendants(new TreePath(rootNode));
         List<TreePath> expandedPaths = Collections.list(expandedEnum);
 
-        TreePath path = jTree.getSelectionPath();
+        TreePath path = tree.getSelectionPath();
         if (path == null) {
             return;
         }
 
-        DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-        String interfaceName = interfaceNode.toString();
-        String tcName = String.format("1:%s", interfaceNode.getChildCount() + 1);
-    
-        TrafficClassPanel tcPanel = new TrafficClassPanel();
-        String tcPanelName = String.format("tc_%s_%s", interfaceName, tcName);
-        rightPanel.add(tcPanel, tcPanelName);
-        tcPanels.put(tcPanelName, tcPanel);
+        ConfigTreeNode niNode = (ConfigTreeNode) path.getLastPathComponent();
+        String niName = niNode.getName();
+        String tcName = String.format("1:%s", niNode.getChildCount() + 1);
 
-        DefaultMutableTreeNode tcNode = new DefaultMutableTreeNode(tcName);
-        interfaceNode.add(tcNode);
+        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
+        rightPanel.add(tcPanel, tcPanel.getName());
+
+        ConfigTreeNode tcNode = new ConfigTreeNode(tcPanel, false);
+        tcNode.setName(tcName);
+        niNode.add(tcNode);
 
         treeModel.reload();
-        expandedPaths.stream().forEach(jTree::expandPath);
-        jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNode)));
+        expandedPaths.stream().forEach(tree::expandPath);
+        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNode)));
     }
 
     private void removeTrafficClass() {
-        Enumeration<TreePath> expandedEnum = jTree.getExpandedDescendants(new TreePath(jTree.getModel().getRoot()));
+        Enumeration<TreePath> expandedEnum = tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()));
         List<TreePath> expandedPaths = Collections.list(expandedEnum);
 
-        TreePath path = jTree.getSelectionPath();
+        TreePath path = tree.getSelectionPath();
         if (path == null) {
             return;
         }
 
-        DefaultMutableTreeNode tcNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-        DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode) tcNode.getParent();
-        DefaultMutableTreeNode tcNodePrevious = tcNode.getPreviousNode();
+        ConfigTreeNode tcNode = (ConfigTreeNode) path.getLastPathComponent();
+        ConfigTreeNode niNode = (ConfigTreeNode) tcNode.getParent();
+        ConfigTreeNode tcNodePrev = (ConfigTreeNode) tcNode.getPreviousNode();
 
-        interfaceNode.remove(tcNode);
+        niNode.remove(tcNode);
 
-        String interfaceName = interfaceNode.toString();
-        String tcName = tcNode.toString();
-        String tcPanelName = String.format("tc_%s_%s", interfaceName, tcName);
-
-        TrafficClassPanel panelToRemove = tcPanels.get(tcPanelName);
-        if (panelToRemove != null) {
-            rightPanel.remove(panelToRemove);
-            tcPanels.remove(tcPanelName);
-        }
-
+        TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+        rightPanel.remove(tcPanel);
         rightPanel.revalidate();
         rightPanel.repaint();
 
         treeModel.reload();
-        expandedPaths.stream().forEach(jTree::expandPath);
-        jTree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNodePrevious)));
+        expandedPaths.stream().forEach(tree::expandPath);
+        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNodePrev)));
     }
 
-    private void updateButtonPanel() {
-        CardLayout cardLayout = (CardLayout) buttonPanel.getLayout();
-        TreePath path = jTree.getSelectionPath();
+    private void updateView(TreeSelectionEvent tse) {
+        CardLayout buttonPanelCards = (CardLayout) buttonPanel.getLayout();
+        CardLayout rightPanelCards = (CardLayout) rightPanel.getLayout();
 
+        TreePath path = tse.getNewLeadSelectionPath();
         if (path == null) {
-            cardLayout.show(buttonPanel, "refresh");
             return;
         }
 
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-        if (selectedNode.getParent() == rootNode) {
-            cardLayout.show(buttonPanel, "add");
-        } else if (selectedNode.getParent() == null) {
-            cardLayout.show(buttonPanel, "refresh");
-        } else {
-            cardLayout.show(buttonPanel, "remove");
+        Object object = ((ConfigTreeNode) path.getLastPathComponent()).getUserObject();
+        String name = ((ConfigTreeNode) path.getLastPathComponent()).getName();
+
+        switch (object) {
+            case DefaultRootPanel rootPanel -> {
+                buttonPanelCards.show(buttonPanel, BTN_REFRESH);
+                rootPanel.update();
+                rightPanelCards.show(rightPanel, DEFAULT_ROOT_PANEL);
+            }
+            case NetworkInterfacePanel niPanel -> {
+                buttonPanelCards.show(buttonPanel, BTN_ADD);
+                niPanel.update(name);
+                rightPanelCards.show(rightPanel, NETWORK_INTERFACE_PANEL);
+            }
+            case TrafficClassPanel tcPanel -> {
+                buttonPanelCards.show(buttonPanel, BTN_REMOVE);
+                rightPanelCards.show(rightPanel, tcPanel.getName());
+            }
+            default -> {
+            }
         }
     }
 
-    private void updateRightPanel() {
-        CardLayout cardLayout = (CardLayout) rightPanel.getLayout();
-        TreePath path = jTree.getSelectionPath();
-
-        if (path == null) {
-            cardLayout.show(rightPanel, "default_empty");
-            return;
-        }
-
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-        if (selectedNode == rootNode) {
-            cardLayout.show(rightPanel, "default_empty");
-        } else if (selectedNode.getParent() == rootNode) {
-            cardLayout.show(rightPanel, "network_interface_state");
-        } else {
-            DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode) selectedNode.getParent();
-            String networkInterfaceName = interfaceNode.getUserObject().toString();
-            String tcName = selectedNode.getUserObject().toString();
-
-            String tcPanelName = String.format("tc_%s_%s", networkInterfaceName, tcName);
-            cardLayout.show(rightPanel, tcPanelName);
-        }
-    }
-
-    public void modifyTestElement(TestElement testElement) {
+    public void modifyTestElement(TestElement te) {
+        CollectionProperty niNames = new CollectionProperty();
+        niNames.setName(PROPERTY_NETWORK_INTERFACES);
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
-            String interfaceName = interfaceNode.getUserObject().toString();
-            testElement.setProperty("interface_" + i, interfaceName);
+            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            String niName = niNode.getName();
+            niNames.addItem(niName);
 
-            StringBuilder tcNames = new StringBuilder();
-            for (int j = 0; j < interfaceNode.getChildCount(); j++) {
-                DefaultMutableTreeNode tcNode = (DefaultMutableTreeNode) interfaceNode.getChildAt(j);
-                String tcName = tcNode.getUserObject().toString();
-                tcNames.append(tcName).append(",");
-
-                String tcPanelName = String.format("tc_%s_%s", interfaceName, tcName);
-                TrafficClassPanel tcPanel = tcPanels.get(tcPanelName);
+            CollectionProperty tcNames = new CollectionProperty();
+            tcNames.setName(PROPERTY_TRAFFIC_CLASSES + niNode.getName());
+            for (int j = 0; j < niNode.getChildCount(); j++) {
+                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
+                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+                String tcName = tcNode.getName();
+                tcNames.addItem(tcName);
 
                 CollectionProperty parameters = tcPanel.getNetworkParameters();
-                parameters.setName(tcPanelName);
-                testElement.setProperty(parameters);
+                parameters.setName(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
+                te.setProperty(parameters);
             }
-            testElement.setProperty("classes_" + i, tcNames.toString());
+            te.setProperty(tcNames);
         }
+        te.setProperty(niNames);
     }
 
-    public void configure(TestElement testElement) {
+    public void configure(TestElement te) {
         rootNode.removeAllChildren();
-        tcPanels.clear();
         rightPanel.removeAll();
 
-        int interfaceIndex = 0;
-        while (true) {
-            String niName = testElement.getPropertyAsString("interface_" + interfaceIndex);
-            if (niName.isEmpty()) {
-                break;
-            }
+        JMeterProperty niNamesProp = te.getProperty(PROPERTY_NETWORK_INTERFACES);
+        if (niNamesProp instanceof CollectionProperty niNames) {
+            for (int i = 0; i < niNames.size(); i++) {
+                String niName = niNames.get(i).getStringValue();
+                ConfigTreeNode niNode = new ConfigTreeNode(networkInterfacePanel);
+                niNode.setName(niName);
+                rootNode.add(niNode);
 
-            DefaultMutableTreeNode niNode = new DefaultMutableTreeNode(niName);
-            rootNode.add(niNode);
+                JMeterProperty tcNamesProp = te.getProperty(PROPERTY_TRAFFIC_CLASSES + niName);
+                if (tcNamesProp instanceof CollectionProperty tcNames) {
+                    for (int j = 0; j < tcNames.size(); j++) {
+                        String tcName = tcNames.get(j).getStringValue();
+                        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
+                        ConfigTreeNode tcNode = new ConfigTreeNode(tcPanel, false);
+                        tcNode.setName(tcName);
+                        niNode.add(tcNode);
+                        rightPanel.add(tcPanel, tcPanel.getName());
 
-            String trafficClasses = testElement.getPropertyAsString("classes_" + interfaceIndex);
-            if (!trafficClasses.isEmpty()) {
-                String[] tcNames = trafficClasses.split(",");
-                for (String tcName : tcNames) {
-
-                    DefaultMutableTreeNode tcNode = new DefaultMutableTreeNode(tcName);
-                    niNode.add(tcNode);
-
-                    String tcPanelName = String.format("tc_%s_%s", niName, tcName);
-                    TrafficClassPanel tcPanel = tcPanels.computeIfAbsent(tcPanelName,
-                            key -> new TrafficClassPanel());
-
-                    JMeterProperty parameters = testElement.getProperty(tcPanelName);
-                    if (parameters instanceof CollectionProperty collectionProperty) {
-                        tcPanel.setNetworkParameters(collectionProperty);
-                    } else {
-                        tcPanel.setNetworkParameters(new CollectionProperty());
+                        JMeterProperty parametersProp = te.getProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
+                        if (parametersProp instanceof CollectionProperty parameters) {
+                            tcPanel.setNetworkParameters(parameters);
+                        }
                     }
-
-                    rightPanel.add(tcPanel, tcPanelName);
                 }
             }
-
-            interfaceIndex++;
         }
-
-        rightPanel.add(new NetworkInterfaceStatePanel(), "network_interface_state");
-        rightPanel.add(new JPanel(), "default_empty");
-
+        rightPanel.add(defaultRootPanel, DEFAULT_ROOT_PANEL);
+        rightPanel.add(networkInterfacePanel, NETWORK_INTERFACE_PANEL);
         treeModel.reload();
+        tree.setSelectionPath(new TreePath(rootNode));
     }
 
-    public void collectAndApplySettings() {
+    public void collectSettings() {
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            DefaultMutableTreeNode niNode = (DefaultMutableTreeNode) rootNode.getChildAt(i);
-            String niName = niNode.getUserObject().toString();
+            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            String niName = niNode.getName();
             controller.addNetworkInterface(niName);
 
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                DefaultMutableTreeNode tcNode = (DefaultMutableTreeNode) niNode.getChildAt(j);
-                String tcName = tcNode.getUserObject().toString();
+                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
+                String tcName = tcNode.getName();
 
                 controller.addTrafficClassToInterface(niName, tcName);
 
-                String tcPanelName = String.format("tc_%s_%s", niName, tcName);
-                TrafficClassPanel tcPanel = tcPanels.get(tcPanelName);
-
+                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
                 CollectionProperty propertyParameters = tcPanel.getNetworkParameters();
                 NetworkParameters networkParameters = NetworkEmulatorConverter.convertToNetworkParameters(propertyParameters);
                 controller.setNetworkParameters(niName, tcName, networkParameters);
