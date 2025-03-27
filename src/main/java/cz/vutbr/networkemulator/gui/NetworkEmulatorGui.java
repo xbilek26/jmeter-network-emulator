@@ -32,7 +32,6 @@ import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.linux.CommandOutput;
 import cz.vutbr.networkemulator.linux.CommandRunner;
-import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
@@ -40,8 +39,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
-    private NetworkEmulatorModel networkEmulator;
-    private NetworkEmulatorController controller;
+    private final NetworkEmulatorController controller;
 
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
@@ -49,13 +47,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JLabel lblEmulatorState;
 
     public NetworkEmulatorGui() {
-        if (networkEmulator == null) {
-            networkEmulator = new NetworkEmulatorModel();
-        }
-
-        if (controller == null) {
-            controller = new NetworkEmulatorController(networkEmulator);
-        }
+        controller = NetworkEmulatorController.getInstance();
         init();
     }
 
@@ -96,12 +88,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private ConfigurationPanel createConfigurationPanel() {
-        configurationPanel = new ConfigurationPanel(controller);
+        configurationPanel = new ConfigurationPanel();
         return configurationPanel;
     }
 
     private void startEmulation() {
-        configurationPanel.collectAndApplySettings();
+        configurationPanel.collectSettings();
         controller.runEmulation();
         controller.printNetworkConfiguration();
 
