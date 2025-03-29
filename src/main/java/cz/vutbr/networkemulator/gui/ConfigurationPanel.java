@@ -90,7 +90,7 @@ public class ConfigurationPanel extends JPanel {
         tree.addTreeSelectionListener(this::updateView);
 
         JButton btnRefresh = new JButton(NetworkEmulatorConstants.BTN_REFRESH_INTERFACES);
-        btnRefresh.addActionListener(_ -> refreshInterfaces());
+        btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
         JButton btnAdd = new JButton(NetworkEmulatorConstants.BTN_ADD_TRAFFIC_CLASS);
         btnAdd.addActionListener(_ -> addTrafficClass());
         JButton btnRemove = new JButton(NetworkEmulatorConstants.BTN_REMOVE_TRAFFIC_CLASS);
@@ -122,7 +122,7 @@ public class ConfigurationPanel extends JPanel {
         return rightPanel;
     }
 
-    private void refreshInterfaces() {
+    private void refreshNetworkInterfaces() {
         Set<String> currentNetworkInterfaces = new HashSet<>();
         List<ConfigTreeNode> nodesToRemove = new ArrayList<>();
 
