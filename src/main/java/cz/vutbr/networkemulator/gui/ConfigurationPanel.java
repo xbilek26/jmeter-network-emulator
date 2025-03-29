@@ -3,6 +3,7 @@ package cz.vutbr.networkemulator.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -112,33 +113,43 @@ public class ConfigurationPanel extends JPanel {
 
     private JPanel createRightPanel() {
         rightPanel = new JPanel(new CardLayout());
-
         defaultRootPanel = new DefaultRootPanel();
         rootNode.setUserObject(defaultRootPanel);
         rightPanel.add(defaultRootPanel, DEFAULT_ROOT_PANEL);
-
         networkInterfacePanel = new NetworkInterfacePanel();
         rightPanel.add(networkInterfacePanel, NETWORK_INTERFACE_PANEL);
+
         return rightPanel;
     }
 
     private void refreshInterfaces() {
         Set<String> currentNetworkInterfaces = new HashSet<>();
+        List<ConfigTreeNode> nodesToRemove = new ArrayList<>();
+
+        controller.refreshNetworkInterfaces();
+        Set<String> phyNetworkInterfaces = controller.getNetworkInterfaces();
+
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
-            currentNetworkInterfaces.add(niNode.getName());
-        }
-
-        controller.refreshInterfaces();
-        Set<String> phyNetworkInterfaces = controller.getNetworkInterfaces();
-        for (String niName : phyNetworkInterfaces) {
-            if (!currentNetworkInterfaces.contains(niName)) {
-                ConfigTreeNode niNode = new ConfigTreeNode();
-                niNode.setUserObject(networkInterfacePanel);
-                niNode.setName(niName);
-                rootNode.add(niNode);
+            String niName = niNode.getName();
+            currentNetworkInterfaces.add(niName);
+            if (!phyNetworkInterfaces.contains(niName)) {
+                nodesToRemove.add(niNode);
             }
         }
+        nodesToRemove.forEach(rootNode::remove);
+
+        Set<String> toAdd = new HashSet<>(phyNetworkInterfaces);
+        toAdd.removeAll(currentNetworkInterfaces);
+        toAdd.stream()
+                .map(niName -> {
+                    ConfigTreeNode niNode = new ConfigTreeNode();
+                    niNode.setUserObject(networkInterfacePanel);
+                    niNode.setName(niName);
+                    return niNode;
+                })
+                .forEach(rootNode::add);
+
         treeModel.reload();
         tree.setSelectionPath(new TreePath(rootNode));
     }
@@ -299,7 +310,7 @@ public class ConfigurationPanel extends JPanel {
                 ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
                 String tcName = tcNode.getName();
 
-                controller.addTrafficClassToInterface(niName, tcName);
+                controller.addTrafficClass(niName, tcName);
 
                 TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
                 CollectionProperty propertyParameters = tcPanel.getNetworkParameters();
