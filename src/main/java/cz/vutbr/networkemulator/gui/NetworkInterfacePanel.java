@@ -19,7 +19,9 @@ public class NetworkInterfacePanel extends JPanel {
     @SuppressWarnings("unused")
     private final NetworkEmulatorController controller;
 
-    public NetworkInterfacePanel() {
+    public NetworkInterfacePanel(String name) {
+        setName(name);
+        
         controller = NetworkEmulatorController.getInstance();
 
         setLayout(new BorderLayout());
