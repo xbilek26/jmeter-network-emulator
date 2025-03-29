@@ -24,6 +24,7 @@ public class NetworkEmulatorController {
     private final NetworkEmulatorModel networkEmulator;
 
     private static class SingletonHolder {
+
         private static final NetworkEmulatorController INSTANCE = new NetworkEmulatorController(new NetworkEmulatorModel());
     }
 
@@ -35,7 +36,7 @@ public class NetworkEmulatorController {
         return SingletonHolder.INSTANCE;
     }
 
-    public void refreshInterfaces() {
+    public void refreshNetworkInterfaces() {
         networkEmulator.clearNetworkInterfaces();
         try {
             Enumeration<NetworkInterface> phyNetworkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -74,7 +75,7 @@ public class NetworkEmulatorController {
                 .collect(Collectors.toSet());
     }
 
-    public void addTrafficClassToInterface(String niName, String tcName) {
+    public void addTrafficClass(String niName, String tcName) {
         Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
@@ -83,7 +84,7 @@ public class NetworkEmulatorController {
         networkInterface.ifPresent(ni -> ni.addTrafficClass(tcName));
     }
 
-    public void removeTrafficClassFromInterface(String niName, String tcName) {
+    public void removeTrafficClass(String niName, String tcName) {
         Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
