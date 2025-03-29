@@ -165,7 +165,11 @@ public class ConfigurationPanel extends JPanel {
 
         ConfigTreeNode niNode = (ConfigTreeNode) path.getLastPathComponent();
         String niName = niNode.getName();
-        String tcName = String.format("1:%s", niNode.getChildCount() + 1);
+        int newTcNodeNumber = 1;
+        if (niNode.getChildCount() > 0) {
+            newTcNodeNumber = Integer.parseInt(((ConfigTreeNode) niNode.getLastChild()).getName().substring(2)) + 1;
+        }
+        String tcName = String.format("1:%s", newTcNodeNumber);
 
         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
         rightPanel.add(tcPanel, tcPanel.getName());
