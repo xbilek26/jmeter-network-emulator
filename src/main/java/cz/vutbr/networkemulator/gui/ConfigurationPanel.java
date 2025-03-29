@@ -113,11 +113,11 @@ public class ConfigurationPanel extends JPanel {
 
     private JPanel createRightPanel() {
         rightPanel = new JPanel(new CardLayout());
-        defaultRootPanel = new DefaultRootPanel();
+        defaultRootPanel = new DefaultRootPanel(DEFAULT_ROOT_PANEL);
         rootNode.setUserObject(defaultRootPanel);
-        rightPanel.add(defaultRootPanel, DEFAULT_ROOT_PANEL);
-        networkInterfacePanel = new NetworkInterfacePanel();
-        rightPanel.add(networkInterfacePanel, NETWORK_INTERFACE_PANEL);
+        rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
+        networkInterfacePanel = new NetworkInterfacePanel(NETWORK_INTERFACE_PANEL);
+        rightPanel.add(networkInterfacePanel, networkInterfacePanel.getName());
 
         return rightPanel;
     }
@@ -225,12 +225,12 @@ public class ConfigurationPanel extends JPanel {
             case DefaultRootPanel rootPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REFRESH);
                 rootPanel.update();
-                rightPanelCards.show(rightPanel, DEFAULT_ROOT_PANEL);
+                rightPanelCards.show(rightPanel, rootPanel.getName());
             }
             case NetworkInterfacePanel niPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_ADD);
                 niPanel.update(name);
-                rightPanelCards.show(rightPanel, NETWORK_INTERFACE_PANEL);
+                rightPanelCards.show(rightPanel, niPanel.getName());
             }
             case TrafficClassPanel tcPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REMOVE);
@@ -298,8 +298,8 @@ public class ConfigurationPanel extends JPanel {
                 }
             }
         }
-        rightPanel.add(defaultRootPanel, DEFAULT_ROOT_PANEL);
-        rightPanel.add(networkInterfacePanel, NETWORK_INTERFACE_PANEL);
+        rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
+        rightPanel.add(networkInterfacePanel, networkInterfacePanel.getName());
         treeModel.reload();
         tree.setSelectionPath(new TreePath(rootNode));
     }
