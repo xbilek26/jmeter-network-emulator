@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.vutbr.networkemulator.linux.CommandRunner;
+import cz.vutbr.networkemulator.linux.CommandType;
 import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
 import cz.vutbr.networkemulator.model.NetworkInterfaceModel;
 import cz.vutbr.networkemulator.model.NetworkParameters;
@@ -22,6 +24,9 @@ public class NetworkEmulatorController {
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorController.class);
 
     private final NetworkEmulatorModel networkEmulator;
+    private final CommandRunner runner = CommandRunner.getInstance();
+
+    private String networkConfiguration = "";
 
     private static class SingletonHolder {
 
@@ -151,6 +156,23 @@ public class NetworkEmulatorController {
                 }
             });
         });
+    }
+
+    public void saveNetworkConfiguration() {
+        networkConfiguration = runner.runCommand("tc qdisc show", CommandType.GENERIC_COMMAND);
+
+        System.out.println("NETWORK CONFIG:");
+        System.out.println(networkConfiguration);
+    }
+
+    public void restoreNetworkConfiguration() {
+        String output = runner.runCommand(networkConfiguration, CommandType.NETWORK_CONFIGURATION);
+        System.out.println("Network Config Restored. Output: " + output);
+    }
+
+    public String getNetworkConfiguration() {
+        return runner.runCommand("tc qdisc show", CommandType.GENERIC_COMMAND);
+
     }
 
     public void runEmulation() {
