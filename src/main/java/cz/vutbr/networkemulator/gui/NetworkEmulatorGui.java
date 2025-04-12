@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
-import cz.vutbr.networkemulator.linux.CommandOutput;
-import cz.vutbr.networkemulator.linux.CommandRunner;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
@@ -94,6 +92,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private void startEmulation() {
         configurationPanel.collectSettings();
+        controller.saveNetworkConfiguration();
         controller.runEmulation();
         controller.printNetworkConfiguration();
 
@@ -105,6 +104,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private void stopEmulation() {
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
+        controller.restoreNetworkConfiguration();
         lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
     }
 
@@ -120,9 +120,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         currentSettings.setLineWrap(true);
         currentSettings.setWrapStyleWord(true);
 
-        CommandRunner runner = new CommandRunner();
-        CommandOutput output = runner.runCommand("tc qdisc");
-        currentSettings.setText(output.getOutputString());
+        currentSettings.setText(controller.getNetworkConfiguration());
 
         statePanel.add(scrollPane, BorderLayout.CENTER);
 
