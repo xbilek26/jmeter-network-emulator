@@ -243,7 +243,7 @@ public class ConfigurationPanel extends JPanel {
         }
     }
 
-    public List<String> getExpandedPaths(JTree tree) {
+    private List<String> getExpandedPaths(JTree tree) {
         List<String> expanded = new ArrayList<>();
         TreePath rootPath = new TreePath(rootNode);
 
@@ -273,7 +273,7 @@ public class ConfigurationPanel extends JPanel {
         return expanded;
     }
 
-    public void restoreExpandedPaths(JTree tree, List<String> pathsToExpand) {
+    private void restoreExpandedPaths(JTree tree, List<String> pathsToExpand) {
         TreePath rootPath = new TreePath(rootNode);
 
         if (pathsToExpand.contains(rootNode.getName())) {
