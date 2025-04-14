@@ -24,9 +24,8 @@ public final class NetworkEmulatorConstants {
     public static final String TITLE_CONFIG_PANEL = "Configuration Panel";
     public static final String TITLE_FILTER_PANEL = "Filter";
     public static final String TITLE_DELAY_PANEL = "Delay";
-    public static final String TITLE_DROP_PANEL = "Packet Drop";
+    public static final String TITLE_LOSS_PANEL = "Packet Loss";
     public static final String TITLE_RATE_PANEL = "Rate";
-    public static final String TITLE_LOSS_PANEL = "Loss";
     public static final String TITLE_REORDERING_PANEL = "Reordering";
     public static final String TITLE_DUPLICATION_PANEL = "Duplication";
     public static final String TITLE_CORRUPTION_PANEL = "Corruption";
@@ -39,19 +38,15 @@ public final class NetworkEmulatorConstants {
     public static final String LABEL_JITTER = "Jitter (ms):";
     public static final String LABEL_DELAY_CORRELATION = "Correlation (%):";
     public static final String LABEL_DISTRIBUTION = "Distribution:";
-    public static final String LABEL_DROP_VALUE = "Packet Drop (%):";
-    public static final String LABEL_DROP_CORRELATION = "Correlation (%):";
-    public static final String LABEL_RATE = "Rate (bps):";
+    public static final String LABEL_LOSS_VALUE = "Packet Loss (%):";
+    public static final String LABEL_LOSS_CORRELATION = "Correlation (%):";
+    public static final String LABEL_RATE = "Rate (kbps):";
     public static final String LABEL_LOSS = "Loss (%):";
     public static final String LABEL_REORDERING_VALUE = "Reordering (%):";
     public static final String LABEL_REORDERING_CORRELATION = "Correlation (%):";
     public static final String LABEL_DUPLICATION_VALUE = "Duplication (%):";
     public static final String LABEL_DUPLICATION_CORRELATION = "Correlation (%):";
     public static final String LABEL_CORRUPTION = "Corruption (%):";
-
-    public static final String PROPERTY_NETWORK_PARAMETERS = "networkParameters_";
-    public static final String PROPERTY_TRAFFIC_CLASSES = "trafficClasses_";
-    public static final String PROPERTY_NETWORK_INTERFACES= "networkInterfaces";
 
     private NetworkEmulatorConstants() {
     }
