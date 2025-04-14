@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.linux.CommandRunner;
-import cz.vutbr.networkemulator.linux.CommandType;
 import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
 import cz.vutbr.networkemulator.model.NetworkInterfaceModel;
 import cz.vutbr.networkemulator.model.NetworkParameters;
@@ -25,8 +24,6 @@ public class NetworkEmulatorController {
 
     private final NetworkEmulatorModel networkEmulator;
     private final CommandRunner runner = CommandRunner.getInstance();
-
-    private String networkConfiguration = "";
 
     private static class SingletonHolder {
 
@@ -80,6 +77,10 @@ public class NetworkEmulatorController {
                 .collect(Collectors.toSet());
     }
 
+    public void clearNetworkInterfaces() {
+        networkEmulator.clearNetworkInterfaces();
+    }
+
     public void addTrafficClass(String niName, String tcName) {
         Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
@@ -125,57 +126,89 @@ public class NetworkEmulatorController {
                 .orElse(null);
     }
 
-    public void printNetworkConfiguration() {
-        networkEmulator.getNetworkInterfaces().forEach(networkInterface -> {
-            System.out.println("Interface: " + networkInterface.getName());
-
-            networkInterface.getTrafficClasses().forEach(trafficClass -> {
-                System.out.println("  Traffic Class: " + trafficClass.getName());
-
-                NetworkParameters parameters = trafficClass.getNetworkParameters();
-                if (parameters != null) {
-                    System.out.println("    Parameters:");
-                    System.out.println("      Src Address: " + parameters.getSrcAddress());
-                    System.out.println("      Src Port: " + parameters.getSrcPort());
-                    System.out.println("      Dst Address: " + parameters.getDstAddress());
-                    System.out.println("      Dst Port: " + parameters.getDstPort());
-                    System.out.println("      Delay Value: " + parameters.getDelayValue());
-                    System.out.println("      Jitter: " + parameters.getJitter());
-                    System.out.println("      Delay Correlation: " + parameters.getDelayCorrelation());
-                    System.out.println("      Drop Value: " + parameters.getDropValue());
-                    System.out.println("      Drop Correlation: " + parameters.getDropCorrelation());
-                    System.out.println("      Rate: " + parameters.getRate());
-                    System.out.println("      Loss: " + parameters.getLoss());
-                    System.out.println("      Reordering Value: " + parameters.getReorderingValue());
-                    System.out.println("      Reordering Correlation: " + parameters.getReorderingCorrelation());
-                    System.out.println("      Duplication Value: " + parameters.getDuplicationValue());
-                    System.out.println("      Duplication Correlation: " + parameters.getDuplicationCorrelation());
-                    System.out.println("      Corruption Value: " + parameters.getCorruption());
-                } else {
-                    System.out.println("    No parameters set for this traffic class.");
-                }
-            });
-        });
-    }
-
-    public void saveNetworkConfiguration() {
-        networkConfiguration = runner.runCommand("tc qdisc show", CommandType.GENERIC_COMMAND);
-
-        System.out.println("NETWORK CONFIG:");
-        System.out.println(networkConfiguration);
-    }
-
     public void restoreNetworkConfiguration() {
-        String output = runner.runCommand(networkConfiguration, CommandType.NETWORK_CONFIGURATION);
-        System.out.println("Network Config Restored. Output: " + output);
+        for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
+            runner.runCommand(String.format("tc qdisc del dev %s root", ni.getName()));
+        }
     }
 
     public String getNetworkConfiguration() {
-        return runner.runCommand("tc qdisc show", CommandType.GENERIC_COMMAND);
+        return runner.runCommand("tc qdisc show");
 
     }
 
     public void runEmulation() {
+        for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
+            setupRootQdisc(ni.getName());
+            for (TrafficClassModel tc : ni.getTrafficClasses()) {
+                setupTrafficClass(ni.getName(), tc);
+            }
+        }
+    }
+
+    private void setupRootQdisc(String dev) {
+        runner.runCommand(String.format("tc qdisc del dev %s root", dev));
+        runner.runCommand(String.format("tc qdisc add dev %s root handle 1: htb", dev));
+        runner.runCommand(String.format("tc class add dev %s parent 1: classid 1:1 htb rate 4gbps quantum 1514", dev));
+    }
+
+    private void setupTrafficClass(String dev, TrafficClassModel tc) {
+        String classId = tc.getName() + "0";
+        String handleId = tc.getName().substring(2) + "0:";
+        runner.runCommand(String.format("tc class add dev %s parent 1:1 classid %s htb rate 4gbps quantum 1514", dev, classId));
+
+        NetworkParameters p = tc.getNetworkParameters();
+        if (p != null) {
+            String command = buildNetemCommand(dev, classId, handleId, p);
+            runner.runCommand(command);
+        }
+    }
+
+    private String buildNetemCommand(String dev, String classId, String handleId, NetworkParameters params) {
+        StringBuilder cmd = new StringBuilder();
+        cmd.append(String.format("tc qdisc add dev %s parent %s handle %s netem", dev, classId, handleId));
+
+        appendIfSet(cmd, "delay", params.getDelayValue(), "ms");
+        appendIfSet(cmd, "", params.getJitter(), params.getDelayCorrelation(), "ms");
+        appendIfSet(cmd, "loss", params.getLossValue(), params.getLossCorrelation());
+        appendIfSet(cmd, "rate", params.getRate(), "kbit");
+        appendIfSet(cmd, "reorder", params.getReorderingValue(), params.getReorderingCorrelation());
+        appendIfSet(cmd, "duplicate", params.getDuplicationValue(), params.getDuplicationCorrelation());
+        appendIfSet(cmd, "corrupt", params.getCorruption());
+
+        return cmd.toString();
+    }
+
+    private void appendIfSet(StringBuilder cmd, String keyword, int value) {
+        appendIfSet(cmd, keyword, value, -1, null);
+    }
+
+    private void appendIfSet(StringBuilder cmd, String keyword, int value, int correlation) {
+        appendIfSet(cmd, keyword, value, correlation, null);
+    }
+
+    private void appendIfSet(StringBuilder cmd, String keyword, int value, String unit) {
+        appendIfSet(cmd, keyword, value, -1, unit);
+    }
+
+    private void appendIfSet(StringBuilder cmd, String keyword, int value, int correlation, String unit) {
+        if (value == -1) {
+            return;
+        }
+
+        if (!keyword.isEmpty()) {
+            cmd.append(" ").append(keyword);
+        }
+
+        cmd.append(" ").append(value);
+
+        if (unit != null) {
+            cmd.append(unit);
+        }
+
+        if (correlation != -1) {
+            cmd.append(" ").append(correlation);
+        }
     }
 
 }
