@@ -32,10 +32,9 @@ public class TrafficClassPanel extends JPanel {
     private JTextField jitterField;
     private JTextField delayCorrelationField;
     private JComboBox<String> distributionsBox;
-    private JTextField dropValueField;
-    private JTextField dropCorrelationField;
-    private JTextField rateField;
     private JTextField lossValueField;
+    private JTextField lossCorrelationField;
+    private JTextField rateField;
     private JTextField reorderingValueField;
     private JTextField reorderingCorrelationField;
     private JTextField duplicationValueField;
@@ -57,10 +56,9 @@ public class TrafficClassPanel extends JPanel {
         parameters.addItem(jitterField.getText());
         parameters.addItem(delayCorrelationField.getText());
         // TODO: Distribution
-        parameters.addItem(dropValueField.getText());
-        parameters.addItem(dropCorrelationField.getText());
-        parameters.addItem(rateField.getText());
         parameters.addItem(lossValueField.getText());
+        parameters.addItem(lossCorrelationField.getText());
+        parameters.addItem(rateField.getText());
         parameters.addItem(reorderingValueField.getText());
         parameters.addItem(reorderingCorrelationField.getText());
         parameters.addItem(duplicationValueField.getText());
@@ -79,24 +77,22 @@ public class TrafficClassPanel extends JPanel {
         jitterField.setText(parameters.get(5).getStringValue());
         delayCorrelationField.setText(parameters.get(6).getStringValue());
         // TODO: Distribution
-        dropValueField.setText(parameters.get(7).getStringValue());
-        dropCorrelationField.setText(parameters.get(8).getStringValue());
+        lossValueField.setText(parameters.get(7).getStringValue());
+        lossCorrelationField.setText(parameters.get(8).getStringValue());
         rateField.setText(parameters.get(9).getStringValue());
-        lossValueField.setText(parameters.get(10).getStringValue());
-        reorderingValueField.setText(parameters.get(11).getStringValue());
-        reorderingCorrelationField.setText(parameters.get(12).getStringValue());
-        duplicationValueField.setText(parameters.get(13).getStringValue());
-        duplicationCorrelationField.setText(parameters.get(14).getStringValue());
-        corruptionField.setText(parameters.get(15).getStringValue());
+        reorderingValueField.setText(parameters.get(10).getStringValue());
+        reorderingCorrelationField.setText(parameters.get(11).getStringValue());
+        duplicationValueField.setText(parameters.get(12).getStringValue());
+        duplicationCorrelationField.setText(parameters.get(13).getStringValue());
+        corruptionField.setText(parameters.get(14).getStringValue());
     }
 
     private void init() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         add(createFilterPanel());
         add(createDelayPanel());
-        add(createDropPanel());
-        add(createRatePanel());
         add(createLossPanel());
+        add(createRatePanel());
         add(createReorderingPanel());
         add(createDuplicationPanel());
         add(createCorruptionPanel());
@@ -176,26 +172,26 @@ public class TrafficClassPanel extends JPanel {
         return delayPanel;
     }
 
-    private JPanel createDropPanel() {
-        dropValueField = new JTextField(10);
-        dropCorrelationField = new JTextField(10);
+    private JPanel createLossPanel() {
+        lossValueField = new JTextField(10);
+        lossCorrelationField = new JTextField(10);
 
-        JLabel dropValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DROP_VALUE);
-        dropValueLabel.setLabelFor(dropValueField);
-        JLabel dropCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DROP_CORRELATION);
-        dropCorrelationLabel.setLabelFor(dropCorrelationField);
+        JLabel lossValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS_VALUE);
+        lossValueLabel.setLabelFor(lossValueField);
+        JLabel lossCorrelationLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS_CORRELATION);
+        lossCorrelationLabel.setLabelFor(lossCorrelationField);
 
-        dropValueField.setInputVerifier(new RangeVerifier(0, 100));
-        dropCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
+        lossValueField.setInputVerifier(new RangeVerifier(0, 100));
+        lossCorrelationField.setInputVerifier(new RangeVerifier(0, 100));
 
-        JPanel dropPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dropPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DROP_PANEL));
-        dropPanel.add(dropValueLabel);
-        dropPanel.add(dropValueField);
-        dropPanel.add(dropCorrelationLabel);
-        dropPanel.add(dropCorrelationField);
+        JPanel lossPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        lossPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_LOSS_PANEL));
+        lossPanel.add(lossValueLabel);
+        lossPanel.add(lossValueField);
+        lossPanel.add(lossCorrelationLabel);
+        lossPanel.add(lossCorrelationField);
 
-        return dropPanel;
+        return lossPanel;
     }
 
     private JPanel createRatePanel() {
@@ -212,22 +208,6 @@ public class TrafficClassPanel extends JPanel {
         ratePanel.add(rateField);
 
         return ratePanel;
-    }
-
-    private JPanel createLossPanel() {
-        lossValueField = new JTextField(10);
-
-        JLabel lossLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS);
-        lossLabel.setLabelFor(lossValueField);
-
-        lossValueField.setInputVerifier(new RangeVerifier(0, 100));
-
-        JPanel lossPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        lossPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_LOSS_PANEL));
-        lossPanel.add(lossLabel);
-        lossPanel.add(lossValueField);
-
-        return lossPanel;
     }
 
     private JPanel createReorderingPanel() {
