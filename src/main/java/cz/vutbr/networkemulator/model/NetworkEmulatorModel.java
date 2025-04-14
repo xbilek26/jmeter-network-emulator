@@ -18,7 +18,6 @@ public class NetworkEmulatorModel {
     private final List<NetworkInterfaceModel> networkInterfaces;
 
     public NetworkEmulatorModel() {
-
         this.networkInterfaces = new ArrayList<>();
         log.info("Created network emulator");
     }
