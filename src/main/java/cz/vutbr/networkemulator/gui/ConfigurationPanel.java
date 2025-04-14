@@ -305,6 +305,7 @@ public class ConfigurationPanel extends JPanel {
     }
 
     public void collectSettings() {
+        controller.clearNetworkInterfaces();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
             String niName = niNode.getName();
