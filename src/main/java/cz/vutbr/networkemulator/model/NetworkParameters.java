@@ -21,10 +21,9 @@ public class NetworkParameters {
     private int jitter;
     private int delayCorrelation;
     // TODO: Distribution
-    private int dropValue;
-    private int dropCorrelation;
+    private int lossValue;
+    private int lossCorrelation;
     private int rate;
-    private int loss;
     private int reorderingValue;
     private int reorderingCorrelation;
     private int duplicationValue;
@@ -87,22 +86,23 @@ public class NetworkParameters {
         this.delayCorrelation = delayCorrelation;
     }
 
+    public int getLossValue() {
+        return lossValue;
+    }
+
+    public void setLossValue(int lossValue) {
+        this.lossValue = lossValue;
+    }
+
+    public int getLossCorrelation() {
+        return lossCorrelation;
+    }
+
+    public void setLossCorrelation(int lossCorrelation) {
+        this.lossCorrelation = lossCorrelation;
+    }
+
     // TODO: Distribution
-    public int getDropValue() {
-        return dropValue;
-    }
-
-    public void setDropValue(int dropValue) {
-        this.dropValue = dropValue;
-    }
-
-    public int getDropCorrelation() {
-        return dropCorrelation;
-    }
-
-    public void setDropCorrelation(int dropCorrelation) {
-        this.dropCorrelation = dropCorrelation;
-    }
 
     public int getRate() {
         return rate;
@@ -110,14 +110,6 @@ public class NetworkParameters {
 
     public void setRate(int rateValue) {
         this.rate = rateValue;
-    }
-
-    public int getLoss() {
-        return loss;
-    }
-
-    public void setLoss(int lossValue) {
-        this.loss = lossValue;
     }
 
     public int getReorderingValue() {
