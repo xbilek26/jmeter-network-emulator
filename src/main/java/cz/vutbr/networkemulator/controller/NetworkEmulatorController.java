@@ -1,35 +1,34 @@
 package cz.vutbr.networkemulator.controller;
 
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.linux.tc.TrafficControl;
-import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
-import cz.vutbr.networkemulator.model.NetworkInterfaceModel;
+import cz.vutbr.networkemulator.model.NetworkEmulator;
+import cz.vutbr.networkemulator.model.NetworkInterface;
 import cz.vutbr.networkemulator.model.NetworkParameters;
-import cz.vutbr.networkemulator.model.TrafficClassModel;
+import cz.vutbr.networkemulator.model.TrafficClass;
 
 public class NetworkEmulatorController {
 
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorController.class);
 
-    private final NetworkEmulatorModel networkEmulator;
+    private final NetworkEmulator networkEmulator;
 
     private static class SingletonHolder {
 
-        private static final NetworkEmulatorController INSTANCE = new NetworkEmulatorController(new NetworkEmulatorModel());
+        private static final NetworkEmulatorController INSTANCE = new NetworkEmulatorController(new NetworkEmulator());
     }
 
-    private NetworkEmulatorController(NetworkEmulatorModel networkEmulator) {
+    private NetworkEmulatorController(NetworkEmulator networkEmulator) {
         this.networkEmulator = networkEmulator;
     }
 
@@ -39,22 +38,17 @@ public class NetworkEmulatorController {
 
     public void refreshNetworkInterfaces() {
         networkEmulator.clearNetworkInterfaces();
-        try {
-            Enumeration<NetworkInterface> phyNetworkInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (phyNetworkInterfaces.hasMoreElements()) {
-                NetworkInterface phyNetworkInterface = phyNetworkInterfaces.nextElement();
-                String phyNetworkInterfaceName = phyNetworkInterface.getName();
 
-                if (!phyNetworkInterfaceName.equals("lo")) {
-                    addNetworkInterface(phyNetworkInterfaceName);
-                }
-
+        Pattern pattern = Pattern.compile("dev\\s+(\\S+)");
+        Matcher matcher = pattern.matcher(TrafficControl.showQDiscs());
+        while (matcher.find()) {
+            if (!matcher.group(1).equals("lo")) {
+                addNetworkInterface(matcher.group(1));
             }
-        } catch (SocketException ex) {
         }
     }
 
-    public NetworkEmulatorModel getNetworkEmulator() {
+    public NetworkEmulator getNetworkEmulator() {
         return networkEmulator;
     }
 
@@ -72,7 +66,7 @@ public class NetworkEmulatorController {
 
     public Set<String> getNetworkInterfaces() {
         return networkEmulator.getNetworkInterfaces().stream()
-                .map(NetworkInterfaceModel::getName)
+                .map(NetworkInterface::getName)
                 .collect(Collectors.toSet());
     }
 
@@ -81,7 +75,7 @@ public class NetworkEmulatorController {
     }
 
     public void addTrafficClass(String niName, String tcName) {
-        Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
+        Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .findFirst();
@@ -90,7 +84,7 @@ public class NetworkEmulatorController {
     }
 
     public void removeTrafficClass(String niName, String tcName) {
-        Optional<NetworkInterfaceModel> networkInterface = networkEmulator.getNetworkInterfaces()
+        Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .findFirst();
@@ -102,7 +96,7 @@ public class NetworkEmulatorController {
         return networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .map(TrafficClassModel::getName)
+                .map(TrafficClass::getName)
                 .collect(Collectors.toList());
     }
 
@@ -121,12 +115,12 @@ public class NetworkEmulatorController {
                 .flatMap(ni -> ni.getTrafficClasses().stream())
                 .filter(tc -> tc.getName().equals(tcName))
                 .findFirst()
-                .map(TrafficClassModel::getNetworkParameters)
+                .map(TrafficClass::getNetworkParameters)
                 .orElse(null);
     }
 
     public void restoreNetworkConfiguration() {
-        for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
+        for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             String dev = ni.getName();
             TrafficControl.restoreDefaults(dev);
         }
@@ -137,9 +131,9 @@ public class NetworkEmulatorController {
     }
 
     public void runEmulation() {
-        for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
+        for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             TrafficControl.setupRootQdisc(ni.getName());
-            for (TrafficClassModel tc : ni.getTrafficClasses()) {
+            for (TrafficClass tc : ni.getTrafficClasses()) {
                 String dev = ni.getName();
                 String classId = tc.getName() + "0";
                 String handleId = tc.getName().substring(2) + "0:";
