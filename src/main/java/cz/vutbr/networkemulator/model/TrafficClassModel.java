@@ -35,5 +35,4 @@ public class TrafficClassModel {
     public void setNetworkParameters(NetworkParameters networkParameters) {
         this.networkParameters = networkParameters;
     }
-
 }
