@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -280,23 +282,23 @@ public class ConfigurationPanel extends JPanel {
             tree.expandPath(rootPath);
         }
 
-        int interfaceCount = treeModel.getChildCount(rootNode);
-        for (int i = 0; i < interfaceCount; i++) {
-            Object iface = treeModel.getChild(rootNode, i);
-            TreePath ifacePath = rootPath.pathByAddingChild(iface);
+        int niCount = treeModel.getChildCount(rootNode);
+        for (int i = 0; i < niCount; i++) {
+            Object ni = treeModel.getChild(rootNode, i);
+            TreePath niPath = rootPath.pathByAddingChild(ni);
 
-            if (pathsToExpand.contains(iface.toString())) {
-                tree.expandPath(ifacePath);
+            if (pathsToExpand.contains(ni.toString())) {
+                tree.expandPath(niPath);
             }
 
-            int classCount = treeModel.getChildCount(iface);
-            for (int j = 0; j < classCount; j++) {
-                Object trafficClass = treeModel.getChild(iface, j);
-                String pathStr = iface.toString() + "/" + trafficClass.toString();
+            int tcCount = treeModel.getChildCount(ni);
+            for (int j = 0; j < tcCount; j++) {
+                Object tc = treeModel.getChild(ni, j);
+                String pathStr = ni.toString() + "/" + tc.toString();
 
                 if (pathsToExpand.contains(pathStr)) {
-                    TreePath classPath = ifacePath.pathByAddingChild(trafficClass);
-                    tree.expandPath(classPath);
+                    TreePath tcPath = niPath.pathByAddingChild(tc);
+                    tree.expandPath(tcPath);
                 }
             }
         }
@@ -408,14 +410,15 @@ public class ConfigurationPanel extends JPanel {
 
         treeModel.reload();
 
-        List<String> expPaths = new ArrayList<>();
         JMeterProperty expandedPathsProp = te.getProperty(PROPERTY_EXPANDED_PATHS);
         if (expandedPathsProp instanceof CollectionProperty expandedPaths) {
-            for (int i = 0; i < expandedPaths.size(); i++) {
-                expPaths.add(expandedPaths.get(i).getStringValue());
-            }
+            restoreExpandedPaths(
+                    tree,
+                    ((Collection<JMeterProperty>) expandedPaths.getObjectValue()).stream()
+                            .map(JMeterProperty::getStringValue)
+                            .collect(Collectors.toList())
+            );
         }
-        restoreExpandedPaths(tree, expPaths);
 
         JMeterProperty selectedPathProp = te.getProperty(PROPERTY_SELECTED_PATH);
         selectPath(selectedPathProp.getStringValue());
