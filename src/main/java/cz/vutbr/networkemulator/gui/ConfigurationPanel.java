@@ -233,6 +233,7 @@ public class ConfigurationPanel extends JPanel {
             }
             case NetworkInterfacePanel niPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_ADD);
+                collectSettings();
                 niPanel.update(name);
                 rightPanelCards.show(rightPanel, niPanel.getName());
             }
