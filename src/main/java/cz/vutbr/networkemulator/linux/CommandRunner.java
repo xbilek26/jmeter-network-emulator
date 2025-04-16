@@ -6,16 +6,7 @@ import java.io.InputStreamReader;
 
 public class CommandRunner {
 
-    private static class SingletonHolder {
-
-        private static final CommandRunner INSTANCE = new CommandRunner();
-    }
-
-    public static CommandRunner getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    public String runCommand(String command) {
+    public static String runCommand(String command) {
         StringBuilder output = new StringBuilder();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
