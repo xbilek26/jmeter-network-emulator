@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.linux.CommandRunner;
+import cz.vutbr.networkemulator.linux.tc.TrafficControl;
 import cz.vutbr.networkemulator.model.NetworkEmulatorModel;
 import cz.vutbr.networkemulator.model.NetworkInterfaceModel;
 import cz.vutbr.networkemulator.model.NetworkParameters;
@@ -23,7 +23,6 @@ public class NetworkEmulatorController {
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorController.class);
 
     private final NetworkEmulatorModel networkEmulator;
-    private final CommandRunner runner = CommandRunner.getInstance();
 
     private static class SingletonHolder {
 
@@ -128,87 +127,26 @@ public class NetworkEmulatorController {
 
     public void restoreNetworkConfiguration() {
         for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
-            runner.runCommand(String.format("tc qdisc del dev %s root", ni.getName()));
+            String dev = ni.getName();
+            TrafficControl.restoreDefaults(dev);
         }
     }
 
     public String getNetworkConfiguration() {
-        return runner.runCommand("tc qdisc show");
-
+        return TrafficControl.showQDiscs();
     }
 
     public void runEmulation() {
         for (NetworkInterfaceModel ni : networkEmulator.getNetworkInterfaces()) {
-            setupRootQdisc(ni.getName());
+            TrafficControl.setupRootQdisc(ni.getName());
             for (TrafficClassModel tc : ni.getTrafficClasses()) {
-                setupTrafficClass(ni.getName(), tc);
+                String dev = ni.getName();
+                String classId = tc.getName() + "0";
+                String handleId = tc.getName().substring(2) + "0:";
+                NetworkParameters params = tc.getNetworkParameters();
+                TrafficControl.setupTrafficClass(dev, classId, handleId, params);
+                TrafficControl.setupFilter(dev, classId, handleId, params);
             }
         }
     }
-
-    private void setupRootQdisc(String dev) {
-        runner.runCommand(String.format("tc qdisc del dev %s root", dev));
-        runner.runCommand(String.format("tc qdisc add dev %s root handle 1: htb", dev));
-        runner.runCommand(String.format("tc class add dev %s parent 1: classid 1:1 htb rate 4gbps quantum 1514", dev));
-    }
-
-    private void setupTrafficClass(String dev, TrafficClassModel tc) {
-        String classId = tc.getName() + "0";
-        String handleId = tc.getName().substring(2) + "0:";
-        runner.runCommand(String.format("tc class add dev %s parent 1:1 classid %s htb rate 4gbps quantum 1514", dev, classId));
-
-        NetworkParameters p = tc.getNetworkParameters();
-        if (p != null) {
-            String command = buildNetemCommand(dev, classId, handleId, p);
-            runner.runCommand(command);
-        }
-    }
-
-    private String buildNetemCommand(String dev, String classId, String handleId, NetworkParameters params) {
-        StringBuilder cmd = new StringBuilder();
-        cmd.append(String.format("tc qdisc add dev %s parent %s handle %s netem", dev, classId, handleId));
-
-        appendIfSet(cmd, "delay", params.getDelayValue(), "ms");
-        appendIfSet(cmd, "", params.getJitter(), params.getDelayCorrelation(), "ms");
-        appendIfSet(cmd, "loss", params.getLossValue(), params.getLossCorrelation());
-        appendIfSet(cmd, "rate", params.getRate(), "kbit");
-        appendIfSet(cmd, "reorder", params.getReorderingValue(), params.getReorderingCorrelation());
-        appendIfSet(cmd, "duplicate", params.getDuplicationValue(), params.getDuplicationCorrelation());
-        appendIfSet(cmd, "corrupt", params.getCorruption());
-
-        return cmd.toString();
-    }
-
-    private void appendIfSet(StringBuilder cmd, String keyword, int value) {
-        appendIfSet(cmd, keyword, value, -1, null);
-    }
-
-    private void appendIfSet(StringBuilder cmd, String keyword, int value, int correlation) {
-        appendIfSet(cmd, keyword, value, correlation, null);
-    }
-
-    private void appendIfSet(StringBuilder cmd, String keyword, int value, String unit) {
-        appendIfSet(cmd, keyword, value, -1, unit);
-    }
-
-    private void appendIfSet(StringBuilder cmd, String keyword, int value, int correlation, String unit) {
-        if (value == -1) {
-            return;
-        }
-
-        if (!keyword.isEmpty()) {
-            cmd.append(" ").append(keyword);
-        }
-
-        cmd.append(" ").append(value);
-
-        if (unit != null) {
-            cmd.append(unit);
-        }
-
-        if (correlation != -1) {
-            cmd.append(" ").append(correlation);
-        }
-    }
-
 }
