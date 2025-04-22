@@ -1,5 +1,7 @@
 package cz.vutbr.networkemulator.utils;
 
+import java.util.Map;
+
 public final class NetworkEmulatorConstants {
 
     public static final String BTN_ADD_TRAFFIC_CLASS = "Add Traffic Class";
@@ -28,6 +30,10 @@ public final class NetworkEmulatorConstants {
     public static final String TITLE_DUPLICATION_PANEL = "Duplication";
     public static final String TITLE_CORRUPTION_PANEL = "Corruption";
 
+    public static final String IP_PROTOCOL = "IP protocol";
+    public static final String TCP_PROTOCOL = "TCP";
+    public static final String UDP_PROTOCOL = "UDP";
+    public static final String ICMP_PROTOCOL = "ICMP";
     public static final String SRC_ADDRESS = "Src Address";
     public static final String SRC_PORT = "Src Port";
     public static final String DST_ADDRESS = "Dst Address";
@@ -46,6 +52,7 @@ public final class NetworkEmulatorConstants {
     public static final String CORRUPTION = "Corruption";
     public static final String CORRELATION = "Correlation";
 
+    public static final String LABEL_IP_PROTOCOL = IP_PROTOCOL + ":";
     public static final String LABEL_SRC_ADDRESS = SRC_ADDRESS + ":";
     public static final String LABEL_SRC_PORT = SRC_PORT + ":";
     public static final String LABEL_DST_ADDRESS = DST_ADDRESS + ":";
@@ -62,6 +69,56 @@ public final class NetworkEmulatorConstants {
     public static final String LABEL_DUPLICATION_VALUE = DUPLICATION_VALUE + " (%):";
     public static final String LABEL_DUPLICATION_CORRELATION = CORRELATION + " (%):";
     public static final String LABEL_CORRUPTION = CORRUPTION + " (%):";
+
+    public static final String[] SUBNET_MASKS = {
+        "/32",
+        "/31",
+        "/30",
+        "/29",
+        "/28",
+        "/27",
+        "/26",
+        "/25",
+        "/24",
+        "/23",
+        "/22",
+        "/21",
+        "/20",
+        "/19",
+        "/18",
+        "/17",
+        "/16"
+    };
+
+    public static final String[] PROTOCOLS = {
+        "",
+        "HTTP",
+        "HTTPS",
+        "FTP",
+        "SSH",
+        "DNS",
+        "SMTP",
+        "POP3",
+        "IMAP"
+    };
+
+    public static final Map<String, Integer> PROTOCOL_PORTS = Map.of(
+            "HTTP", 80,
+            "HTTPS", 443,
+            "FTP", 21,
+            "SSH", 22,
+            "DNS", 53,
+            "SMTP", 25,
+            "POP3", 110,
+            "IMAP", 143
+    );
+
+    public static final String[] DISTRIBUTIONS = {
+        // "uniform", not working
+        "normal",
+        "pareto",
+        "paretonormal"
+    };
 
     private NetworkEmulatorConstants() {
     }
