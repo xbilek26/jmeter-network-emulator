@@ -18,14 +18,17 @@ public class NetworkParameters {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkParameters.class);
 
+    private String ipProtocol;
     private String srcAddress;
+    private String srcSubnetMask;
     private int srcPort;
     private String dstAddress;
+    private String dstSubnetMask;
     private int dstPort;
     private int delayValue;
     private int jitter;
     private int delayCorrelation;
-    // TODO: Distribution
+    private String distribution;
     private int lossValue;
     private int lossCorrelation;
     private int rate;
@@ -35,12 +38,28 @@ public class NetworkParameters {
     private int duplicationCorrelation;
     private int corruption;
 
+    public String getIpProtocol() {
+        return ipProtocol;
+    }
+
+    public void setIpProtocol(String ipProtocol) {
+        this.ipProtocol = ipProtocol;
+    }
+
     public String getSrcAddress() {
         return srcAddress;
     }
 
     public void setSrcAddress(String srcAddress) {
         this.srcAddress = srcAddress;
+    }
+
+    public String getSrcSubnetMask() {
+        return srcSubnetMask;
+    }
+
+    public void setSrcSubnetMask(String srcSubnetMask) {
+        this.srcSubnetMask = srcSubnetMask;
     }
 
     public int getSrcPort() {
@@ -57,6 +76,14 @@ public class NetworkParameters {
 
     public void setDstAddress(String dstAddress) {
         this.dstAddress = dstAddress;
+    }
+
+    public String getDstSubnetMask() {
+        return dstSubnetMask;
+    }
+
+    public void setDstSubnetMask(String dstSubnetMask) {
+        this.dstSubnetMask = dstSubnetMask;
     }
 
     public int getDstPort() {
@@ -91,6 +118,14 @@ public class NetworkParameters {
         this.delayCorrelation = delayCorrelation;
     }
 
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
+
     public int getLossValue() {
         return lossValue;
     }
@@ -107,7 +142,6 @@ public class NetworkParameters {
         this.lossCorrelation = lossCorrelation;
     }
 
-    // TODO: Distribution
     public int getRate() {
         return rate;
     }
