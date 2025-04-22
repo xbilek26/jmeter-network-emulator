@@ -2,8 +2,6 @@ package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,7 +72,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private void startEmulator() {
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);
-        setComponentsEnabled(configurationPanel, false);
+        configurationPanel.setComponentsEnabled(false);
         configurationPanel.collectSettings();
         controller.runEmulation();
         currentSettings.setText(controller.getNetworkConfiguration());
@@ -84,21 +82,10 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private void stopEmulator() {
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
-        setComponentsEnabled(configurationPanel, true);
+        configurationPanel.setComponentsEnabled(true);
         controller.restoreNetworkConfiguration();
         currentSettings.setText(controller.getNetworkConfiguration());
         lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
-    }
-
-    public void setComponentsEnabled(Container container, boolean enabled) {
-        for (Component component : container.getComponents()) {
-            if (component instanceof Container c) {
-                setComponentsEnabled(c, enabled);
-            }
-            if (component != null) {
-                component.setEnabled(enabled);
-            }
-        }
     }
 
     private JPanel createConfigurationPanel() {
