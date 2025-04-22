@@ -357,7 +357,7 @@ public class ConfigurationPanel extends JPanel {
 
         JMeterProperty expandedPathsProp = te.getProperty(PROPERTY_EXPANDED_PATHS);
         if (expandedPathsProp instanceof CollectionProperty expandedPaths) {
-            tree.restoreExpandedPaths(
+            tree.expandPaths(
                     ((Collection<JMeterProperty>) expandedPaths.getObjectValue()).stream()
                             .map(JMeterProperty::getStringValue)
                             .collect(Collectors.toList())

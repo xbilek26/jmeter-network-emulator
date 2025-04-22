@@ -45,7 +45,7 @@ public class ConfigTree extends JTree {
         return expanded;
     }
 
-    public void restoreExpandedPaths(List<String> pathsToExpand) {
+    public void expandPaths(List<String> pathsToExpand) {
         ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
         TreePath rootPath = new TreePath(rootNode);
 
