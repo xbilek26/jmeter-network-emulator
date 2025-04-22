@@ -1,12 +1,15 @@
 package cz.vutbr.networkemulator.gui;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.apache.jmeter.testelement.property.CollectionProperty;
@@ -22,12 +25,16 @@ public class TrafficClassPanel extends JPanel {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(TrafficClassPanel.class);
 
-    private final String[] distributions = {"Uniform", "Normal", "Pareto Normal"};
-
+    private JRadioButton tcpButton;
+    private JRadioButton udpButton;
+    private JRadioButton icmpButton;
     private JTextField srcAddressField;
+    private JComboBox<String> srcSubnetMaskBox;
     private JTextField srcPortField;
     private JTextField dstAddressField;
+    private JComboBox<String> dstSubnetMaskBox;
     private JTextField dstPortField;
+    private JComboBox<String> protocolsBox;
     private JTextField delayValueField;
     private JTextField jitterField;
     private JTextField delayCorrelationField;
@@ -48,14 +55,17 @@ public class TrafficClassPanel extends JPanel {
 
     public CollectionProperty getNetworkParameters() {
         CollectionProperty parameters = new CollectionProperty();
+        parameters.addItem(getIpProtocol());
         parameters.addItem(srcAddressField.getText());
+        parameters.addItem(srcSubnetMaskBox.getSelectedItem());
         parameters.addItem(srcPortField.getText());
         parameters.addItem(dstAddressField.getText());
+        parameters.addItem(dstSubnetMaskBox.getSelectedItem());
         parameters.addItem(dstPortField.getText());
         parameters.addItem(delayValueField.getText());
         parameters.addItem(jitterField.getText());
         parameters.addItem(delayCorrelationField.getText());
-        // TODO: Distribution
+        parameters.addItem(distributionsBox.getSelectedItem());
         parameters.addItem(lossValueField.getText());
         parameters.addItem(lossCorrelationField.getText());
         parameters.addItem(rateField.getText());
@@ -65,26 +75,33 @@ public class TrafficClassPanel extends JPanel {
         parameters.addItem(duplicationCorrelationField.getText());
         parameters.addItem(corruptionField.getText());
 
+        parameters.addItem(protocolsBox.getSelectedItem());
+
         return parameters;
     }
 
     public void setNetworkParameters(CollectionProperty parameters) {
-        srcAddressField.setText(parameters.get(0).getStringValue());
-        srcPortField.setText(parameters.get(1).getStringValue());
-        dstAddressField.setText(parameters.get(2).getStringValue());
-        dstPortField.setText(parameters.get(3).getStringValue());
-        delayValueField.setText(parameters.get(4).getStringValue());
-        jitterField.setText(parameters.get(5).getStringValue());
-        delayCorrelationField.setText(parameters.get(6).getStringValue());
-        // TODO: Distribution
-        lossValueField.setText(parameters.get(7).getStringValue());
-        lossCorrelationField.setText(parameters.get(8).getStringValue());
-        rateField.setText(parameters.get(9).getStringValue());
-        reorderingValueField.setText(parameters.get(10).getStringValue());
-        reorderingCorrelationField.setText(parameters.get(11).getStringValue());
-        duplicationValueField.setText(parameters.get(12).getStringValue());
-        duplicationCorrelationField.setText(parameters.get(13).getStringValue());
-        corruptionField.setText(parameters.get(14).getStringValue());
+        setIpProtocol(parameters.get(0).getStringValue());
+        srcAddressField.setText(parameters.get(1).getStringValue());
+        srcSubnetMaskBox.setSelectedItem(parameters.get(2).getStringValue());
+        srcPortField.setText(parameters.get(3).getStringValue());
+        dstAddressField.setText(parameters.get(4).getStringValue());
+        dstSubnetMaskBox.setSelectedItem(parameters.get(5).getStringValue());
+        dstPortField.setText(parameters.get(6).getStringValue());
+        delayValueField.setText(parameters.get(7).getStringValue());
+        jitterField.setText(parameters.get(8).getStringValue());
+        delayCorrelationField.setText(parameters.get(9).getStringValue());
+        distributionsBox.setSelectedItem(parameters.get(10).getStringValue());
+        lossValueField.setText(parameters.get(11).getStringValue());
+        lossCorrelationField.setText(parameters.get(12).getStringValue());
+        rateField.setText(parameters.get(13).getStringValue());
+        reorderingValueField.setText(parameters.get(14).getStringValue());
+        reorderingCorrelationField.setText(parameters.get(15).getStringValue());
+        duplicationValueField.setText(parameters.get(16).getStringValue());
+        duplicationCorrelationField.setText(parameters.get(17).getStringValue());
+        corruptionField.setText(parameters.get(18).getStringValue());
+
+        protocolsBox.setSelectedItem(parameters.get(19).getStringValue());
     }
 
     private void init() {
@@ -99,40 +116,67 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createFilterPanel() {
-        dstAddressField = new JTextField(20);
-        dstPortField = new JTextField(7);
+        tcpButton = new JRadioButton(NetworkEmulatorConstants.TCP_PROTOCOL);
+        udpButton = new JRadioButton(NetworkEmulatorConstants.UDP_PROTOCOL);
+        icmpButton = new JRadioButton(NetworkEmulatorConstants.ICMP_PROTOCOL);
+        tcpButton.setSelected(true);
+
+        ButtonGroup ipProtocolGroup = new ButtonGroup();
+        ipProtocolGroup.add(tcpButton);
+        ipProtocolGroup.add(udpButton);
+        ipProtocolGroup.add(icmpButton);
+
         srcAddressField = new JTextField(20);
         srcPortField = new JTextField(7);
+        dstAddressField = new JTextField(20);
+        dstPortField = new JTextField(7);
 
-        JLabel srcAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_ADDRESS);
-        srcAddressLabel.setLabelFor(srcAddressField);
-        JLabel srcPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT);
-        srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_ADDRESS);
-        dstAddressLabel.setLabelFor(dstAddressField);
-        JLabel dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
-        dstPortLabel.setLabelFor(dstPortField);
+        srcSubnetMaskBox = new JComboBox<>(NetworkEmulatorConstants.SUBNET_MASKS);
+        dstSubnetMaskBox = new JComboBox<>(NetworkEmulatorConstants.SUBNET_MASKS);
+        srcSubnetMaskBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
+        dstSubnetMaskBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
+
+        protocolsBox = new JComboBox<>(NetworkEmulatorConstants.PROTOCOLS);
+        protocolsBox.setPreferredSize(new Dimension(120, srcPortField.getPreferredSize().height));
+
+        protocolsBox.addActionListener(e -> {
+            String selectedProtocol = (String) protocolsBox.getSelectedItem();
+            Integer port = NetworkEmulatorConstants.PROTOCOL_PORTS.get(selectedProtocol);
+            if (!selectedProtocol.isEmpty()) {
+                dstPortField.setText(port.toString());
+            }
+        });
 
         dstAddressField.setInputVerifier(new IpAddressVerifier());
         dstPortField.setInputVerifier(new RangeVerifier(0, 1024));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
         srcPortField.setInputVerifier(new RangeVerifier(0, 1024));
 
+        JPanel iPprotocolPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        iPprotocolPanel.add(new JLabel(NetworkEmulatorConstants.LABEL_IP_PROTOCOL));
+        iPprotocolPanel.add(tcpButton);
+        iPprotocolPanel.add(udpButton);
+        iPprotocolPanel.add(icmpButton);
+
         JPanel srcPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        srcPanel.add(srcAddressLabel);
+        srcPanel.add(new JLabel(NetworkEmulatorConstants.LABEL_SRC_ADDRESS));
         srcPanel.add(srcAddressField);
-        srcPanel.add(srcPortLabel);
+        srcPanel.add(srcSubnetMaskBox);
+        srcPanel.add(new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT));
         srcPanel.add(srcPortField);
 
         JPanel dstPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dstPanel.add(dstAddressLabel);
+        dstPanel.add(new JLabel(NetworkEmulatorConstants.LABEL_DST_ADDRESS));
         dstPanel.add(dstAddressField);
-        dstPanel.add(dstPortLabel);
+        dstPanel.add(dstSubnetMaskBox);
+        dstPanel.add(new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT));
         dstPanel.add(dstPortField);
+        dstPanel.add(protocolsBox);
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.PAGE_AXIS));
         filterPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_FILTER_PANEL));
+        filterPanel.add(iPprotocolPanel);
         filterPanel.add(srcPanel);
         filterPanel.add(dstPanel);
 
@@ -140,10 +184,11 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createDelayPanel() {
-        delayValueField = new JTextField(10);
-        jitterField = new JTextField(10);
-        delayCorrelationField = new JTextField(10);
-        distributionsBox = new JComboBox<>(distributions);
+        delayValueField = new JTextField(8);
+        jitterField = new JTextField(8);
+        delayCorrelationField = new JTextField(8);
+        distributionsBox = new JComboBox<>(NetworkEmulatorConstants.DISTRIBUTIONS);
+        distributionsBox.setPreferredSize(new Dimension(250, delayCorrelationField.getPreferredSize().height));
 
         JLabel delayValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_VALUE);
         delayValueLabel.setLabelFor(delayValueField);
@@ -173,8 +218,8 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createLossPanel() {
-        lossValueField = new JTextField(10);
-        lossCorrelationField = new JTextField(10);
+        lossValueField = new JTextField(8);
+        lossCorrelationField = new JTextField(8);
 
         JLabel lossValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS_VALUE);
         lossValueLabel.setLabelFor(lossValueField);
@@ -195,7 +240,7 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createRatePanel() {
-        rateField = new JTextField(10);
+        rateField = new JTextField(8);
 
         JLabel rateLabel = new JLabel(NetworkEmulatorConstants.LABEL_RATE);
         rateLabel.setLabelFor(rateLabel);
@@ -211,8 +256,8 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createReorderingPanel() {
-        reorderingValueField = new JTextField(10);
-        reorderingCorrelationField = new JTextField(10);
+        reorderingValueField = new JTextField(8);
+        reorderingCorrelationField = new JTextField(8);
 
         JLabel reorderingValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_VALUE);
         reorderingValueLabel.setLabelFor(reorderingValueField);
@@ -233,8 +278,8 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createDuplicationPanel() {
-        duplicationValueField = new JTextField(10);
-        duplicationCorrelationField = new JTextField(10);
+        duplicationValueField = new JTextField(8);
+        duplicationCorrelationField = new JTextField(8);
 
         JLabel duplicationValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DUPLICATION_VALUE);
         duplicationValueLabel.setLabelFor(duplicationValueField);
@@ -255,7 +300,7 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private JPanel createCorruptionPanel() {
-        corruptionField = new JTextField(10);
+        corruptionField = new JTextField(8);
 
         JLabel corruptionLabel = new JLabel(NetworkEmulatorConstants.LABEL_CORRUPTION);
         corruptionLabel.setLabelFor(corruptionField);
@@ -269,4 +314,28 @@ public class TrafficClassPanel extends JPanel {
 
         return corruptionPanel;
     }
+
+    private String getIpProtocol() {
+        if (udpButton.isSelected()) {
+            return NetworkEmulatorConstants.UDP_PROTOCOL;
+        }
+        if (icmpButton.isSelected()) {
+            return NetworkEmulatorConstants.ICMP_PROTOCOL;
+        }
+
+        return NetworkEmulatorConstants.TCP_PROTOCOL;
+    }
+
+    private void setIpProtocol(String protocol) {
+        switch (protocol) {
+            case NetworkEmulatorConstants.UDP_PROTOCOL ->
+                udpButton.setSelected(true);
+            case NetworkEmulatorConstants.ICMP_PROTOCOL ->
+                icmpButton.setSelected(true);
+            default ->
+                tcpButton.setSelected(true);
+        }
+
+    }
+
 }
