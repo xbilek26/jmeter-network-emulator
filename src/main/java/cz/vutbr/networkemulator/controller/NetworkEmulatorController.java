@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.linux.tc.TrafficControl;
+import cz.vutbr.networkemulator.linux.TrafficControl;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
 import cz.vutbr.networkemulator.model.NetworkInterface;
 import cz.vutbr.networkemulator.model.NetworkParameters;
@@ -42,9 +42,9 @@ public class NetworkEmulatorController {
         Pattern pattern = Pattern.compile("dev\\s+(\\S+)");
         Matcher matcher = pattern.matcher(TrafficControl.showQDiscs());
         while (matcher.find()) {
-            if (!matcher.group(1).equals("lo")) {
-                addNetworkInterface(matcher.group(1));
-            }
+            // if (!matcher.group(1).equals("lo")) {
+            addNetworkInterface(matcher.group(1));
+            // }
         }
     }
 
@@ -132,6 +132,7 @@ public class NetworkEmulatorController {
 
     public void runEmulation() {
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
+            if (ni.getTrafficClasses().isEmpty()) continue;
             TrafficControl.setupRootQdisc(ni.getName());
             for (TrafficClass tc : ni.getTrafficClasses()) {
                 String dev = ni.getName();
