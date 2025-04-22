@@ -2,6 +2,8 @@ package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,9 +19,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -30,8 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
-import cz.vutbr.networkemulator.gui.tree.TreeNodeRenderer;
+import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
 import cz.vutbr.networkemulator.model.NetworkParameters;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
@@ -56,9 +59,13 @@ public class ConfigurationPanel extends JPanel {
 
     private ConfigTreeNode rootNode;
     private DefaultTreeModel treeModel;
-    private JTree tree;
+    private ConfigTree tree;
 
     private JPanel buttonPanel;
+    private JButton btnRefresh;
+    private JButton btnAdd;
+    private JButton btnRemove;
+
     private JPanel rightPanel;
 
     private DefaultRootPanel defaultRootPanel;
@@ -86,18 +93,18 @@ public class ConfigurationPanel extends JPanel {
         rootNode = new ConfigTreeNode();
         rootNode.setName(NetworkEmulatorConstants.ROOT_NODE_NAME);
         treeModel = new DefaultTreeModel(rootNode);
-        tree = new JTree(treeModel);
+        tree = new ConfigTree(treeModel);
         tree.setRootVisible(true);
         tree.setShowsRootHandles(true);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.setCellRenderer(new TreeNodeRenderer());
+        tree.setCellRenderer(new ConfigTreeNodeRenderer());
         tree.addTreeSelectionListener(this::updateView);
 
-        JButton btnRefresh = new JButton(NetworkEmulatorConstants.BTN_REFRESH_INTERFACES);
+        btnRefresh = new JButton(NetworkEmulatorConstants.BTN_REFRESH_INTERFACES);
         btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
-        JButton btnAdd = new JButton(NetworkEmulatorConstants.BTN_ADD_TRAFFIC_CLASS);
+        btnAdd = new JButton(NetworkEmulatorConstants.BTN_ADD_TRAFFIC_CLASS);
         btnAdd.addActionListener(_ -> addTrafficClass());
-        JButton btnRemove = new JButton(NetworkEmulatorConstants.BTN_REMOVE_TRAFFIC_CLASS);
+        btnRemove = new JButton(NetworkEmulatorConstants.BTN_REMOVE_TRAFFIC_CLASS);
         btnRemove.addActionListener(_ -> removeTrafficClass());
 
         buttonPanel = new JPanel(new CardLayout());
@@ -246,97 +253,34 @@ public class ConfigurationPanel extends JPanel {
         }
     }
 
-    private List<String> getExpandedPaths(JTree tree) {
-        List<String> expanded = new ArrayList<>();
-        TreePath rootPath = new TreePath(rootNode);
+    public void setComponentsEnabled(boolean enabled) {
+        btnRefresh.setEnabled(enabled);
+        btnAdd.setEnabled(enabled);
+        btnRemove.setEnabled(enabled);
 
-        if (tree.isExpanded(rootPath)) {
-            expanded.add(rootNode.getName());
-        }
-
-        int interfaceCount = treeModel.getChildCount(rootNode);
-        for (int i = 0; i < interfaceCount; i++) {
-            Object iface = treeModel.getChild(rootNode, i);
-            TreePath ifacePath = rootPath.pathByAddingChild(iface);
-
-            if (tree.isExpanded(ifacePath)) {
-                expanded.add(iface.toString());
-            }
-
-            int classCount = treeModel.getChildCount(iface);
-            for (int j = 0; j < classCount; j++) {
-                Object trafficClass = treeModel.getChild(iface, j);
-                TreePath classPath = ifacePath.pathByAddingChild(trafficClass);
-
-                if (tree.isExpanded(classPath)) {
-                    expanded.add(iface.toString() + "/" + trafficClass.toString());
-                }
-            }
-        }
-        return expanded;
+        setTrafficClassPanelsEnabled((ConfigTreeNode) tree.getModel().getRoot(), enabled);
     }
 
-    private void restoreExpandedPaths(JTree tree, List<String> pathsToExpand) {
-        TreePath rootPath = new TreePath(rootNode);
-
-        if (pathsToExpand.contains(rootNode.getName())) {
-            tree.expandPath(rootPath);
-        }
-
-        int niCount = treeModel.getChildCount(rootNode);
-        for (int i = 0; i < niCount; i++) {
-            Object ni = treeModel.getChild(rootNode, i);
-            TreePath niPath = rootPath.pathByAddingChild(ni);
-
-            if (pathsToExpand.contains(ni.toString())) {
-                tree.expandPath(niPath);
+    private void setTrafficClassPanelsEnabled(ConfigTreeNode rootNode, boolean enabled) {
+        Enumeration<TreeNode> niNodes = rootNode.children();
+        while (niNodes.hasMoreElements()) {
+            Enumeration<TreeNode> tcNodes = ((ConfigTreeNode) niNodes.nextElement()).children();
+            while (tcNodes.hasMoreElements()) {
+                TrafficClassPanel tcPanel = (TrafficClassPanel) ((ConfigTreeNode) tcNodes.nextElement()).getUserObject();
+                tcPanel.setEnabled(enabled);
+                setAllChildComponentsEnabled(tcPanel, enabled);
             }
 
-            int tcCount = treeModel.getChildCount(ni);
-            for (int j = 0; j < tcCount; j++) {
-                Object tc = treeModel.getChild(ni, j);
-                String pathStr = ni.toString() + "/" + tc.toString();
-
-                if (pathsToExpand.contains(pathStr)) {
-                    TreePath tcPath = niPath.pathByAddingChild(tc);
-                    tree.expandPath(tcPath);
-                }
-            }
         }
     }
 
-    private String getSelectedPath() {
-        TreePath selectedPath = tree.getSelectionPath();
-        Object[] pathComponents = selectedPath.getPath();
-        StringBuilder pathBuilder = new StringBuilder();
-        for (Object pathComponent : pathComponents) {
-            ConfigTreeNode node = (ConfigTreeNode) pathComponent;
-            pathBuilder.append(node.getName());
-            pathBuilder.append("/");
-        }
-
-        return pathBuilder.toString();
-    }
-
-    private void selectPath(String path) {
-        String[] pathComponents = path.split("/");
-
-        TreePath pathToSelect = new TreePath(rootNode);
-        ConfigTreeNode currentNode = rootNode;
-
-        for (String pathComponent : pathComponents) {
-            for (int i = 0; i < currentNode.getChildCount(); i++) {
-                ConfigTreeNode child = (ConfigTreeNode) currentNode.getChildAt(i);
-                if (pathComponent.equals(child.getName())) {
-                    pathToSelect = pathToSelect.pathByAddingChild(child);
-                    currentNode = child;
-                    break;
-                }
+    private void setAllChildComponentsEnabled(Container container, boolean enabled) {
+        for (Component component : container.getComponents()) {
+            component.setEnabled(enabled);
+            if (component instanceof Container nested) {
+                setAllChildComponentsEnabled(nested, enabled);
             }
         }
-
-        tree.setSelectionPath(pathToSelect);
-        tree.scrollPathToVisible(pathToSelect);
     }
 
     public void modifyTestElement(TestElement te) {
@@ -362,14 +306,14 @@ public class ConfigurationPanel extends JPanel {
         }
         te.setProperty(niNames);
 
-        List<String> expanded = getExpandedPaths(tree);
+        List<String> expanded = tree.getExpandedPaths();
         CollectionProperty expandedPaths = new CollectionProperty(PROPERTY_EXPANDED_PATHS, new ArrayList<>());
         for (String path : expanded) {
             expandedPaths.addItem(path);
         }
         te.setProperty(expandedPaths);
 
-        String selectedPath = getSelectedPath();
+        String selectedPath = tree.getSelectedPath();
         te.setProperty(PROPERTY_SELECTED_PATH, selectedPath);
     }
 
@@ -413,8 +357,7 @@ public class ConfigurationPanel extends JPanel {
 
         JMeterProperty expandedPathsProp = te.getProperty(PROPERTY_EXPANDED_PATHS);
         if (expandedPathsProp instanceof CollectionProperty expandedPaths) {
-            restoreExpandedPaths(
-                    tree,
+            tree.restoreExpandedPaths(
                     ((Collection<JMeterProperty>) expandedPaths.getObjectValue()).stream()
                             .map(JMeterProperty::getStringValue)
                             .collect(Collectors.toList())
@@ -422,7 +365,7 @@ public class ConfigurationPanel extends JPanel {
         }
 
         JMeterProperty selectedPathProp = te.getProperty(PROPERTY_SELECTED_PATH);
-        selectPath(selectedPathProp.getStringValue());
+        tree.selectPath(selectedPathProp.getStringValue());
     }
 
     public void collectSettings() {
