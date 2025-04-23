@@ -1,5 +1,7 @@
 package cz.vutbr.networkemulator.gui;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
@@ -336,6 +338,21 @@ public class TrafficClassPanel extends JPanel {
                 tcpButton.setSelected(true);
         }
 
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setComponentsEnabled(this, enabled);
+    }
+
+    private void setComponentsEnabled(Container container, boolean enabled) {
+        for (Component component : container.getComponents()) {
+            component.setEnabled(enabled);
+            if (component instanceof Container nested) {
+                setComponentsEnabled(nested, enabled);
+            }
+        }
     }
 
 }
