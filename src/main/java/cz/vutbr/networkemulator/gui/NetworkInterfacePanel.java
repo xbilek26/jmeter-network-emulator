@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,10 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+
+import org.apache.jmeter.gui.util.PowerTableModel;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.model.NetworkParameters;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkInterfacePanel extends JPanel {
 
@@ -53,11 +54,9 @@ public class NetworkInterfacePanel extends JPanel {
 
                 JTable table = new JTable(buildTableModel(params));
                 table.setFillsViewportHeight(true);
-                table.setEnabled(false);
                 table.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 JPanel tableContainer = new JPanel(new BorderLayout());
-                tableContainer.add(table.getTableHeader(), BorderLayout.NORTH);
                 tableContainer.add(table, BorderLayout.CENTER);
                 tableContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
                 tableContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, table.getPreferredSize().height + table.getTableHeader().getPreferredSize().height));
@@ -71,18 +70,64 @@ public class NetworkInterfacePanel extends JPanel {
         contentPanel.repaint();
     }
 
-    private DefaultTableModel buildTableModel(NetworkParameters params) {
-        String[] columnNames = {"Parameter", "Value"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+    private PowerTableModel buildTableModel(NetworkParameters params) {
+        PowerTableModel tableModel = new PowerTableModel(
+                new String[]{NetworkEmulatorConstants.PARAMETER, NetworkEmulatorConstants.VALUE},
+                new Class[]{String.class, String.class}
+        );
 
-        Map<String, Integer> setParams = params.getSetParameters();
-        setParams.forEach((key, value) -> model.addRow(new Object[]{key, value}));
+        if (params.isIpProtocolSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.IP_PROTOCOL, params.getIpProtocol()});
+        }
+        if (params.isSrcAddressSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.SRC_ADDRESS, params.getSrcAddress() + params.getSrcSubnetMask()});
+        }
+        if (params.isSrcPortSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.SRC_PORT, params.getSrcPort()});
+        }
+        if (params.isDstAddressSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DST_ADDRESS, params.getDstAddress() + params.getDstSubnetMask()});
+        }
+        if (params.isDstPortSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DST_PORT, params.getDstPort()});
+        }
+        if (params.isDelayValueSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DELAY_VALUE, params.getDelayValue() + NetworkEmulatorConstants.DELAY_UNIT});
+        }
+        if (params.isJitterSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.JITTER, params.getJitter() + NetworkEmulatorConstants.JITTER_UNIT});
+        }
+        if (params.isDelayCorrelationSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DELAY_CORRELATION, params.getDelayCorrelation() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isDistributionSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DISTRIBUTION, params.getDistribution()});
+        }
+        if (params.isLossValueSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.LOSS_VALUE, params.getLossValue() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isLossCorrelationSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.LOSS_CORRELATION, params.getLossCorrelation() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isRateSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.RATE, params.getRate() + NetworkEmulatorConstants.RATE_UNIT});
+        }
+        if (params.isReorderingValueSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.REORDERING_VALUE, params.getReorderingValue() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isReorderingCorrelationSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.REORDERING_CORRELATION, params.getReorderingCorrelation() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isDuplicationValueSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DUPLICATION_VALUE, params.getDuplicationValue() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isDuplicationCorrelationSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DUPLICATION_CORRELATION, params.getDuplicationCorrelation() + NetworkEmulatorConstants.PERCENT});
+        }
+        if (params.isCorruptionSet()) {
+            tableModel.addRow(new Object[]{NetworkEmulatorConstants.CORRUPTION, params.getCorruption() + NetworkEmulatorConstants.PERCENT});
+        }
 
-        return model;
+        return tableModel;
     }
 }
