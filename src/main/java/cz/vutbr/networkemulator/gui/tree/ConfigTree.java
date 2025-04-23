@@ -1,11 +1,15 @@
 package cz.vutbr.networkemulator.gui.tree;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
+import cz.vutbr.networkemulator.gui.TrafficClassPanel;
 
 public class ConfigTree extends JTree {
 
@@ -108,6 +112,19 @@ public class ConfigTree extends JTree {
 
         setSelectionPath(path);
         scrollPathToVisible(path);
+    }
+
+    public Set<TrafficClassPanel> getTcPanels() {
+        Set<TrafficClassPanel> tcPanels = new HashSet<>();
+        ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
+        for (int i = 0; i < rootNode.getChildCount(); i++) {
+            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            for (int j = 0; j < niNode.getChildCount(); j++) {
+                tcPanels.add((TrafficClassPanel) ((ConfigTreeNode) niNode.getChildAt(j)).getUserObject());
+            }
+        }
+
+        return tcPanels;
     }
 
 }
