@@ -3,6 +3,7 @@ package cz.vutbr.networkemulator.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -52,7 +53,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private void init() {
         registerIcon();
-        setLayout(new BorderLayout(0, 5));
+        setLayout(new BorderLayout());
         setBorder(makeBorder());
         add(makeTitlePanel(), BorderLayout.NORTH);
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createMainPanel(), createConfigurationPanel());
@@ -67,25 +68,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         mainPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_MAIN_PANEL));
 
         return mainPanel;
-    }
-
-    private void startEmulator() {
-        btnStart.setEnabled(false);
-        btnStop.setEnabled(true);
-        configurationPanel.setComponentsEnabled(false);
-        configurationPanel.collectSettings();
-        controller.runEmulation();
-        currentSettings.setText(controller.getNetworkConfiguration());
-        lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
-    }
-
-    private void stopEmulator() {
-        btnStart.setEnabled(true);
-        btnStop.setEnabled(false);
-        configurationPanel.setComponentsEnabled(true);
-        controller.restoreNetworkConfiguration();
-        currentSettings.setText(controller.getNetworkConfiguration());
-        lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
     }
 
     private JPanel createConfigurationPanel() {
@@ -120,16 +102,16 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         ImageIcon startImage = JMeterUtils.getImage("toolbar/" + iconSize + "/arrow-right-3.png");
         btnStart = new JButton(NetworkEmulatorConstants.BTN_START_EMULATION);
         btnStart.setIcon(startImage);
-        btnStart.addActionListener(e -> startEmulator());
         btnStart.setFocusable(false);
         btnStart.setEnabled(true);
+        btnStart.addActionListener(this::toggleEmulator);
 
         btnStop = new JButton(NetworkEmulatorConstants.BTN_STOP_EMULATION);
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
         btnStop.setIcon(stopImage);
-        btnStop.addActionListener(e -> stopEmulator());
         btnStop.setFocusable(false);
         btnStop.setEnabled(false);
+        btnStop.addActionListener(this::toggleEmulator);
 
         lblEmulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
 
@@ -138,6 +120,26 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         controlPanel.add(lblEmulatorState);
 
         return controlPanel;
+    }
+
+    private void toggleEmulator(ActionEvent evt) {
+        final Object source = evt.getSource();
+        if (source == btnStart) {
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
+            configurationPanel.setComponentsEnabled(false);
+            configurationPanel.collectSettings();
+            controller.runEmulation();
+            currentSettings.setText(controller.getNetworkConfiguration());
+            lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
+        } else if (source == btnStop) {
+            btnStart.setEnabled(true);
+            btnStop.setEnabled(false);
+            configurationPanel.setComponentsEnabled(true);
+            controller.restoreNetworkConfiguration();
+            currentSettings.setText(controller.getNetworkConfiguration());
+            lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+        }
     }
 
     public static void registerIcon() {
