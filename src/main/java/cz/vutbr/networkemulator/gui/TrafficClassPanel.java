@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -14,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class TrafficClassPanel extends JPanel {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(TrafficClassPanel.class);
 
+    private ButtonGroup ipProtocolGroup;
     private JRadioButton tcpButton;
     private JRadioButton udpButton;
     private JRadioButton icmpButton;
@@ -50,60 +52,62 @@ public class TrafficClassPanel extends JPanel {
     private JTextField duplicationCorrelationField;
     private JTextField corruptionField;
 
+    private final String UNDERSCORE = "_";
+
     public TrafficClassPanel(String niName, String tcName) {
-        setName(niName + "_" + tcName);
+        setName(niName + UNDERSCORE + tcName);
         init();
     }
 
-    public CollectionProperty getNetworkParameters() {
-        CollectionProperty parameters = new CollectionProperty();
-        parameters.addItem(getIpProtocol());
-        parameters.addItem(srcAddressField.getText());
-        parameters.addItem(srcSubnetMaskBox.getSelectedItem());
-        parameters.addItem(srcPortField.getText());
-        parameters.addItem(dstAddressField.getText());
-        parameters.addItem(dstSubnetMaskBox.getSelectedItem());
-        parameters.addItem(dstPortField.getText());
-        parameters.addItem(delayValueField.getText());
-        parameters.addItem(jitterField.getText());
-        parameters.addItem(delayCorrelationField.getText());
-        parameters.addItem(distributionsBox.getSelectedItem());
-        parameters.addItem(lossValueField.getText());
-        parameters.addItem(lossCorrelationField.getText());
-        parameters.addItem(rateField.getText());
-        parameters.addItem(reorderingValueField.getText());
-        parameters.addItem(reorderingCorrelationField.getText());
-        parameters.addItem(duplicationValueField.getText());
-        parameters.addItem(duplicationCorrelationField.getText());
-        parameters.addItem(corruptionField.getText());
+    public List<String> getNetworkParameters() {
+        List<String> parameters = new ArrayList<>();
+        parameters.add(getIpProtocol());
+        parameters.add(srcAddressField.getText());
+        parameters.add((String) srcSubnetMaskBox.getSelectedItem());
+        parameters.add(srcPortField.getText());
+        parameters.add(dstAddressField.getText());
+        parameters.add((String) dstSubnetMaskBox.getSelectedItem());
+        parameters.add(dstPortField.getText());
+        parameters.add(delayValueField.getText());
+        parameters.add(jitterField.getText());
+        parameters.add(delayCorrelationField.getText());
+        parameters.add((String) distributionsBox.getSelectedItem());
+        parameters.add(lossValueField.getText());
+        parameters.add(lossCorrelationField.getText());
+        parameters.add(rateField.getText());
+        parameters.add(reorderingValueField.getText());
+        parameters.add(reorderingCorrelationField.getText());
+        parameters.add(duplicationValueField.getText());
+        parameters.add(duplicationCorrelationField.getText());
+        parameters.add(corruptionField.getText());
 
-        parameters.addItem(protocolsBox.getSelectedItem());
+        parameters.add((String) protocolsBox.getSelectedItem());
 
         return parameters;
     }
 
-    public void setNetworkParameters(CollectionProperty parameters) {
-        setIpProtocol(parameters.get(0).getStringValue());
-        srcAddressField.setText(parameters.get(1).getStringValue());
-        srcSubnetMaskBox.setSelectedItem(parameters.get(2).getStringValue());
-        srcPortField.setText(parameters.get(3).getStringValue());
-        dstAddressField.setText(parameters.get(4).getStringValue());
-        dstSubnetMaskBox.setSelectedItem(parameters.get(5).getStringValue());
-        dstPortField.setText(parameters.get(6).getStringValue());
-        delayValueField.setText(parameters.get(7).getStringValue());
-        jitterField.setText(parameters.get(8).getStringValue());
-        delayCorrelationField.setText(parameters.get(9).getStringValue());
-        distributionsBox.setSelectedItem(parameters.get(10).getStringValue());
-        lossValueField.setText(parameters.get(11).getStringValue());
-        lossCorrelationField.setText(parameters.get(12).getStringValue());
-        rateField.setText(parameters.get(13).getStringValue());
-        reorderingValueField.setText(parameters.get(14).getStringValue());
-        reorderingCorrelationField.setText(parameters.get(15).getStringValue());
-        duplicationValueField.setText(parameters.get(16).getStringValue());
-        duplicationCorrelationField.setText(parameters.get(17).getStringValue());
-        corruptionField.setText(parameters.get(18).getStringValue());
+    public void setNetworkParameters(List<String> parameters) {
+        setIpProtocol(parameters.get(0));
+        srcAddressField.setText(parameters.get(1));
+        srcSubnetMaskBox.setSelectedItem(parameters.get(2));
+        srcPortField.setText(parameters.get(3));
+        dstAddressField.setText(parameters.get(4));
+        dstSubnetMaskBox.setSelectedItem(parameters.get(5));
+        dstPortField.setText(parameters.get(6));
+        delayValueField.setText(parameters.get(7));
+        jitterField.setText(parameters.get(8));
+        delayCorrelationField.setText(parameters.get(9));
+        distributionsBox.setSelectedItem(parameters.get(10));
+        lossValueField.setText(parameters.get(11));
+        lossCorrelationField.setText(parameters.get(12));
+        rateField.setText(parameters.get(13));
+        reorderingValueField.setText(parameters.get(14));
+        reorderingCorrelationField.setText(parameters.get(15));
+        duplicationValueField.setText(parameters.get(16));
+        duplicationCorrelationField.setText(parameters.get(17));
+        corruptionField.setText(parameters.get(18));
 
-        protocolsBox.setSelectedItem(parameters.get(19).getStringValue());
+        protocolsBox.setSelectedItem(parameters.get(19));
     }
 
     private void init() {
@@ -123,7 +127,7 @@ public class TrafficClassPanel extends JPanel {
         icmpButton = new JRadioButton(NetworkEmulatorConstants.ICMP_PROTOCOL);
         tcpButton.setSelected(true);
 
-        ButtonGroup ipProtocolGroup = new ButtonGroup();
+        ipProtocolGroup = new ButtonGroup();
         ipProtocolGroup.add(tcpButton);
         ipProtocolGroup.add(udpButton);
         ipProtocolGroup.add(icmpButton);
@@ -190,7 +194,7 @@ public class TrafficClassPanel extends JPanel {
         jitterField = new JTextField(8);
         delayCorrelationField = new JTextField(8);
         distributionsBox = new JComboBox<>(NetworkEmulatorConstants.DISTRIBUTIONS);
-        distributionsBox.setPreferredSize(new Dimension(250, delayCorrelationField.getPreferredSize().height));
+        distributionsBox.setPreferredSize(new Dimension(180, delayCorrelationField.getPreferredSize().height));
 
         JLabel delayValueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_VALUE);
         delayValueLabel.setLabelFor(delayValueField);
@@ -318,6 +322,7 @@ public class TrafficClassPanel extends JPanel {
     }
 
     private String getIpProtocol() {
+        System.out.println("ip protocol " + ipProtocolGroup.getSelection().getActionCommand());
         if (udpButton.isSelected()) {
             return NetworkEmulatorConstants.UDP_PROTOCOL;
         }
