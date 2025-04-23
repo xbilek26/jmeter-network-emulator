@@ -4,13 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,6 +23,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
+import org.apache.jmeter.testelement.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -250,7 +249,7 @@ public class ConfigurationPanel extends JPanel {
         }
     }
 
-    public void setComponentsEnabled(boolean enabled) {
+    public void setEditable(boolean enabled) {
         btnRefresh.setEnabled(enabled);
         btnAdd.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
@@ -273,23 +272,19 @@ public class ConfigurationPanel extends JPanel {
                 String tcName = tcNode.getName();
                 tcNames.addItem(tcName);
 
-                CollectionProperty parameters = tcPanel.getNetworkParameters();
-                parameters.setName(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
+                CollectionProperty parameters = new CollectionProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName(),
+                        tcPanel.getNetworkParameters());
                 te.setProperty(parameters);
             }
             te.setProperty(tcNames);
         }
         te.setProperty(niNames);
 
-        List<String> expanded = tree.getExpandedPaths();
-        CollectionProperty expandedPaths = new CollectionProperty(PROPERTY_EXPANDED_PATHS, new ArrayList<>());
-        for (String path : expanded) {
-            expandedPaths.addItem(path);
-        }
+        CollectionProperty expandedPaths = new CollectionProperty(PROPERTY_EXPANDED_PATHS, tree.getExpandedPaths());
         te.setProperty(expandedPaths);
 
-        String selectedPath = tree.getSelectedPath();
-        te.setProperty(PROPERTY_SELECTED_PATH, selectedPath);
+        StringProperty selectedPath = new StringProperty(PROPERTY_SELECTED_PATH, tree.getSelectedPath());
+        te.setProperty(selectedPath);
     }
 
     public void configure(TestElement te) {
@@ -316,11 +311,10 @@ public class ConfigurationPanel extends JPanel {
                         tcNode.setName(tcName);
                         niNode.add(tcNode);
 
-                        JMeterProperty parametersProp = te.getProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
-                        if (parametersProp instanceof CollectionProperty parameters) {
-                            tcPanel.setNetworkParameters(parameters);
-                        }
+                        JMeterProperty parameters = te.getProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
+                        tcPanel.setNetworkParameters(NetworkEmulatorConverter.convertToList((CollectionProperty) parameters));
                     }
+
                 }
             }
         }
@@ -330,17 +324,11 @@ public class ConfigurationPanel extends JPanel {
 
         treeModel.reload();
 
-        JMeterProperty expandedPathsProp = te.getProperty(PROPERTY_EXPANDED_PATHS);
-        if (expandedPathsProp instanceof CollectionProperty expandedPaths) {
-            tree.expandPaths(
-                    ((Collection<JMeterProperty>) expandedPaths.getObjectValue()).stream()
-                            .map(JMeterProperty::getStringValue)
-                            .collect(Collectors.toList())
-            );
-        }
+        CollectionProperty expandedPaths = (CollectionProperty) te.getPropertyOrNull(PROPERTY_EXPANDED_PATHS);
+        tree.expandPaths(NetworkEmulatorConverter.convertToList(expandedPaths));
 
-        JMeterProperty selectedPathProp = te.getProperty(PROPERTY_SELECTED_PATH);
-        tree.selectPath(selectedPathProp.getStringValue());
+        StringProperty selectedPath = (StringProperty) te.getPropertyOrNull(PROPERTY_SELECTED_PATH);
+        tree.selectPath(NetworkEmulatorConverter.convertToString(selectedPath));
     }
 
     public void collectSettings() {
@@ -357,8 +345,8 @@ public class ConfigurationPanel extends JPanel {
                 controller.addTrafficClass(niName, tcName);
 
                 TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
-                CollectionProperty propertyParameters = tcPanel.getNetworkParameters();
-                NetworkParameters networkParameters = NetworkEmulatorConverter.convertToNetworkParameters(propertyParameters);
+                List<String> parametersList = tcPanel.getNetworkParameters();
+                NetworkParameters networkParameters = NetworkEmulatorConverter.convertToNetworkParameters(parametersList);
                 controller.setNetworkParameters(niName, tcName, networkParameters);
             }
         }
