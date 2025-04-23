@@ -1,12 +1,7 @@
 package cz.vutbr.networkemulator.model;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 /**
  * Represents network parameters that can be used for network emulation.
@@ -190,49 +185,80 @@ public class NetworkParameters {
         this.corruption = corruptionValue;
     }
 
-    public Map<String, Integer> getSetParameters() {
-        Map<String, Integer> params = new LinkedHashMap<>();
-
-        if (srcPort != -1) {
-            params.put(NetworkEmulatorConstants.SRC_PORT, srcPort);
-        }
-        if (dstPort != -1) {
-            params.put(NetworkEmulatorConstants.DST_PORT, dstPort);
-        }
-        if (delayValue != -1) {
-            params.put(NetworkEmulatorConstants.DELAY_VALUE, delayValue);
-        }
-        if (jitter != -1) {
-            params.put(NetworkEmulatorConstants.JITTER, jitter);
-        }
-        if (delayCorrelation != -1) {
-            params.put(NetworkEmulatorConstants.DELAY_CORRELATION, delayCorrelation);
-        }
-        if (lossValue != -1) {
-            params.put(NetworkEmulatorConstants.LOSS_VALUE, lossValue);
-        }
-        if (lossCorrelation != -1) {
-            params.put(NetworkEmulatorConstants.LOSS_CORRELATION, lossCorrelation);
-        }
-        if (rate != -1) {
-            params.put(NetworkEmulatorConstants.RATE, rate);
-        }
-        if (reorderingValue != -1) {
-            params.put(NetworkEmulatorConstants.REORDERING_VALUE, reorderingValue);
-        }
-        if (reorderingCorrelation != -1) {
-            params.put(NetworkEmulatorConstants.REORDERING_CORRELATION, reorderingCorrelation);
-        }
-        if (duplicationValue != -1) {
-            params.put(NetworkEmulatorConstants.DUPLICATION_VALUE, duplicationValue);
-        }
-        if (duplicationCorrelation != -1) {
-            params.put(NetworkEmulatorConstants.DUPLICATION_CORRELATION, duplicationCorrelation);
-        }
-        if (corruption != -1) {
-            params.put(NetworkEmulatorConstants.CORRUPTION, corruption);
-        }
-
-        return params;
+    public boolean isIpProtocolSet() {
+        return ipProtocol != null && !ipProtocol.isEmpty();
     }
+
+    public boolean isSrcAddressSet() {
+        return srcAddress != null && !srcAddress.isEmpty();
+    }
+
+    public boolean isSrcSubnetMaskSet() {
+        return srcSubnetMask != null && !srcSubnetMask.isEmpty();
+    }
+
+    public boolean isSrcPortSet() {
+        return srcPort != -1;
+    }
+
+    public boolean isDstAddressSet() {
+        return dstAddress != null && !dstAddress.isEmpty();
+    }
+
+    public boolean isDstSubnetMaskSet() {
+        return dstSubnetMask != null && !dstSubnetMask.isEmpty();
+    }
+
+    public boolean isDstPortSet() {
+        return dstPort != -1;
+    }
+
+    public boolean isDelayValueSet() {
+        return delayValue != -1;
+    }
+
+    public boolean isJitterSet() {
+        return jitter != -1;
+    }
+
+    public boolean isDelayCorrelationSet() {
+        return delayCorrelation != -1;
+    }
+
+    public boolean isDistributionSet() {
+        return distribution != null && !distribution.isEmpty();
+    }
+
+    public boolean isLossValueSet() {
+        return lossValue != -1;
+    }
+
+    public boolean isLossCorrelationSet() {
+        return lossCorrelation != -1;
+    }
+
+    public boolean isRateSet() {
+        return rate != -1;
+    }
+
+    public boolean isReorderingValueSet() {
+        return reorderingValue != -1;
+    }
+
+    public boolean isReorderingCorrelationSet() {
+        return reorderingCorrelation != -1;
+    }
+
+    public boolean isDuplicationValueSet() {
+        return duplicationValue != -1;
+    }
+
+    public boolean isDuplicationCorrelationSet() {
+        return duplicationCorrelation != -1;
+    }
+
+    public boolean isCorruptionSet() {
+        return corruption != -1;
+    }
+
 }
