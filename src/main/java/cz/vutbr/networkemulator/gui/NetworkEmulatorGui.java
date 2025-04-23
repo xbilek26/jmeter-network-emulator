@@ -53,7 +53,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private void init() {
         registerIcon();
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0, 5));
         setBorder(makeBorder());
         add(makeTitlePanel(), BorderLayout.NORTH);
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createMainPanel(), createConfigurationPanel());
@@ -127,7 +127,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         if (source == btnStart) {
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
-            configurationPanel.setComponentsEnabled(false);
+            configurationPanel.setEditable(false);
             configurationPanel.collectSettings();
             controller.runEmulation();
             currentSettings.setText(controller.getNetworkConfiguration());
@@ -135,7 +135,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         } else if (source == btnStop) {
             btnStart.setEnabled(true);
             btnStop.setEnabled(false);
-            configurationPanel.setComponentsEnabled(true);
+            configurationPanel.setEditable(true);
             controller.restoreNetworkConfiguration();
             currentSettings.setText(controller.getNetworkConfiguration());
             lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
