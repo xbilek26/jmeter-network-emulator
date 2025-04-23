@@ -22,6 +22,7 @@ public class NetworkInterfacePanel extends JPanel {
 
     private final NetworkEmulatorController controller;
     private final JPanel contentPanel;
+    private final String SPACE = " ";
 
     public NetworkInterfacePanel(String name) {
         setName(name);
@@ -59,7 +60,7 @@ public class NetworkInterfacePanel extends JPanel {
                 JPanel tableContainer = new JPanel(new BorderLayout());
                 tableContainer.add(table, BorderLayout.CENTER);
                 tableContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
-                tableContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, table.getPreferredSize().height + table.getTableHeader().getPreferredSize().height));
+                tableContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, table.getPreferredSize().height));
 
                 contentPanel.add(tableContainer);
                 contentPanel.add(Box.createVerticalStrut(10));
@@ -77,55 +78,106 @@ public class NetworkInterfacePanel extends JPanel {
         );
 
         if (params.isIpProtocolSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.IP_PROTOCOL, params.getIpProtocol()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.IP_PROTOCOL,
+                params.getIpProtocol()
+            });
         }
         if (params.isSrcAddressSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.SRC_ADDRESS, params.getSrcAddress() + params.getSrcSubnetMask()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.SRC_ADDRESS,
+                params.getSrcAddress() + params.getSrcSubnetMask()
+            });
         }
         if (params.isSrcPortSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.SRC_PORT, params.getSrcPort()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.SRC_PORT,
+                params.getSrcPort()
+            });
         }
         if (params.isDstAddressSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DST_ADDRESS, params.getDstAddress() + params.getDstSubnetMask()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DST_ADDRESS,
+                params.getDstAddress() + params.getDstSubnetMask()
+            });
         }
         if (params.isDstPortSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DST_PORT, params.getDstPort()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DST_PORT,
+                params.getDstPort()
+            });
         }
         if (params.isDelayValueSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DELAY_VALUE, params.getDelayValue() + NetworkEmulatorConstants.DELAY_UNIT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DELAY_VALUE,
+                params.getDelayValue() + SPACE + NetworkEmulatorConstants.DELAY_UNIT
+            });
         }
         if (params.isJitterSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.JITTER, params.getJitter() + NetworkEmulatorConstants.JITTER_UNIT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.JITTER,
+                params.getJitter() + SPACE + NetworkEmulatorConstants.JITTER_UNIT
+            });
         }
         if (params.isDelayCorrelationSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DELAY_CORRELATION, params.getDelayCorrelation() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DELAY_CORRELATION,
+                params.getDelayCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isDistributionSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DISTRIBUTION, params.getDistribution()});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DISTRIBUTION,
+                params.getDistribution()
+            });
         }
         if (params.isLossValueSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.LOSS_VALUE, params.getLossValue() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.LOSS_VALUE,
+                params.getLossValue() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isLossCorrelationSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.LOSS_CORRELATION, params.getLossCorrelation() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.LOSS_CORRELATION,
+                params.getLossCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isRateSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.RATE, params.getRate() + NetworkEmulatorConstants.RATE_UNIT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.RATE,
+                params.getRate() + SPACE + NetworkEmulatorConstants.RATE_UNIT
+            });
         }
         if (params.isReorderingValueSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.REORDERING_VALUE, params.getReorderingValue() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.REORDERING_VALUE,
+                params.getReorderingValue() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isReorderingCorrelationSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.REORDERING_CORRELATION, params.getReorderingCorrelation() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.REORDERING_CORRELATION,
+                params.getReorderingCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isDuplicationValueSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DUPLICATION_VALUE, params.getDuplicationValue() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DUPLICATION_VALUE,
+                params.getDuplicationValue() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isDuplicationCorrelationSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.DUPLICATION_CORRELATION, params.getDuplicationCorrelation() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.DUPLICATION_CORRELATION,
+                params.getDuplicationCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
         if (params.isCorruptionSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorConstants.CORRUPTION, params.getCorruption() + NetworkEmulatorConstants.PERCENT});
+            tableModel.addRow(new Object[]{
+                NetworkEmulatorConstants.CORRUPTION,
+                params.getCorruption() + SPACE + NetworkEmulatorConstants.PERCENT
+            });
         }
 
         return tableModel;
