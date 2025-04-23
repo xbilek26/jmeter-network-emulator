@@ -2,8 +2,6 @@ package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -113,7 +110,7 @@ public class ConfigurationPanel extends JPanel {
         buttonPanel.add(btnRemove, BTN_REMOVE);
 
         JScrollPane treeScrollPane = new JScrollPane(tree);
-        treeScrollPane.setPreferredSize(new Dimension(150, 0));
+        treeScrollPane.setPreferredSize(new Dimension(100, 0));
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(treeScrollPane, BorderLayout.CENTER);
@@ -235,14 +232,14 @@ public class ConfigurationPanel extends JPanel {
         switch (object) {
             case DefaultRootPanel rootPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REFRESH);
-                rootPanel.update();
                 rightPanelCards.show(rightPanel, rootPanel.getName());
+                rootPanel.update();
             }
             case NetworkInterfacePanel niPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_ADD);
                 collectSettings();
-                niPanel.update(name);
                 rightPanelCards.show(rightPanel, niPanel.getName());
+                niPanel.update(name);
             }
             case TrafficClassPanel tcPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REMOVE);
@@ -258,29 +255,7 @@ public class ConfigurationPanel extends JPanel {
         btnAdd.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
 
-        setTrafficClassPanelsEnabled((ConfigTreeNode) tree.getModel().getRoot(), enabled);
-    }
-
-    private void setTrafficClassPanelsEnabled(ConfigTreeNode rootNode, boolean enabled) {
-        Enumeration<TreeNode> niNodes = rootNode.children();
-        while (niNodes.hasMoreElements()) {
-            Enumeration<TreeNode> tcNodes = ((ConfigTreeNode) niNodes.nextElement()).children();
-            while (tcNodes.hasMoreElements()) {
-                TrafficClassPanel tcPanel = (TrafficClassPanel) ((ConfigTreeNode) tcNodes.nextElement()).getUserObject();
-                tcPanel.setEnabled(enabled);
-                setAllChildComponentsEnabled(tcPanel, enabled);
-            }
-
-        }
-    }
-
-    private void setAllChildComponentsEnabled(Container container, boolean enabled) {
-        for (Component component : container.getComponents()) {
-            component.setEnabled(enabled);
-            if (component instanceof Container nested) {
-                setAllChildComponentsEnabled(nested, enabled);
-            }
-        }
+        tree.getTcPanels().stream().forEach(tcPanel -> tcPanel.setEnabled(enabled));
     }
 
     public void modifyTestElement(TestElement te) {
