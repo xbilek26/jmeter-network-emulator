@@ -11,18 +11,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.jmeter.gui.util.PowerTableModel;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
-import cz.vutbr.networkemulator.model.NetworkParameters;
+import cz.vutbr.networkemulator.model.filter.Filter;
+import cz.vutbr.networkemulator.model.parameters.Parameter;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 
 public class NetworkInterfacePanel extends JPanel {
 
     private final NetworkEmulatorController controller;
     private final JPanel contentPanel;
-    private final String SPACE = " ";
 
     public NetworkInterfacePanel(String name) {
         setName(name);
@@ -47,13 +48,14 @@ public class NetworkInterfacePanel extends JPanel {
 
         List<String> tcNames = controller.getTrafficClasses(niName);
         tcNames.forEach(tcName -> {
-            NetworkParameters params = controller.getNetworkParameters(niName, tcName);
-            if (params != null) {
+            Filter filter = controller.getFilter(niName, tcName);
+            List<Parameter> parameters = controller.getParameters(niName, tcName);
+            if (filter != null) {
                 JLabel label = new JLabel("Traffic Class: " + tcName);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 contentPanel.add(label);
 
-                JTable table = new JTable(buildTableModel(params));
+                JTable table = new JTable(buildTableModel(filter, parameters));
                 table.setFillsViewportHeight(true);
                 table.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -71,115 +73,25 @@ public class NetworkInterfacePanel extends JPanel {
         contentPanel.repaint();
     }
 
-    private PowerTableModel buildTableModel(NetworkParameters params) {
+    private PowerTableModel buildTableModel(Filter filter, List<Parameter> parameters) {
         PowerTableModel tableModel = new PowerTableModel(
                 new String[]{NetworkEmulatorConstants.PARAMETER, NetworkEmulatorConstants.VALUE},
                 new Class[]{String.class, String.class}
         );
 
-        if (params.isIpProtocolSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.IP_PROTOCOL,
-                params.getIpProtocol()
-            });
-        }
-        if (params.isSrcAddressSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.SRC_ADDRESS,
-                params.getSrcAddress() + params.getSrcSubnetMask()
-            });
-        }
-        if (params.isSrcPortSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.SRC_PORT,
-                params.getSrcPort()
-            });
-        }
-        if (params.isDstAddressSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DST_ADDRESS,
-                params.getDstAddress() + params.getDstSubnetMask()
-            });
-        }
-        if (params.isDstPortSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DST_PORT,
-                params.getDstPort()
-            });
-        }
-        if (params.isDelayValueSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DELAY_VALUE,
-                params.getDelayValue() + SPACE + NetworkEmulatorConstants.DELAY_UNIT
-            });
-        }
-        if (params.isJitterSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.JITTER,
-                params.getJitter() + SPACE + NetworkEmulatorConstants.JITTER_UNIT
-            });
-        }
-        if (params.isDelayCorrelationSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DELAY_CORRELATION,
-                params.getDelayCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isDistributionSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DISTRIBUTION,
-                params.getDistribution()
-            });
-        }
-        if (params.isLossValueSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.LOSS_VALUE,
-                params.getLossValue() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isLossCorrelationSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.LOSS_CORRELATION,
-                params.getLossCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isRateSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.RATE,
-                params.getRate() + SPACE + NetworkEmulatorConstants.RATE_UNIT
-            });
-        }
-        if (params.isReorderingValueSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.REORDERING_VALUE,
-                params.getReorderingValue() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isReorderingCorrelationSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.REORDERING_CORRELATION,
-                params.getReorderingCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isDuplicationValueSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DUPLICATION_VALUE,
-                params.getDuplicationValue() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isDuplicationCorrelationSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.DUPLICATION_CORRELATION,
-                params.getDuplicationCorrelation() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
-        if (params.isCorruptionSet()) {
-            tableModel.addRow(new Object[]{
-                NetworkEmulatorConstants.CORRUPTION,
-                params.getCorruption() + SPACE + NetworkEmulatorConstants.PERCENT
-            });
-        }
+        appendFilterRows(tableModel, filter);
+        appendParameterRows(tableModel, parameters);
 
         return tableModel;
+    }
+
+    private void appendFilterRows(PowerTableModel tableModel, Filter filter) {
+        filter.appendToTable(tableModel);
+    }
+
+    private void appendParameterRows(DefaultTableModel tableModel, List<Parameter> parameters) {
+        for (Parameter parameter : parameters) {
+            parameter.appendToTable(tableModel);
+        }
     }
 }
