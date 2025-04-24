@@ -21,6 +21,18 @@ public class RangeVerifier extends InputVerifier {
         this.max = max;
     }
 
+    public static boolean isValid(String text, int min, int max) {
+        try {
+            if (text == null || text.trim().isEmpty()) {
+                return false;
+            }
+            int value = Integer.parseInt(text.trim());
+            return value >= min && value <= max;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     @Override
     public boolean verify(JComponent source) {
         if (source instanceof JTextField field) {
@@ -28,7 +40,7 @@ public class RangeVerifier extends InputVerifier {
             String input = field.getText().trim();
 
             if (input.isEmpty()) {
-                return true;    
+                return true;
             }
 
             try {
@@ -39,22 +51,22 @@ public class RangeVerifier extends InputVerifier {
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(
-                        null,
-                        String.format("Enter a value between %d and %d.", min, max),
-                        JMeterUtils.getLocaleString("Bad Value"),
-                        JOptionPane.ERROR_MESSAGE
+                            null,
+                            String.format("Enter a value between %d and %d.", min, max),
+                            JMeterUtils.getLocaleString("Bad Value"),
+                            JOptionPane.ERROR_MESSAGE
                     );
 
                     return false;
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
-                    null,
-                    String.format("Enter a number.", min, max),
-                    JMeterUtils.getLocaleString("Bad Value"),
-                    JOptionPane.ERROR_MESSAGE
+                        null,
+                        String.format("Enter a number.", min, max),
+                        JMeterUtils.getLocaleString("Bad Value"),
+                        JOptionPane.ERROR_MESSAGE
                 );
-                
+
                 return false;
             }
         }

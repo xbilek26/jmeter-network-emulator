@@ -19,6 +19,13 @@ public class IpAddressVerifier extends InputVerifier {
 
     private static final Pattern IPV4_PATTERN = createIpv4Pattern();
 
+    public static boolean isValid(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            return false;
+        }
+        return IPV4_PATTERN.matcher(text.trim()).matches();
+    }
+
     @Override
     public boolean verify(JComponent input) {
         if (input instanceof JTextField field) {

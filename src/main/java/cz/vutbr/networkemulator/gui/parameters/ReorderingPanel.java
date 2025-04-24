@@ -6,6 +6,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -29,11 +31,39 @@ public class ReorderingPanel extends JPanel {
 
         valueField.setInputVerifier(new RangeVerifier(0, 100));
         correlationField.setInputVerifier(new RangeVerifier(0, 100));
+        correlationField.setEnabled(false);
+        addInputListener();
 
         add(valueLabel);
         add(valueField);
         add(correlationLabel);
         add(correlationField);
+    }
+
+    private void addInputListener() {
+        DocumentListener inputListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFields();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFields();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFields();
+            }
+        };
+
+        valueField.getDocument().addDocumentListener(inputListener);
+    }
+
+    private void updateFields() {
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), 0, 100);
+        correlationField.setEnabled(isValueValid);
     }
 
     public String getValue() {
@@ -46,6 +76,7 @@ public class ReorderingPanel extends JPanel {
 
     public void setValue(String value) {
         valueField.setText(value);
+        updateFields();
     }
 
     public void setCorrelation(String correlation) {

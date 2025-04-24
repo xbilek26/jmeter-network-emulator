@@ -8,6 +8,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -22,7 +24,7 @@ public class DelayPanel extends JPanel {
     public DelayPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DELAY_PANEL));
-        
+
         valueField = new JTextField(8);
         jitterField = new JTextField(8);
         correlationField = new JTextField(8);
@@ -41,6 +43,10 @@ public class DelayPanel extends JPanel {
         valueField.setInputVerifier(new RangeVerifier(0, 10000));
         jitterField.setInputVerifier(new RangeVerifier(0, 10000));
         correlationField.setInputVerifier(new RangeVerifier(0, 100));
+        jitterField.setEnabled(false);
+        correlationField.setEnabled(false);
+        distributionsBox.setEnabled(false);
+        addInputListener();
 
         add(valueLabel);
         add(valueField);
@@ -50,6 +56,36 @@ public class DelayPanel extends JPanel {
         add(correlationField);
         add(distributionsLabel);
         add(distributionsBox);
+    }
+
+    private void addInputListener() {
+        DocumentListener inputListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFields();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFields();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFields();
+            }
+        };
+
+        valueField.getDocument().addDocumentListener(inputListener);
+        jitterField.getDocument().addDocumentListener(inputListener);
+    }
+
+    private void updateFields() {
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), 0, 10000);
+        boolean isJitterValid = RangeVerifier.isValid(jitterField.getText(), 0, 10000);
+        jitterField.setEnabled(isValueValid);
+        correlationField.setEnabled(isValueValid && isJitterValid);
+        distributionsBox.setEnabled(isValueValid && isJitterValid);
     }
 
     public String getValue() {
@@ -70,10 +106,12 @@ public class DelayPanel extends JPanel {
 
     public void setValue(String value) {
         valueField.setText(value);
+        updateFields();
     }
 
     public void setJitter(String jitter) {
         jitterField.setText(jitter);
+        updateFields();
     }
 
     public void setCorrelation(String correlation) {
