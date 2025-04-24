@@ -54,8 +54,6 @@ public final class NetworkEmulatorConstants {
 
     public static final String PARAMETER = "Parameter";
     public static final String VALUE = "Value";
-    public static final String DELAY_UNIT = "ms";
-    public static final String JITTER_UNIT = "ms";
     public static final String PERCENT = "%";
     public static final String RATE_UNIT = "kbps";
 
@@ -64,18 +62,18 @@ public final class NetworkEmulatorConstants {
     public static final String LABEL_SRC_PORT = SRC_PORT + ":";
     public static final String LABEL_DST_ADDRESS = DST_ADDRESS + ":";
     public static final String LABEL_DST_PORT = DST_PORT + ":";
-    public static final String LABEL_DELAY_VALUE = DELAY_VALUE + " (" + DELAY_UNIT + "):";
-    public static final String LABEL_JITTER = JITTER + " (" + JITTER_UNIT + "):";
-    public static final String LABEL_DELAY_CORRELATION = CORRELATION + " (" + PERCENT + "):";
+    public static final String LABEL_DELAY_VALUE = DELAY_VALUE + " (ms):";
+    public static final String LABEL_JITTER = JITTER + " (ms):";
+    public static final String LABEL_DELAY_CORRELATION = CORRELATION + " (%):";
     public static final String LABEL_DISTRIBUTION = DISTRIBUTION + ":";
-    public static final String LABEL_LOSS_VALUE = LOSS_VALUE + " (" + PERCENT + "):";
-    public static final String LABEL_LOSS_CORRELATION = CORRELATION + " (" + PERCENT + "):";
-    public static final String LABEL_RATE = RATE + " (" + RATE_UNIT + "):";
-    public static final String LABEL_REORDERING_VALUE = REORDERING_VALUE + " (" + PERCENT + "):";
-    public static final String LABEL_REORDERING_CORRELATION = CORRELATION + " (" + PERCENT + "):";
-    public static final String LABEL_DUPLICATION_VALUE = DUPLICATION_VALUE + " (" + PERCENT + "):";
-    public static final String LABEL_DUPLICATION_CORRELATION = CORRELATION + " (" + PERCENT + "):";
-    public static final String LABEL_CORRUPTION = CORRUPTION + " (" + PERCENT + "):";
+    public static final String LABEL_LOSS_VALUE = LOSS_VALUE + " (%):";
+    public static final String LABEL_LOSS_CORRELATION = CORRELATION + " (%):";
+    public static final String LABEL_RATE = RATE + " (kbps):";
+    public static final String LABEL_REORDERING_VALUE = REORDERING_VALUE + " (%):";
+    public static final String LABEL_REORDERING_CORRELATION = CORRELATION + " (%):";
+    public static final String LABEL_DUPLICATION_VALUE = DUPLICATION_VALUE + " (%):";
+    public static final String LABEL_DUPLICATION_CORRELATION = CORRELATION + " (%):";
+    public static final String LABEL_CORRUPTION = CORRUPTION + " (%):";
 
     public static final String[] SUBNET_MASKS = {
         "/32",
