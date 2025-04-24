@@ -1,0 +1,87 @@
+package cz.vutbr.networkemulator.gui.parameters;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.verification.RangeVerifier;
+
+public class DelayPanel extends JPanel {
+
+    private final JTextField valueField;
+    private final JTextField jitterField;
+    private final JTextField correlationField;
+    private final JComboBox<String> distributionsBox;
+
+    public DelayPanel() {
+        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DELAY_PANEL));
+        
+        valueField = new JTextField(8);
+        jitterField = new JTextField(8);
+        correlationField = new JTextField(8);
+        distributionsBox = new JComboBox<>(NetworkEmulatorConstants.DISTRIBUTIONS);
+        distributionsBox.setPreferredSize(new Dimension(180, correlationField.getPreferredSize().height));
+
+        JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_VALUE);
+        valueLabel.setLabelFor(valueField);
+        JLabel jitterLabel = new JLabel(NetworkEmulatorConstants.LABEL_JITTER);
+        jitterLabel.setLabelFor(jitterField);
+        JLabel correlationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_CORRELATION);
+        correlationLabel.setLabelFor(correlationField);
+        JLabel distributionsLabel = new JLabel(NetworkEmulatorConstants.LABEL_DISTRIBUTION);
+        distributionsLabel.setLabelFor(distributionsBox);
+
+        valueField.setInputVerifier(new RangeVerifier(0, 10000));
+        jitterField.setInputVerifier(new RangeVerifier(0, 10000));
+        correlationField.setInputVerifier(new RangeVerifier(0, 100));
+
+        add(valueLabel);
+        add(valueField);
+        add(jitterLabel);
+        add(jitterField);
+        add(correlationLabel);
+        add(correlationField);
+        add(distributionsLabel);
+        add(distributionsBox);
+    }
+
+    public String getValue() {
+        return valueField.getText().trim();
+    }
+
+    public String getJitter() {
+        return jitterField.getText().trim();
+    }
+
+    public String getCorrelation() {
+        return correlationField.getText().trim();
+    }
+
+    public String getDistribution() {
+        return (String) distributionsBox.getSelectedItem();
+    }
+
+    public void setValue(String value) {
+        valueField.setText(value);
+    }
+
+    public void setJitter(String jitter) {
+        jitterField.setText(jitter);
+    }
+
+    public void setCorrelation(String correlation) {
+        correlationField.setText(correlation);
+    }
+
+    public void setDistribution(String distribution) {
+        distributionsBox.setSelectedItem(distribution);
+    }
+
+}

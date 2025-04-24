@@ -38,7 +38,7 @@ public class NetworkInterfacePanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        scrollPane.setPreferredSize(new Dimension(700, 400));
+        scrollPane.setPreferredSize(new Dimension(700, 100));
 
         add(scrollPane, BorderLayout.CENTER);
     }
