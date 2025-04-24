@@ -31,7 +31,6 @@ import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
-import cz.vutbr.networkemulator.model.NetworkParameters;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
 
@@ -42,7 +41,6 @@ public class ConfigurationPanel extends JPanel {
 
     private final String PROPERTY_NETWORK_INTERFACES = "network_interfaces";
     private final String PROPERTY_TRAFFIC_CLASSES = "traffic_classes_";
-    private final String PROPERTY_NETWORK_PARAMETERS = "network_parameters_";
     private final String PROPERTY_EXPANDED_PATHS = "expanded_paths";
     private final String PROPERTY_SELECTED_PATH = "selected_path";
 
@@ -249,6 +247,26 @@ public class ConfigurationPanel extends JPanel {
         }
     }
 
+    public void collectSettings() {
+        controller.clearNetworkInterfaces();
+        for (int i = 0; i < rootNode.getChildCount(); i++) {
+            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            String niName = niNode.getName();
+            controller.addNetworkInterface(niName);
+
+            for (int j = 0; j < niNode.getChildCount(); j++) {
+                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
+                String tcName = tcNode.getName();
+
+                controller.addTrafficClass(niName, tcName);
+
+                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+                controller.setFilter(niName, tcName, tcPanel.getFilter());
+                controller.setParameters(niName, tcName, tcPanel.getParameters());
+            }
+        }
+    }
+
     public void setEditable(boolean enabled) {
         btnRefresh.setEnabled(enabled);
         btnAdd.setEnabled(enabled);
@@ -272,9 +290,7 @@ public class ConfigurationPanel extends JPanel {
                 String tcName = tcNode.getName();
                 tcNames.addItem(tcName);
 
-                CollectionProperty parameters = new CollectionProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName(),
-                        tcPanel.getNetworkParameters());
-                te.setProperty(parameters);
+                tcPanel.modifyTestElement(te);
             }
             te.setProperty(tcNames);
         }
@@ -311,8 +327,7 @@ public class ConfigurationPanel extends JPanel {
                         tcNode.setName(tcName);
                         niNode.add(tcNode);
 
-                        JMeterProperty parameters = te.getProperty(PROPERTY_NETWORK_PARAMETERS + tcPanel.getName());
-                        tcPanel.setNetworkParameters(NetworkEmulatorConverter.convertToList((CollectionProperty) parameters));
+                        tcPanel.configure(te);
                     }
 
                 }
@@ -329,26 +344,5 @@ public class ConfigurationPanel extends JPanel {
 
         StringProperty selectedPath = (StringProperty) te.getPropertyOrNull(PROPERTY_SELECTED_PATH);
         tree.selectPath(NetworkEmulatorConverter.convertToString(selectedPath));
-    }
-
-    public void collectSettings() {
-        controller.clearNetworkInterfaces();
-        for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
-            String niName = niNode.getName();
-            controller.addNetworkInterface(niName);
-
-            for (int j = 0; j < niNode.getChildCount(); j++) {
-                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
-                String tcName = tcNode.getName();
-
-                controller.addTrafficClass(niName, tcName);
-
-                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
-                List<String> parametersList = tcPanel.getNetworkParameters();
-                NetworkParameters networkParameters = NetworkEmulatorConverter.convertToNetworkParameters(parametersList);
-                controller.setNetworkParameters(niName, tcName, networkParameters);
-            }
-        }
     }
 }
