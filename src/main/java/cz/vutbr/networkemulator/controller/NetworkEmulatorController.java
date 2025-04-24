@@ -13,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import cz.vutbr.networkemulator.linux.TrafficControl;
 import cz.vutbr.networkemulator.model.NetworkEmulator;
 import cz.vutbr.networkemulator.model.NetworkInterface;
-import cz.vutbr.networkemulator.model.NetworkParameters;
 import cz.vutbr.networkemulator.model.TrafficClass;
+import cz.vutbr.networkemulator.model.filter.Filter;
+import cz.vutbr.networkemulator.model.parameters.Parameter;
 
 public class NetworkEmulatorController {
 
@@ -100,22 +101,41 @@ public class NetworkEmulatorController {
                 .collect(Collectors.toList());
     }
 
-    public void setNetworkParameters(String niName, String tcName, NetworkParameters networkParameters) {
-        networkEmulator.getNetworkInterfaces().stream()
-                .filter(ni -> ni.getName().equals(niName))
-                .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(tcName))
-                .findFirst()
-                .ifPresent(tc -> tc.setNetworkParameters(networkParameters));
-    }
-
-    public NetworkParameters getNetworkParameters(String niName, String tcName) {
+    public Filter getFilter(String niName, String tcName) {
         return networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
                 .filter(tc -> tc.getName().equals(tcName))
                 .findFirst()
-                .map(TrafficClass::getNetworkParameters)
+                .map(TrafficClass::getFilter)
+                .orElse(null);
+    }
+
+    public void setFilter(String niName, String tcName, Filter filter) {
+        networkEmulator.getNetworkInterfaces().stream()
+                .filter(ni -> ni.getName().equals(niName))
+                .flatMap(ni -> ni.getTrafficClasses().stream())
+                .filter(tc -> tc.getName().equals(tcName))
+                .findFirst()
+                .ifPresent(tc -> tc.setFilter(filter));
+    }
+
+    public void setParameters(String niName, String tcName, List<Parameter> parameters) {
+        networkEmulator.getNetworkInterfaces().stream()
+                .filter(ni -> ni.getName().equals(niName))
+                .flatMap(ni -> ni.getTrafficClasses().stream())
+                .filter(tc -> tc.getName().equals(tcName))
+                .findFirst()
+                .ifPresent(tc -> tc.setParameters(parameters));
+    }
+
+    public List<Parameter> getParameters(String niName, String tcName) {
+        return networkEmulator.getNetworkInterfaces().stream()
+                .filter(ni -> ni.getName().equals(niName))
+                .flatMap(ni -> ni.getTrafficClasses().stream())
+                .filter(tc -> tc.getName().equals(tcName))
+                .findFirst()
+                .map(TrafficClass::getParameters)
                 .orElse(null);
     }
 
@@ -132,15 +152,18 @@ public class NetworkEmulatorController {
 
     public void runEmulation() {
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
-            if (ni.getTrafficClasses().isEmpty()) continue;
+            if (ni.getTrafficClasses().isEmpty()) {
+                continue;
+            }
             TrafficControl.setupRootQdisc(ni.getName());
             for (TrafficClass tc : ni.getTrafficClasses()) {
                 String dev = ni.getName();
                 String classId = tc.getName() + "0";
                 String handleId = tc.getName().substring(2) + "0:";
-                NetworkParameters params = tc.getNetworkParameters();
-                TrafficControl.setupTrafficClass(dev, classId, handleId, params);
-                TrafficControl.setupFilter(dev, classId, handleId, params);
+                List<Parameter> parameters = tc.getParameters();
+                Filter filter = tc.getFilter();
+                TrafficControl.setupTrafficClass(dev, classId, handleId, parameters);
+                TrafficControl.setupFilter(dev, classId, handleId, filter);
             }
         }
     }
