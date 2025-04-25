@@ -32,10 +32,20 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorTestElement.class);
 
+    private static final String PROP_EMULATION_RUNNING = "NetworkEmulator.emulationRunning";
+
     public NetworkEmulatorTestElement() {
         registerAddToTreeListener();
         registerDuplicateListener();
         registerPasteListener();
+    }
+
+    public void setEmulationRunning(boolean running) {
+        setProperty(PROP_EMULATION_RUNNING, running);
+    }
+
+    public boolean isEmulationRunning() {
+        return getPropertyAsBoolean(PROP_EMULATION_RUNNING, false);
     }
 
     private void registerAddToTreeListener() {

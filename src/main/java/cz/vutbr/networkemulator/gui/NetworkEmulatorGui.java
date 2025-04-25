@@ -43,7 +43,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
     private JButton btnStop;
-    private JLabel lblEmulatorState;
+    private JLabel emulatorState;
     private JTextArea currentSettings;
 
     public NetworkEmulatorGui() {
@@ -113,11 +113,11 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStop.setEnabled(false);
         btnStop.addActionListener(this::toggleEmulator);
 
-        lblEmulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
+        emulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
 
         controlPanel.add(btnStart);
         controlPanel.add(btnStop);
-        controlPanel.add(lblEmulatorState);
+        controlPanel.add(emulatorState);
 
         return controlPanel;
     }
@@ -131,14 +131,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
             configurationPanel.collectSettings();
             controller.runEmulation();
             currentSettings.setText(controller.getNetworkConfiguration());
-            lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
+            emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
         } else if (source == btnStop) {
             btnStart.setEnabled(true);
             btnStop.setEnabled(false);
             configurationPanel.setEditable(true);
             controller.restoreNetworkConfiguration();
             currentSettings.setText(controller.getNetworkConfiguration());
-            lblEmulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+            emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
         }
     }
 
@@ -167,12 +167,26 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public void modifyTestElement(TestElement element) {
         super.modifyTestElement(element);
         configurationPanel.modifyTestElement(element);
+
+        if (element instanceof NetworkEmulatorTestElement networkEmulatorTestElement) {
+            networkEmulatorTestElement.setEmulationRunning(btnStop.isEnabled()); // btnStop = běží
+        }
     }
 
     @Override
     public void configure(TestElement element) {
         super.configure(element);
         configurationPanel.configure(element);
+
+        if (element instanceof NetworkEmulatorTestElement networkEmulatorTestElement) {
+            boolean running = networkEmulatorTestElement.isEmulationRunning();
+            btnStart.setEnabled(!running);
+            btnStop.setEnabled(running);
+            configurationPanel.setEditable(!running);
+            emulatorState.setText(running
+                    ? NetworkEmulatorConstants.MSG_EMULATION_RUNNING
+                    : NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+        }
     }
 
     @Override
