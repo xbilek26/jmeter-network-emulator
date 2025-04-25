@@ -126,7 +126,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private void toggleEmulator(ActionEvent evt) {
         final Object source = evt.getSource();
         if (source == btnStart) {
-            configurationPanel.collectSettings();
+            configurationPanel.applySettingsToController();
             controller.runEmulation();
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
