@@ -14,6 +14,11 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class RatePanel extends JPanel {
 
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 1000000;
+    private static final int MIN_OVERHEAD = 0;
+    private static final int MAX_OVERHEAD = 1000000;
+
     private final JTextField valueField;
     private final JTextField overheadField;
 
@@ -29,8 +34,8 @@ public class RatePanel extends JPanel {
         JLabel overheadLabel = new JLabel(NetworkEmulatorConstants.LABEL_OVERHEAD);
         overheadLabel.setLabelFor(overheadField);
 
-        valueField.setInputVerifier(new RangeVerifier(0, 100000));
-        overheadField.setInputVerifier(new RangeVerifier(0, 100000));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
+        overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD));
         overheadField.setEnabled(false);
         addInputListener();
 
@@ -62,7 +67,7 @@ public class RatePanel extends JPanel {
     }
 
     private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), 0, 100000);
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE);
         overheadField.setEnabled(isValueValid);
     }
 

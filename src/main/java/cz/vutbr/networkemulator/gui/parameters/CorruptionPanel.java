@@ -12,6 +12,9 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class CorruptionPanel extends JPanel {
 
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 100;
+
     private final JTextField valueField;
 
     public CorruptionPanel() {
@@ -23,7 +26,7 @@ public class CorruptionPanel extends JPanel {
         JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_CORRUPTION);
         valueLabel.setLabelFor(valueField);
 
-        valueField.setInputVerifier(new RangeVerifier(0, 100));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
 
         add(valueLabel);
         add(valueField);

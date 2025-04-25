@@ -14,6 +14,11 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class ReorderingPanel extends JPanel {
 
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 100;
+    private static final int MIN_CORRELATION = 0;
+    private static final int MAX_CORRELATION = 100;
+
     private final JTextField valueField;
     private final JTextField correlationField;
 
@@ -29,8 +34,8 @@ public class ReorderingPanel extends JPanel {
         JLabel correlationLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_CORRELATION);
         correlationLabel.setLabelFor(correlationField);
 
-        valueField.setInputVerifier(new RangeVerifier(0, 100));
-        correlationField.setInputVerifier(new RangeVerifier(0, 100));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
+        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION));
         correlationField.setEnabled(false);
         addInputListener();
 
@@ -62,7 +67,7 @@ public class ReorderingPanel extends JPanel {
     }
 
     private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), 0, 100);
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE);
         correlationField.setEnabled(isValueValid);
     }
 

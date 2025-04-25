@@ -16,6 +16,13 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class DelayPanel extends JPanel {
 
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 1000000;
+    private static final int MIN_JITTER = 0;
+    private static final int MAX_JITTER = 1000000;
+    private static final int MIN_CORRELATION = 0;
+    private static final int MAX_CORRELATION = 100;
+
     private final JTextField valueField;
     private final JTextField jitterField;
     private final JTextField correlationField;
@@ -40,9 +47,9 @@ public class DelayPanel extends JPanel {
         JLabel distributionsLabel = new JLabel(NetworkEmulatorConstants.LABEL_DISTRIBUTION);
         distributionsLabel.setLabelFor(distributionsBox);
 
-        valueField.setInputVerifier(new RangeVerifier(0, 10000));
-        jitterField.setInputVerifier(new RangeVerifier(0, 10000));
-        correlationField.setInputVerifier(new RangeVerifier(0, 100));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
+        jitterField.setInputVerifier(new RangeVerifier(MIN_JITTER, MAX_JITTER));
+        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION));
         jitterField.setEnabled(false);
         correlationField.setEnabled(false);
         distributionsBox.setEnabled(false);
@@ -81,8 +88,8 @@ public class DelayPanel extends JPanel {
     }
 
     private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), 0, 10000);
-        boolean isJitterValid = RangeVerifier.isValid(jitterField.getText(), 0, 10000);
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE);
+        boolean isJitterValid = RangeVerifier.isValid(jitterField.getText(), MIN_JITTER, MAX_JITTER);
         jitterField.setEnabled(isValueValid);
         correlationField.setEnabled(isValueValid && isJitterValid);
         distributionsBox.setEnabled(isValueValid && isJitterValid);

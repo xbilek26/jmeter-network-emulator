@@ -18,6 +18,9 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class FilterPanel extends JPanel {
 
+    private static final int MIN_PORT_VALUE = 0;
+    private static final int MAX_PORT_VALUE = 65535;
+
     private final ButtonGroup ipProtocolGroup;
     private final JRadioButton tcpButton;
     private final JRadioButton udpButton;
@@ -78,9 +81,9 @@ public class FilterPanel extends JPanel {
         });
 
         dstAddressField.setInputVerifier(new IpAddressVerifier());
-        dstPortField.setInputVerifier(new RangeVerifier(0, 1024));
+        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
-        srcPortField.setInputVerifier(new RangeVerifier(0, 1024));
+        srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE));
         tcpButton.addItemListener(e -> updateFields());
         udpButton.addItemListener(e -> updateFields());
         icmpButton.addItemListener(e -> updateFields());
