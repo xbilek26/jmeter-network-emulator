@@ -34,8 +34,8 @@ public class LossPanel extends JPanel {
         JLabel correlationLabel = new JLabel(NetworkEmulatorConstants.LABEL_LOSS_CORRELATION);
         correlationLabel.setLabelFor(correlationField);
 
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
-        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
+        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
         correlationField.setEnabled(false);
         addInputListener();
 
@@ -67,7 +67,7 @@ public class LossPanel extends JPanel {
     }
 
     private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE);
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE, true);
         correlationField.setEnabled(isValueValid);
     }
 

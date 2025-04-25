@@ -81,9 +81,9 @@ public class FilterPanel extends JPanel {
         });
 
         dstAddressField.setInputVerifier(new IpAddressVerifier());
-        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE));
+        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
-        srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE));
+        srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         tcpButton.addItemListener(e -> updateFields());
         udpButton.addItemListener(e -> updateFields());
         icmpButton.addItemListener(e -> updateFields());

@@ -6,28 +6,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.apache.jmeter.util.JMeterUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RangeVerifier extends InputVerifier {
 
-    @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(RangeVerifier.class);
+    private final double min, max;
+    private final boolean isDouble;
 
-    private final int min, max;
-
-    public RangeVerifier(int min, int max) {
+    public RangeVerifier(double min, double max, boolean allowDecimal) {
         this.min = min;
         this.max = max;
+        this.isDouble = allowDecimal;
     }
 
-    public static boolean isValid(String text, int min, int max) {
+    public static boolean isValid(String text, double min, double max, boolean isDouble) {
         try {
             if (text == null || text.trim().isEmpty()) {
                 return false;
             }
-            int value = Integer.parseInt(text.trim());
-            return value >= min && value <= max;
+            if (isDouble) {
+                double value = Double.parseDouble(text.trim());
+                return value >= min && value <= max;
+            } else {
+                int value = Integer.parseInt(text.trim());
+                return value >= min && value <= max;
+            }
         } catch (NumberFormatException e) {
             return false;
         }
@@ -44,29 +46,36 @@ public class RangeVerifier extends InputVerifier {
             }
 
             try {
-                int value = Integer.parseInt(input);
-                boolean isInRange = value >= min && value <= max;
+                boolean isInRange;
+                if (isDouble) {
+                    double value = Double.parseDouble(input);
+                    isInRange = value >= min && value <= max;
+                } else {
+                    int value = Integer.parseInt(input);
+                    isInRange = value >= min && value <= max;
+                }
 
                 if (isInRange) {
                     return true;
                 } else {
+                    String minFormatted = (min % 1 == 0) ? String.format("%d", (int) min) : String.format("%.2f", min);
+                    String maxFormatted = (max % 1 == 0) ? String.format("%d", (int) max) : String.format("%.2f", max);
+
                     JOptionPane.showMessageDialog(
                             null,
-                            String.format("Enter a value between %d and %d.", min, max),
+                            String.format("Enter a value between %s and %s.", minFormatted, maxFormatted),
                             JMeterUtils.getLocaleString("Bad Value"),
                             JOptionPane.ERROR_MESSAGE
                     );
-
                     return false;
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         null,
-                        String.format("Enter a number.", min, max),
+                        "Enter a valid number.",
                         JMeterUtils.getLocaleString("Bad Value"),
                         JOptionPane.ERROR_MESSAGE
                 );
-
                 return false;
             }
         }

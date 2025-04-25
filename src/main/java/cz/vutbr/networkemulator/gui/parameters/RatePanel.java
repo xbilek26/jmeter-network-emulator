@@ -34,8 +34,8 @@ public class RatePanel extends JPanel {
         JLabel overheadLabel = new JLabel(NetworkEmulatorConstants.LABEL_OVERHEAD);
         overheadLabel.setLabelFor(overheadField);
 
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
-        overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
+        overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD, false));
         overheadField.setEnabled(false);
         addInputListener();
 
@@ -67,7 +67,7 @@ public class RatePanel extends JPanel {
     }
 
     private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE);
+        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE, true);
         overheadField.setEnabled(isValueValid);
     }
 

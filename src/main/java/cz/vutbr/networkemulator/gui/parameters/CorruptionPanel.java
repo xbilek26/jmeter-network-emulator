@@ -26,7 +26,7 @@ public class CorruptionPanel extends JPanel {
         JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_CORRUPTION);
         valueLabel.setLabelFor(valueField);
 
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE));
+        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
 
         add(valueLabel);
         add(valueField);
