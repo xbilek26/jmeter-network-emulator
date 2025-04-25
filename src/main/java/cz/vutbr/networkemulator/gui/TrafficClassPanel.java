@@ -83,7 +83,8 @@ public class TrafficClassPanel extends JPanel {
                 lossPanel.getCorrelation()
         ));
         parameters.add(new Rate(
-                ratePanel.getValue()
+                ratePanel.getValue(),
+                ratePanel.getOverhead()
         ));
         parameters.add(new Duplication(
                 duplicationPanel.getValue(),
@@ -151,6 +152,7 @@ public class TrafficClassPanel extends JPanel {
         parameters.addItem(lossPanel.getValue());
         parameters.addItem(lossPanel.getCorrelation());
         parameters.addItem(ratePanel.getValue());
+        parameters.addItem(ratePanel.getOverhead());
         parameters.addItem(duplicationPanel.getValue());
         parameters.addItem(duplicationPanel.getCorrelation());
         parameters.addItem(corruptionPanel.getValue());
@@ -180,9 +182,10 @@ public class TrafficClassPanel extends JPanel {
             lossPanel.setValue(parameters.get(6).getStringValue());
             lossPanel.setCorrelation(parameters.get(7).getStringValue());
             ratePanel.setValue(parameters.get(8).getStringValue());
-            duplicationPanel.setValue(parameters.get(9).getStringValue());
-            duplicationPanel.setCorrelation(parameters.get(10).getStringValue());
-            corruptionPanel.setValue(parameters.get(11).getStringValue());
+            ratePanel.setOverhead(parameters.get(9).getStringValue());
+            duplicationPanel.setValue(parameters.get(10).getStringValue());
+            duplicationPanel.setCorrelation(parameters.get(11).getStringValue());
+            corruptionPanel.setValue(parameters.get(12).getStringValue());
         }
     }
 }

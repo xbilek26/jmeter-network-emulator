@@ -45,6 +45,7 @@ public final class NetworkEmulatorConstants {
     public static final String LOSS_VALUE = "Packet Loss";
     public static final String LOSS_CORRELATION = "Loss Correlation";
     public static final String RATE = "Rate";
+    public static final String OVERHEAD = "Overhead";
     public static final String REORDERING_VALUE = "Reordering";
     public static final String REORDERING_CORRELATION = "Reordering Correlation";
     public static final String DUPLICATION_VALUE = "Duplication";
@@ -69,6 +70,7 @@ public final class NetworkEmulatorConstants {
     public static final String LABEL_LOSS_VALUE = LOSS_VALUE + " (%):";
     public static final String LABEL_LOSS_CORRELATION = CORRELATION + " (%):";
     public static final String LABEL_RATE = RATE + " (kbps):";
+    public static final String LABEL_OVERHEAD = OVERHEAD + " (B):";
     public static final String LABEL_REORDERING_VALUE = REORDERING_VALUE + " (%):";
     public static final String LABEL_REORDERING_CORRELATION = CORRELATION + " (%):";
     public static final String LABEL_DUPLICATION_VALUE = DUPLICATION_VALUE + " (%):";
