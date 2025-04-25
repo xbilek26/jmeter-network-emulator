@@ -40,9 +40,9 @@ public class TrafficClassPanel extends JPanel {
 
     private FilterPanel filterPanel;
     private DelayPanel delayPanel;
+    private ReorderingPanel reorderingPanel;
     private LossPanel lossPanel;
     private RatePanel ratePanel;
-    private ReorderingPanel reorderingPanel;
     private DuplicationPanel duplicationPanel;
     private CorruptionPanel corruptionPanel;
 
@@ -74,16 +74,16 @@ public class TrafficClassPanel extends JPanel {
                 delayPanel.getCorrelation(),
                 delayPanel.getDistribution()
         ));
+        parameters.add(new Reordering(
+                reorderingPanel.getValue(),
+                reorderingPanel.getCorrelation()
+        ));
         parameters.add(new Loss(
                 lossPanel.getValue(),
                 lossPanel.getCorrelation()
         ));
         parameters.add(new Rate(
                 ratePanel.getValue()
-        ));
-        parameters.add(new Reordering(
-                reorderingPanel.getValue(),
-                reorderingPanel.getCorrelation()
         ));
         parameters.add(new Duplication(
                 duplicationPanel.getValue(),
@@ -100,17 +100,17 @@ public class TrafficClassPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         filterPanel = new FilterPanel();
         delayPanel = new DelayPanel();
+        reorderingPanel = new ReorderingPanel();
         lossPanel = new LossPanel();
         ratePanel = new RatePanel();
-        reorderingPanel = new ReorderingPanel();
         duplicationPanel = new DuplicationPanel();
         corruptionPanel = new CorruptionPanel();
 
         add(filterPanel);
         add(delayPanel);
+        add(reorderingPanel);
         add(lossPanel);
         add(ratePanel);
-        add(reorderingPanel);
         add(duplicationPanel);
         add(corruptionPanel);
     }
@@ -146,11 +146,11 @@ public class TrafficClassPanel extends JPanel {
         parameters.addItem(delayPanel.getJitter());
         parameters.addItem(delayPanel.getCorrelation());
         parameters.addItem(delayPanel.getDistribution());
+        parameters.addItem(reorderingPanel.getValue());
+        parameters.addItem(reorderingPanel.getCorrelation());
         parameters.addItem(lossPanel.getValue());
         parameters.addItem(lossPanel.getCorrelation());
         parameters.addItem(ratePanel.getValue());
-        parameters.addItem(reorderingPanel.getValue());
-        parameters.addItem(reorderingPanel.getCorrelation());
         parameters.addItem(duplicationPanel.getValue());
         parameters.addItem(duplicationPanel.getCorrelation());
         parameters.addItem(corruptionPanel.getValue());
@@ -175,11 +175,11 @@ public class TrafficClassPanel extends JPanel {
             delayPanel.setJitter(parameters.get(1).getStringValue());
             delayPanel.setCorrelation(parameters.get(2).getStringValue());
             delayPanel.setDistribution(parameters.get(3).getStringValue());
-            lossPanel.setValue(parameters.get(4).getStringValue());
-            lossPanel.setCorrelation(parameters.get(5).getStringValue());
-            ratePanel.setValue(parameters.get(6).getStringValue());
-            reorderingPanel.setValue(parameters.get(7).getStringValue());
-            reorderingPanel.setCorrelation(parameters.get(8).getStringValue());
+            reorderingPanel.setValue(parameters.get(4).getStringValue());
+            reorderingPanel.setCorrelation(parameters.get(5).getStringValue());
+            lossPanel.setValue(parameters.get(6).getStringValue());
+            lossPanel.setCorrelation(parameters.get(7).getStringValue());
+            ratePanel.setValue(parameters.get(8).getStringValue());
             duplicationPanel.setValue(parameters.get(9).getStringValue());
             duplicationPanel.setCorrelation(parameters.get(10).getStringValue());
             corruptionPanel.setValue(parameters.get(11).getStringValue());

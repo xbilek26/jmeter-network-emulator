@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
@@ -64,7 +62,7 @@ public class FilterPanel extends JPanel {
         srcPortLabel.setLabelFor(srcPortField);
         dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
         dstPortLabel.setLabelFor(dstPortField);
-        
+
         srcSubnetMaskBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
         dstSubnetMaskBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
 
@@ -83,9 +81,9 @@ public class FilterPanel extends JPanel {
         dstPortField.setInputVerifier(new RangeVerifier(0, 1024));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
         srcPortField.setInputVerifier(new RangeVerifier(0, 1024));
-        srcSubnetMaskBox.setEnabled(false);
-        dstSubnetMaskBox.setEnabled(false);
-        addInputListener();
+        tcpButton.addActionListener(e -> updateFields());
+        udpButton.addActionListener(e -> updateFields());
+        icmpButton.addActionListener(e -> updateFields());
 
         JPanel iPprotocolPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         iPprotocolPanel.add(ipProtocolLabel);
@@ -113,31 +111,6 @@ public class FilterPanel extends JPanel {
         add(dstPanel);
     }
 
-    private void addInputListener() {
-        tcpButton.addActionListener(e -> updateFields());
-        udpButton.addActionListener(e -> updateFields());
-        icmpButton.addActionListener(e -> updateFields());
-        DocumentListener addressListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateFields();
-            }
-        };
-
-        srcAddressField.getDocument().addDocumentListener(addressListener);
-        dstAddressField.getDocument().addDocumentListener(addressListener);
-    }
-
     private void updateFields() {
         boolean isIcmp = getIpProtocol().equals(NetworkEmulatorConstants.ICMP_PROTOCOL);
 
@@ -146,12 +119,6 @@ public class FilterPanel extends JPanel {
         dstPortLabel.setVisible(!isIcmp);
         dstPortField.setVisible(!isIcmp);
         protocolsBox.setVisible(!isIcmp);
-
-        boolean isSrcValid = IpAddressVerifier.isValid(getSrcAddress());
-        boolean isDstValid = IpAddressVerifier.isValid(getDstAddress());
-
-        srcSubnetMaskBox.setEnabled(isSrcValid);
-        dstSubnetMaskBox.setEnabled(isDstValid);
     }
 
     public String getIpProtocol() {
