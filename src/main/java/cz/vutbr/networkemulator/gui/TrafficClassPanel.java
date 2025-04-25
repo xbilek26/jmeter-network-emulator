@@ -159,7 +159,7 @@ public class TrafficClassPanel extends JPanel {
         te.setProperty(parameters);
     }
 
-    void configure(TestElement te) {
+    public void configure(TestElement te) {
         JMeterProperty filterPropery = (CollectionProperty) te.getProperty(PROPERTY_FILTER + getName());
         if (filterPropery instanceof CollectionProperty filter) {
             filterPanel.setIpProtocol(filter.get(0).getStringValue());
