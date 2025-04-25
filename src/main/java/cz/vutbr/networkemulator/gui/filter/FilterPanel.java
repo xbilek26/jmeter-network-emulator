@@ -81,9 +81,9 @@ public class FilterPanel extends JPanel {
         dstPortField.setInputVerifier(new RangeVerifier(0, 1024));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
         srcPortField.setInputVerifier(new RangeVerifier(0, 1024));
-        tcpButton.addActionListener(e -> updateFields());
-        udpButton.addActionListener(e -> updateFields());
-        icmpButton.addActionListener(e -> updateFields());
+        tcpButton.addItemListener(e -> updateFields());
+        udpButton.addItemListener(e -> updateFields());
+        icmpButton.addItemListener(e -> updateFields());
 
         JPanel iPprotocolPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         iPprotocolPanel.add(ipProtocolLabel);
