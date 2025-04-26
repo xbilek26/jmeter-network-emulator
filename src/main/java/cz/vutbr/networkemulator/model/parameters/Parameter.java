@@ -30,6 +30,6 @@ public abstract class Parameter {
 
     public abstract void appendToCommand(StringBuilder cmd);
 
-    public abstract void appendToTable(DefaultTableModel model);
+    public abstract void appendToTable(DefaultTableModel tableModel);
 
 }

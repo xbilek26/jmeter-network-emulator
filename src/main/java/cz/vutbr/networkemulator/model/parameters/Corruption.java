@@ -16,9 +16,9 @@ public class Corruption extends Parameter {
     }
 
     @Override
-    public void appendToTable(DefaultTableModel model) {
+    public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
-            model.addRow(new Object[]{getName(), getValue() + "%"});
+            tableModel.addRow(new Object[]{getName(), getValue() + "%"});
         }
     }
 }

@@ -34,7 +34,7 @@ public class Duplication extends Parameter {
     }
 
     @Override
-    public void appendToTable(DefaultTableModel model) {
+    public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
             StringBuilder sb = new StringBuilder();
             sb.append(getValue()).append("%");
@@ -42,7 +42,7 @@ public class Duplication extends Parameter {
                 sb.append(", corr=").append(getCorrelation()).append("%");
             }
 
-            model.addRow(new Object[]{getName(), sb.toString()});
+            tableModel.addRow(new Object[]{getName(), sb.toString()});
         }
     }
 

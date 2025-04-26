@@ -68,7 +68,7 @@ public class Delay extends Parameter {
     }
 
     @Override
-    public void appendToTable(DefaultTableModel model) {
+    public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
             StringBuilder sb = new StringBuilder();
             sb.append(getValue()).append("ms");
@@ -82,7 +82,7 @@ public class Delay extends Parameter {
                 }
             }
 
-            model.addRow(new Object[]{"Delay", sb.toString()});
+            tableModel.addRow(new Object[]{"Delay", sb.toString()});
         }
     }
 }
