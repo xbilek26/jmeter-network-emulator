@@ -32,7 +32,7 @@ import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
 import cz.vutbr.networkemulator.utils.Constants;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
+import cz.vutbr.networkemulator.utils.Converter;
 
 public class ConfigurationPanel extends JPanel {
 
@@ -344,9 +344,9 @@ public class ConfigurationPanel extends JPanel {
         treeModel.reload();
 
         CollectionProperty expandedPaths = (CollectionProperty) te.getPropertyOrNull(PROPERTY_EXPANDED_PATHS);
-        tree.expandPaths(NetworkEmulatorConverter.convertToList(expandedPaths));
+        tree.expandPaths(Converter.convertToList(expandedPaths));
 
         StringProperty selectedPath = (StringProperty) te.getPropertyOrNull(PROPERTY_SELECTED_PATH);
-        tree.selectPath(NetworkEmulatorConverter.convertToString(selectedPath));
+        tree.selectPath(Converter.convertToString(selectedPath));
     }
 }
