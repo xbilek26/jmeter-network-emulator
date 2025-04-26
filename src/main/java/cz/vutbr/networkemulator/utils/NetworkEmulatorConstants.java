@@ -35,9 +35,11 @@ public final class NetworkEmulatorConstants {
     public static final String UDP_PROTOCOL = "UDP";
     public static final String ICMP_PROTOCOL = "ICMP";
     public static final String SRC_ADDRESS = "Src Address";
-    public static final String SRC_PORT = "Src Port";
     public static final String DST_ADDRESS = "Dst Address";
+    public static final String SRC_PORT = "Src Port";
     public static final String DST_PORT = "Dst Port";
+    public static final String ICMP_TYPE = "ICMP Type";
+    public static final String ICMP_CODE = "ICMP Code";
     public static final String DELAY_VALUE = "Startup Delay";
     public static final String JITTER = "Jitter";
     public static final String DELAY_CORRELATION = "Delay Correlation";
@@ -60,9 +62,11 @@ public final class NetworkEmulatorConstants {
 
     public static final String LABEL_IP_PROTOCOL = IP_PROTOCOL + ":";
     public static final String LABEL_SRC_ADDRESS = SRC_ADDRESS + ":";
-    public static final String LABEL_SRC_PORT = SRC_PORT + ":";
     public static final String LABEL_DST_ADDRESS = DST_ADDRESS + ":";
+    public static final String LABEL_SRC_PORT = SRC_PORT + ":";
     public static final String LABEL_DST_PORT = DST_PORT + ":";
+    public static final String LABEL_ICMP_TYPE = ICMP_TYPE + ":";
+    public static final String LABEL_ICMP_CODE = ICMP_CODE + ":";
     public static final String LABEL_DELAY_VALUE = DELAY_VALUE + " (ms):";
     public static final String LABEL_JITTER = JITTER + " (ms):";
     public static final String LABEL_DELAY_CORRELATION = CORRELATION + " (%):";

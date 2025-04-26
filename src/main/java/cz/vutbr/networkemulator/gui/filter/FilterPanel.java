@@ -1,5 +1,6 @@
 package cz.vutbr.networkemulator.gui.filter;
 
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
@@ -20,6 +21,10 @@ public class FilterPanel extends JPanel {
 
     private static final int MIN_PORT_VALUE = 0;
     private static final int MAX_PORT_VALUE = 65535;
+    private static final int MIN_ICMP_TYPE_VALUE = 0;
+    private static final int MAX_ICMP_TYPE_VALUE = 255;
+    private static final int MIN_ICMP_CODE_VALUE = 0;
+    private static final int MAX_ICMP_CODE_VALUE = 255;
 
     private final ButtonGroup ipProtocolGroup;
     private final JRadioButton tcpButton;
@@ -27,13 +32,14 @@ public class FilterPanel extends JPanel {
     private final JRadioButton icmpButton;
     private final JTextField srcAddressField;
     private final JComboBox<String> srcSubnetMaskBox;
-    private final JLabel srcPortLabel;
-    private final JTextField srcPortField;
     private final JTextField dstAddressField;
     private final JComboBox<String> dstSubnetMaskBox;
-    private final JLabel dstPortLabel;
+    private final JTextField srcPortField;
     private final JTextField dstPortField;
     private final JComboBox<String> protocolsBox;
+    private final JTextField icmpTypeField;
+    private final JTextField icmpCodeField;
+    private final JPanel cards;
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -49,6 +55,9 @@ public class FilterPanel extends JPanel {
         ipProtocolGroup.add(udpButton);
         ipProtocolGroup.add(icmpButton);
 
+        icmpTypeField = new JTextField(8);
+        icmpCodeField = new JTextField(8);
+
         srcAddressField = new JTextField(20);
         srcSubnetMaskBox = new JComboBox<>(NetworkEmulatorConstants.SUBNET_MASKS);
         srcPortField = new JTextField(7);
@@ -61,10 +70,14 @@ public class FilterPanel extends JPanel {
         srcAddressLabel.setLabelFor(srcAddressField);
         JLabel dstAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_ADDRESS);
         dstAddressLabel.setLabelFor(dstAddressField);
-        srcPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT);
+        JLabel srcPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT);
         srcPortLabel.setLabelFor(srcPortField);
-        dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
+        JLabel dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
         dstPortLabel.setLabelFor(dstPortField);
+        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorConstants.LABEL_ICMP_TYPE);
+        icmpTypeLabel.setLabelFor(icmpTypeField);
+        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorConstants.LABEL_ICMP_CODE);
+        icmpCodeLabel.setLabelFor(icmpCodeField);
 
         srcSubnetMaskBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
         dstSubnetMaskBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
@@ -80,13 +93,15 @@ public class FilterPanel extends JPanel {
             }
         });
 
-        dstAddressField.setInputVerifier(new IpAddressVerifier());
-        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         srcAddressField.setInputVerifier(new IpAddressVerifier());
+        dstAddressField.setInputVerifier(new IpAddressVerifier());
         srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
-        tcpButton.addItemListener(e -> updateFields());
-        udpButton.addItemListener(e -> updateFields());
-        icmpButton.addItemListener(e -> updateFields());
+        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
+        icmpTypeField.setInputVerifier(new RangeVerifier(MIN_ICMP_TYPE_VALUE, MAX_ICMP_TYPE_VALUE, false));
+        icmpCodeField.setInputVerifier(new RangeVerifier(MIN_ICMP_CODE_VALUE, MAX_ICMP_CODE_VALUE, false));
+        tcpButton.addItemListener(e -> updateCards());
+        udpButton.addItemListener(e -> updateCards());
+        icmpButton.addItemListener(e -> updateCards());
 
         JPanel iPprotocolPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         iPprotocolPanel.add(ipProtocolLabel);
@@ -94,34 +109,49 @@ public class FilterPanel extends JPanel {
         iPprotocolPanel.add(udpButton);
         iPprotocolPanel.add(icmpButton);
 
-        JPanel srcPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        srcPanel.add(srcAddressLabel);
-        srcPanel.add(srcAddressField);
-        srcPanel.add(srcSubnetMaskBox);
-        srcPanel.add(srcPortLabel);
-        srcPanel.add(srcPortField);
+        JPanel addressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        addressPanel.add(srcAddressLabel);
+        addressPanel.add(srcAddressField);
+        addressPanel.add(srcSubnetMaskBox);
+        addressPanel.add(dstAddressLabel);
+        addressPanel.add(dstAddressField);
+        addressPanel.add(dstSubnetMaskBox);
 
-        JPanel dstPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dstPanel.add(dstAddressLabel);
-        dstPanel.add(dstAddressField);
-        dstPanel.add(dstSubnetMaskBox);
-        dstPanel.add(dstPortLabel);
-        dstPanel.add(dstPortField);
-        dstPanel.add(protocolsBox);
+        JPanel portPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        portPanel.add(srcPortLabel);
+        portPanel.add(srcPortField);
+        portPanel.add(dstPortLabel);
+        portPanel.add(dstPortField);
+        portPanel.add(protocolsBox);
+
+        JPanel icmpPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        icmpPanel.add(icmpTypeLabel);
+        icmpPanel.add(icmpTypeField);
+        icmpPanel.add(icmpCodeLabel);
+        icmpPanel.add(icmpCodeField);
+
+        cards = new JPanel(new CardLayout());
+        cards.add(portPanel, "port");
+        cards.add(icmpPanel, "icmp");
+
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.add(cards);
+
+        add(wrapper);
 
         add(iPprotocolPanel);
-        add(srcPanel);
-        add(dstPanel);
+        add(addressPanel);
+        add(wrapper);
     }
 
-    private void updateFields() {
+    private void updateCards() {
         boolean isIcmp = getIpProtocol().equals(NetworkEmulatorConstants.ICMP_PROTOCOL);
-
-        srcPortLabel.setVisible(!isIcmp);
-        srcPortField.setVisible(!isIcmp);
-        dstPortLabel.setVisible(!isIcmp);
-        dstPortField.setVisible(!isIcmp);
-        protocolsBox.setVisible(!isIcmp);
+        CardLayout cl = (CardLayout) cards.getLayout();
+        if (isIcmp) {
+            cl.show(cards, "icmp");
+        } else {
+            cl.show(cards, "port");
+        }
     }
 
     public String getIpProtocol() {
@@ -143,10 +173,6 @@ public class FilterPanel extends JPanel {
         return (String) srcSubnetMaskBox.getSelectedItem();
     }
 
-    public String getSrcPort() {
-        return srcPortField.getText().trim();
-    }
-
     public String getDstAddress() {
         return dstAddressField.getText().trim();
     }
@@ -155,8 +181,20 @@ public class FilterPanel extends JPanel {
         return (String) dstSubnetMaskBox.getSelectedItem();
     }
 
+    public String getSrcPort() {
+        return srcPortField.getText().trim();
+    }
+
     public String getDstPort() {
         return dstPortField.getText().trim();
+    }
+
+    public String getIcmpType() {
+        return icmpTypeField.getText().trim();
+    }
+
+    public String getIcmpCode() {
+        return icmpCodeField.getText().trim();
     }
 
     public void setIpProtocol(String ipProtocol) {
@@ -178,10 +216,6 @@ public class FilterPanel extends JPanel {
         srcSubnetMaskBox.setSelectedItem(srcSubnetMask);
     }
 
-    public void setSrcPort(String srcPort) {
-        srcPortField.setText(srcPort);
-    }
-
     public void setDstAddress(String dstAddress) {
         dstAddressField.setText(dstAddress);
     }
@@ -190,8 +224,20 @@ public class FilterPanel extends JPanel {
         dstSubnetMaskBox.setSelectedItem(dstSubnetMask);
     }
 
+    public void setSrcPort(String srcPort) {
+        srcPortField.setText(srcPort);
+    }
+
     public void setDstPort(String dstPort) {
         dstPortField.setText(dstPort);
+    }
+
+    public void setIcmpType(String icmpType) {
+        icmpTypeField.setText(icmpType);
+    }
+
+    public void setIcmpCode(String icmpCode) {
+        icmpCodeField.setText(icmpCode);
     }
 
 }
