@@ -1,7 +1,6 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
@@ -16,13 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.JMeterToolBar;
+import org.apache.jmeter.gui.util.JSyntaxTextArea;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
@@ -44,7 +43,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JButton btnStart;
     private JButton btnStop;
     private JLabel emulatorState;
-    private JTextArea currentSettings;
+    private JSyntaxTextArea currentSettings;
 
     public NetworkEmulatorGui() {
         controller = NetworkEmulatorController.getInstance();
@@ -66,7 +65,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         mainPanel.setResizeWeight(0.98);
         mainPanel.setDividerLocation(0.98);
         mainPanel.setOneTouchExpandable(true);
-        mainPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_MAIN_PANEL));
+        mainPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_CONTROL_PANEL));
 
         return mainPanel;
     }
@@ -79,14 +78,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JPanel createStatePanel() {
         JPanel statePanel = new JPanel(new BorderLayout());
 
-        currentSettings = new JTextArea();
-        currentSettings.setBackground(new Color(0x000000));
-        currentSettings.setForeground(new Color(0xffffff));
-        currentSettings.setEditable(false);
+        currentSettings = new JSyntaxTextArea();
+        currentSettings.setSyntaxEditingStyle("text/css");
 
         JScrollPane scrollPane = new JScrollPane(currentSettings);
-        currentSettings.setLineWrap(true);
-        currentSettings.setWrapStyleWord(true);
+        scrollPane.setPreferredSize(scrollPane.getMinimumSize());
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
         currentSettings.setText(controller.getNetworkConfiguration());
 
