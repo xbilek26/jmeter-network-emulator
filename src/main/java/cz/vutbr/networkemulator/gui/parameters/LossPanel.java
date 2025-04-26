@@ -86,5 +86,6 @@ public class LossPanel extends JPanel {
 
     public void setCorrelation(String correlation) {
         correlationField.setText(correlation);
+        updateFields();
     }
 }

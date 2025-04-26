@@ -123,10 +123,12 @@ public class DelayPanel extends JPanel {
 
     public void setCorrelation(String correlation) {
         correlationField.setText(correlation);
+        updateFields();
     }
 
     public void setDistribution(String distribution) {
         distributionsBox.setSelectedItem(distribution);
+        updateFields();
     }
 
 }
