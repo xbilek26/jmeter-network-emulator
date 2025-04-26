@@ -39,7 +39,7 @@ public class Reordering extends Parameter {
             StringBuilder sb = new StringBuilder();
             sb.append(getValue()).append("%");
             if (isCorrelationSet()) {
-                sb.append(" (corr=").append(getCorrelation()).append("%)");
+                sb.append(", corr=").append(getCorrelation()).append("%");
             }
 
             model.addRow(new Object[]{getName(), sb.toString()});

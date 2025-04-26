@@ -39,7 +39,7 @@ public class Rate extends Parameter {
             StringBuilder sb = new StringBuilder();
             sb.append(getValue()).append("kbps");
             if (isOverheadSet()) {
-                sb.append(", (overhead=").append(getOverhead()).append("B)");
+                sb.append(", overhead=").append(getOverhead()).append("B");
             }
             model.addRow(new Object[]{getName(), sb.toString()});
         }
