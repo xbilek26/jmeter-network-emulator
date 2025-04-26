@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class DelayPanel extends JPanel {
@@ -30,21 +30,21 @@ public class DelayPanel extends JPanel {
 
     public DelayPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_DELAY_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_DELAY_PANEL));
 
         valueField = new JTextField(8);
         jitterField = new JTextField(8);
         correlationField = new JTextField(8);
-        distributionsBox = new JComboBox<>(NetworkEmulatorConstants.DISTRIBUTIONS);
+        distributionsBox = new JComboBox<>(Constants.DISTRIBUTIONS);
         distributionsBox.setPreferredSize(new Dimension(180, correlationField.getPreferredSize().height));
 
-        JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_VALUE);
+        JLabel valueLabel = new JLabel(Constants.LABEL_DELAY_VALUE);
         valueLabel.setLabelFor(valueField);
-        JLabel jitterLabel = new JLabel(NetworkEmulatorConstants.LABEL_JITTER);
+        JLabel jitterLabel = new JLabel(Constants.LABEL_JITTER);
         jitterLabel.setLabelFor(jitterField);
-        JLabel correlationLabel = new JLabel(NetworkEmulatorConstants.LABEL_DELAY_CORRELATION);
+        JLabel correlationLabel = new JLabel(Constants.LABEL_DELAY_CORRELATION);
         correlationLabel.setLabelFor(correlationField);
-        JLabel distributionsLabel = new JLabel(NetworkEmulatorConstants.LABEL_DISTRIBUTION);
+        JLabel distributionsLabel = new JLabel(Constants.LABEL_DISTRIBUTION);
         distributionsLabel.setLabelFor(distributionsBox);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

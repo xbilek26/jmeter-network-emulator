@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 
 public class IpAddressVerifier extends InputVerifier {
 
@@ -41,8 +41,8 @@ public class IpAddressVerifier extends InputVerifier {
                 return true;
             } else {
                 JOptionPane.showMessageDialog(
-                        null, NetworkEmulatorConstants.MSG_ENTER_VALID_IP_ADDRESS,
-                        NetworkEmulatorConstants.BAD_ADDRESS,
+                        null, Constants.MSG_ENTER_VALID_IP_ADDRESS,
+                        Constants.BAD_ADDRESS,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }

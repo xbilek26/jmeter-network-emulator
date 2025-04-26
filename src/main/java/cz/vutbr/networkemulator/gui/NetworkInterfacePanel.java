@@ -18,7 +18,7 @@ import org.apache.jmeter.gui.util.PowerTableModel;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 
 public class NetworkInterfacePanel extends JPanel {
 
@@ -75,7 +75,7 @@ public class NetworkInterfacePanel extends JPanel {
 
     private PowerTableModel buildTableModel(Filter filter, List<Parameter> parameters) {
         PowerTableModel tableModel = new PowerTableModel(
-                new String[]{NetworkEmulatorConstants.PARAMETER, NetworkEmulatorConstants.VALUE},
+                new String[]{Constants.PARAMETER, Constants.VALUE},
                 new Class[]{String.class, String.class}
         );
 

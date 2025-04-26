@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
@@ -65,7 +65,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         mainPanel.setResizeWeight(0.98);
         mainPanel.setDividerLocation(0.98);
         mainPanel.setOneTouchExpandable(true);
-        mainPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_CONTROL_PANEL));
+        mainPanel.setBorder(BorderFactory.createTitledBorder(Constants.TITLE_CONTROL_PANEL));
 
         return mainPanel;
     }
@@ -98,20 +98,20 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
                 JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE);
         ImageIcon startImage = JMeterUtils.getImage("toolbar/" + iconSize + "/arrow-right-3.png");
-        btnStart = new JButton(NetworkEmulatorConstants.BTN_START_EMULATION);
+        btnStart = new JButton(Constants.BTN_START_EMULATION);
         btnStart.setIcon(startImage);
         btnStart.setFocusable(false);
         btnStart.setEnabled(true);
         btnStart.addActionListener(this::toggleEmulator);
 
-        btnStop = new JButton(NetworkEmulatorConstants.BTN_STOP_EMULATION);
+        btnStop = new JButton(Constants.BTN_STOP_EMULATION);
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
         btnStop.setIcon(stopImage);
         btnStop.setFocusable(false);
         btnStop.setEnabled(false);
         btnStop.addActionListener(this::toggleEmulator);
 
-        emulatorState = new JLabel(NetworkEmulatorConstants.MSG_EMULATION_STOPPED, JLabel.CENTER);
+        emulatorState = new JLabel(Constants.MSG_EMULATION_STOPPED, JLabel.CENTER);
 
         controlPanel.add(btnStart);
         controlPanel.add(btnStop);
@@ -129,14 +129,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
             btnStop.setEnabled(true);
             configurationPanel.setEditable(false);
             currentSettings.setText(controller.getNetworkConfiguration());
-            emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_RUNNING);
+            emulatorState.setText(Constants.MSG_EMULATION_RUNNING);
         } else if (source == btnStop) {
             controller.restoreNetworkConfiguration();
             btnStart.setEnabled(true);
             btnStop.setEnabled(false);
             configurationPanel.setEditable(true);
             currentSettings.setText(controller.getNetworkConfiguration());
-            emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+            emulatorState.setText(Constants.MSG_EMULATION_STOPPED);
         }
     }
 
@@ -148,12 +148,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     @Override
     public String getLabelResource() {
-        return NetworkEmulatorConstants.NETWORK_EMULATOR_LABEL_RESOURCE;
+        return Constants.NETWORK_EMULATOR_LABEL_RESOURCE;
     }
 
     @Override
     public String getStaticLabel() {
-        return NetworkEmulatorConstants.NETWORK_EMULATOR_STATIC_LABEL;
+        return Constants.NETWORK_EMULATOR_STATIC_LABEL;
     }
 
     @Override
@@ -168,7 +168,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStop.setEnabled(false);
         configurationPanel.setEditable(true);
         currentSettings.setText(controller.getNetworkConfiguration());
-        emulatorState.setText(NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+        emulatorState.setText(Constants.MSG_EMULATION_STOPPED);
     }
 
     @Override
@@ -193,8 +193,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         configurationPanel.setEditable(!running);
         currentSettings.setText(controller.getNetworkConfiguration());
         emulatorState.setText(running
-                ? NetworkEmulatorConstants.MSG_EMULATION_RUNNING
-                : NetworkEmulatorConstants.MSG_EMULATION_STOPPED);
+                ? Constants.MSG_EMULATION_RUNNING
+                : Constants.MSG_EMULATION_STOPPED);
 
     }
 

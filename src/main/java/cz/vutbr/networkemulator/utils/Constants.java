@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.utils;
 
 import java.util.Map;
 
-public final class NetworkEmulatorConstants {
+public final class Constants {
 
     public static final String BTN_ADD_TRAFFIC_CLASS = "Add Traffic Class";
     public static final String BTN_REMOVE_TRAFFIC_CLASS = "Remove Traffic Class";
@@ -132,6 +132,6 @@ public final class NetworkEmulatorConstants {
         "paretonormal"
     };
 
-    private NetworkEmulatorConstants() {
+    private Constants() {
     }
 }

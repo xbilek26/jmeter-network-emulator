@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class RatePanel extends JPanel {
@@ -24,14 +24,14 @@ public class RatePanel extends JPanel {
 
     public RatePanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_RATE_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_RATE_PANEL));
 
         valueField = new JTextField(8);
         overheadField = new JTextField(8);
 
-        JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_RATE);
+        JLabel valueLabel = new JLabel(Constants.LABEL_RATE);
         valueLabel.setLabelFor(valueLabel);
-        JLabel overheadLabel = new JLabel(NetworkEmulatorConstants.LABEL_OVERHEAD);
+        JLabel overheadLabel = new JLabel(Constants.LABEL_OVERHEAD);
         overheadLabel.setLabelFor(overheadField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

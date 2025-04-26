@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
@@ -43,11 +43,11 @@ public class FilterPanel extends JPanel {
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_FILTER_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_FILTER_PANEL));
 
-        tcpButton = new JRadioButton(NetworkEmulatorConstants.TCP_PROTOCOL);
-        udpButton = new JRadioButton(NetworkEmulatorConstants.UDP_PROTOCOL);
-        icmpButton = new JRadioButton(NetworkEmulatorConstants.ICMP_PROTOCOL);
+        tcpButton = new JRadioButton(Constants.TCP_PROTOCOL);
+        udpButton = new JRadioButton(Constants.UDP_PROTOCOL);
+        icmpButton = new JRadioButton(Constants.ICMP_PROTOCOL);
         tcpButton.setSelected(true);
 
         ipProtocolGroup = new ButtonGroup();
@@ -59,35 +59,35 @@ public class FilterPanel extends JPanel {
         icmpCodeField = new JTextField(8);
 
         srcAddressField = new JTextField(20);
-        srcSubnetMaskBox = new JComboBox<>(NetworkEmulatorConstants.SUBNET_MASKS);
+        srcSubnetMaskBox = new JComboBox<>(Constants.SUBNET_MASKS);
         srcPortField = new JTextField(7);
         dstAddressField = new JTextField(20);
-        dstSubnetMaskBox = new JComboBox<>(NetworkEmulatorConstants.SUBNET_MASKS);
+        dstSubnetMaskBox = new JComboBox<>(Constants.SUBNET_MASKS);
         dstPortField = new JTextField(7);
 
-        JLabel ipProtocolLabel = new JLabel(NetworkEmulatorConstants.LABEL_IP_PROTOCOL);
-        JLabel srcAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_ADDRESS);
+        JLabel ipProtocolLabel = new JLabel(Constants.LABEL_IP_PROTOCOL);
+        JLabel srcAddressLabel = new JLabel(Constants.LABEL_SRC_ADDRESS);
         srcAddressLabel.setLabelFor(srcAddressField);
-        JLabel dstAddressLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_ADDRESS);
+        JLabel dstAddressLabel = new JLabel(Constants.LABEL_DST_ADDRESS);
         dstAddressLabel.setLabelFor(dstAddressField);
-        JLabel srcPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_SRC_PORT);
+        JLabel srcPortLabel = new JLabel(Constants.LABEL_SRC_PORT);
         srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstPortLabel = new JLabel(NetworkEmulatorConstants.LABEL_DST_PORT);
+        JLabel dstPortLabel = new JLabel(Constants.LABEL_DST_PORT);
         dstPortLabel.setLabelFor(dstPortField);
-        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorConstants.LABEL_ICMP_TYPE);
+        JLabel icmpTypeLabel = new JLabel(Constants.LABEL_ICMP_TYPE);
         icmpTypeLabel.setLabelFor(icmpTypeField);
-        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorConstants.LABEL_ICMP_CODE);
+        JLabel icmpCodeLabel = new JLabel(Constants.LABEL_ICMP_CODE);
         icmpCodeLabel.setLabelFor(icmpCodeField);
 
         srcSubnetMaskBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
         dstSubnetMaskBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
 
-        protocolsBox = new JComboBox<>(NetworkEmulatorConstants.PROTOCOLS);
+        protocolsBox = new JComboBox<>(Constants.PROTOCOLS);
         protocolsBox.setPreferredSize(new Dimension(120, srcPortField.getPreferredSize().height));
 
         protocolsBox.addActionListener(e -> {
             String selectedProtocol = (String) protocolsBox.getSelectedItem();
-            Integer port = NetworkEmulatorConstants.PROTOCOL_PORTS.get(selectedProtocol);
+            Integer port = Constants.PROTOCOL_PORTS.get(selectedProtocol);
             if (!selectedProtocol.isEmpty()) {
                 dstPortField.setText(port.toString());
             }
@@ -145,7 +145,7 @@ public class FilterPanel extends JPanel {
     }
 
     private void updateCards() {
-        boolean isIcmp = getIpProtocol().equals(NetworkEmulatorConstants.ICMP_PROTOCOL);
+        boolean isIcmp = getIpProtocol().equals(Constants.ICMP_PROTOCOL);
         CardLayout cl = (CardLayout) cards.getLayout();
         if (isIcmp) {
             cl.show(cards, "icmp");
@@ -156,13 +156,13 @@ public class FilterPanel extends JPanel {
 
     public String getIpProtocol() {
         if (udpButton.isSelected()) {
-            return NetworkEmulatorConstants.UDP_PROTOCOL;
+            return Constants.UDP_PROTOCOL;
         }
         if (icmpButton.isSelected()) {
-            return NetworkEmulatorConstants.ICMP_PROTOCOL;
+            return Constants.ICMP_PROTOCOL;
         }
 
-        return NetworkEmulatorConstants.TCP_PROTOCOL;
+        return Constants.TCP_PROTOCOL;
     }
 
     public String getSrcAddress() {
@@ -199,9 +199,9 @@ public class FilterPanel extends JPanel {
 
     public void setIpProtocol(String ipProtocol) {
         switch (ipProtocol) {
-            case NetworkEmulatorConstants.UDP_PROTOCOL ->
+            case Constants.UDP_PROTOCOL ->
                 udpButton.setSelected(true);
-            case NetworkEmulatorConstants.ICMP_PROTOCOL ->
+            case Constants.ICMP_PROTOCOL ->
                 icmpButton.setSelected(true);
             default ->
                 tcpButton.setSelected(true);

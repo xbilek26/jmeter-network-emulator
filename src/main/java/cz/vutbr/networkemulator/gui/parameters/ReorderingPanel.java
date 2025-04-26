@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class ReorderingPanel extends JPanel {
@@ -24,14 +24,14 @@ public class ReorderingPanel extends JPanel {
 
     public ReorderingPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorConstants.TITLE_REORDERING_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_REORDERING_PANEL));
 
         valueField = new JTextField(8);
         correlationField = new JTextField(8);
 
-        JLabel valueLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_VALUE);
+        JLabel valueLabel = new JLabel(Constants.LABEL_REORDERING_VALUE);
         valueLabel.setLabelFor(valueField);
-        JLabel correlationLabel = new JLabel(NetworkEmulatorConstants.LABEL_REORDERING_CORRELATION);
+        JLabel correlationLabel = new JLabel(Constants.LABEL_REORDERING_CORRELATION);
         correlationLabel.setLabelFor(correlationField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

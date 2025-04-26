@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.filter;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConstants;
+import cz.vutbr.networkemulator.utils.Constants;
 
 public class Filter {
 
@@ -145,7 +145,7 @@ public class Filter {
                     .append(" 0xff");
 
             switch (protocol) {
-                case NetworkEmulatorConstants.UDP_PROTOCOL, NetworkEmulatorConstants.TCP_PROTOCOL -> {
+                case Constants.UDP_PROTOCOL, Constants.TCP_PROTOCOL -> {
                     if (isSrcPortSet()) {
                         cmd.append(String.format(" match ip sport %s 0xffff", getSrcPort()));
                     }
@@ -153,7 +153,7 @@ public class Filter {
                         cmd.append(String.format(" match ip dport %s 0xffff", getDstPort()));
                     }
                 }
-                case NetworkEmulatorConstants.ICMP_PROTOCOL -> {
+                case Constants.ICMP_PROTOCOL -> {
                     if (isIcmpTypeSet()) {
                         cmd.append(String.format(" match ip icmp_type %s 0xff", getIcmpType()));
                     }
@@ -167,11 +167,11 @@ public class Filter {
 
     private String getProtocolNumber(String protocol) {
         return switch (protocol) {
-            case NetworkEmulatorConstants.UDP_PROTOCOL ->
+            case Constants.UDP_PROTOCOL ->
                 "17";
-            case NetworkEmulatorConstants.ICMP_PROTOCOL ->
+            case Constants.ICMP_PROTOCOL ->
                 "1";
-            case NetworkEmulatorConstants.TCP_PROTOCOL ->
+            case Constants.TCP_PROTOCOL ->
                 "6";
             default ->
                 throw new IllegalArgumentException("Unknown protocol: " + protocol);
@@ -182,35 +182,35 @@ public class Filter {
         if (isIpProtocolSet()) {
             String protocol = getIpProtocol();
             model.addRow(new Object[]{
-                NetworkEmulatorConstants.IP_PROTOCOL,
+                Constants.IP_PROTOCOL,
                 protocol
             });
 
             switch (protocol) {
-                case NetworkEmulatorConstants.TCP_PROTOCOL, NetworkEmulatorConstants.UDP_PROTOCOL -> {
+                case Constants.TCP_PROTOCOL, Constants.UDP_PROTOCOL -> {
                     if (isSrcPortSet()) {
                         model.addRow(new Object[]{
-                            NetworkEmulatorConstants.SRC_PORT,
+                            Constants.SRC_PORT,
                             getSrcPort()
                         });
                     }
                     if (isDstPortSet()) {
                         model.addRow(new Object[]{
-                            NetworkEmulatorConstants.DST_PORT,
+                            Constants.DST_PORT,
                             getDstPort()
                         });
                     }
                 }
-                case NetworkEmulatorConstants.ICMP_PROTOCOL -> {
+                case Constants.ICMP_PROTOCOL -> {
                     if (isIcmpTypeSet()) {
                         model.addRow(new Object[]{
-                            NetworkEmulatorConstants.ICMP_TYPE,
+                            Constants.ICMP_TYPE,
                             getIcmpType()
                         });
                     }
                     if (isIcmpCodeSet()) {
                         model.addRow(new Object[]{
-                            NetworkEmulatorConstants.ICMP_CODE,
+                            Constants.ICMP_CODE,
                             getIcmpCode()
                         });
                     }
@@ -220,13 +220,13 @@ public class Filter {
 
         if (isSrcAddressSet()) {
             model.addRow(new Object[]{
-                NetworkEmulatorConstants.SRC_ADDRESS,
+                Constants.SRC_ADDRESS,
                 getSrcAddress() + getSrcSubnetMask()
             });
         }
         if (isDstAddressSet()) {
             model.addRow(new Object[]{
-                NetworkEmulatorConstants.DST_ADDRESS,
+                Constants.DST_ADDRESS,
                 getDstAddress() + getDstSubnetMask()
             });
         }
