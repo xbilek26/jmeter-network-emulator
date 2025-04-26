@@ -13,12 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.jmeter.gui.util.PowerTableModel;
-
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
-import cz.vutbr.networkemulator.utils.Constants;
 
 public class NetworkInterfacePanel extends JPanel {
 
@@ -73,11 +70,8 @@ public class NetworkInterfacePanel extends JPanel {
         contentPanel.repaint();
     }
 
-    private PowerTableModel buildTableModel(Filter filter, List<Parameter> parameters) {
-        PowerTableModel tableModel = new PowerTableModel(
-                new String[]{Constants.PARAMETER, Constants.VALUE},
-                new Class[]{String.class, String.class}
-        );
+    private DefaultTableModel buildTableModel(Filter filter, List<Parameter> parameters) {
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"", ""}, 0);
 
         appendFilterRows(tableModel, filter);
         appendParameterRows(tableModel, parameters);
@@ -85,7 +79,7 @@ public class NetworkInterfacePanel extends JPanel {
         return tableModel;
     }
 
-    private void appendFilterRows(PowerTableModel tableModel, Filter filter) {
+    private void appendFilterRows(DefaultTableModel tableModel, Filter filter) {
         filter.appendToTable(tableModel);
     }
 

@@ -42,7 +42,7 @@ public class IpAddressVerifier extends InputVerifier {
             } else {
                 JOptionPane.showMessageDialog(
                         null, Constants.MSG_ENTER_VALID_IP_ADDRESS,
-                        Constants.BAD_ADDRESS,
+                        Constants.MSG_BAD_ADDRESS,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
