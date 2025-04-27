@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -63,7 +64,7 @@ public class ConfigurationPanel extends JPanel {
     private JPanel rightPanel;
 
     private DefaultRootPanel defaultRootPanel;
-    private NetworkInterfacePanel networkInterfacePanel;
+    private NetworkInterfacePanel niPanel;
 
     private final NetworkEmulatorController controller;
 
@@ -121,10 +122,10 @@ public class ConfigurationPanel extends JPanel {
         defaultRootPanel = new DefaultRootPanel(DEFAULT_ROOT_PANEL);
         rootNode.setUserObject(defaultRootPanel);
         rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
-        networkInterfacePanel = new NetworkInterfacePanel(NETWORK_INTERFACE_PANEL);
+        niPanel = new NetworkInterfacePanel(NETWORK_INTERFACE_PANEL);
 
-        JScrollPane treeScrollPane = new JScrollPane(networkInterfacePanel);
-        rightPanel.add(treeScrollPane, networkInterfacePanel.getName());
+        JScrollPane scrollPane = new JScrollPane(niPanel);
+        rightPanel.add(scrollPane, niPanel.getName());
 
         return rightPanel;
     }
@@ -151,7 +152,7 @@ public class ConfigurationPanel extends JPanel {
         toAdd.stream()
                 .map(niName -> {
                     ConfigTreeNode niNode = new ConfigTreeNode();
-                    niNode.setUserObject(networkInterfacePanel);
+                    niNode.setUserObject(niPanel);
                     niNode.setName(niName);
                     return niNode;
                 })
@@ -179,8 +180,11 @@ public class ConfigurationPanel extends JPanel {
         String tcName = String.format("1:%s", newTcNodeNumber);
 
         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
-        JScrollPane treeScrollPane = new JScrollPane(tcPanel);
-        rightPanel.add(treeScrollPane, tcPanel.getName());
+        JScrollPane scrollPane = new JScrollPane(tcPanel);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+        rightPanel.add(scrollPane, tcPanel.getName());
 
         ConfigTreeNode tcNode = new ConfigTreeNode(false);
         tcNode.setUserObject(tcPanel);
@@ -315,7 +319,7 @@ public class ConfigurationPanel extends JPanel {
             for (int i = 0; i < niNames.size(); i++) {
                 String niName = niNames.get(i).getStringValue();
                 ConfigTreeNode niNode = new ConfigTreeNode();
-                niNode.setUserObject(networkInterfacePanel);
+                niNode.setUserObject(niPanel);
                 niNode.setName(niName);
                 rootNode.add(niNode);
 
@@ -324,8 +328,11 @@ public class ConfigurationPanel extends JPanel {
                     for (int j = 0; j < tcNames.size(); j++) {
                         String tcName = tcNames.get(j).getStringValue();
                         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
-                        JScrollPane treeScrollPane = new JScrollPane(tcPanel);
-                        rightPanel.add(treeScrollPane, tcPanel.getName());
+                        JScrollPane scrollPane = new JScrollPane(tcPanel);
+                        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+                        rightPanel.add(scrollPane, tcPanel.getName());
                         ConfigTreeNode tcNode = new ConfigTreeNode(false);
                         tcNode.setUserObject(tcPanel);
                         tcNode.setName(tcName);
@@ -339,7 +346,7 @@ public class ConfigurationPanel extends JPanel {
         }
 
         rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
-        rightPanel.add(networkInterfacePanel, networkInterfacePanel.getName());
+        rightPanel.add(niPanel, niPanel.getName());
 
         treeModel.reload();
 
