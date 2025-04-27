@@ -21,10 +21,10 @@ import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.JMeterToolBar;
-import org.apache.jmeter.gui.util.JSyntaxTextArea;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JButton btnStart;
     private JButton btnStop;
     private JLabel emulatorState;
-    private JSyntaxTextArea currentSettings;
+    private RSyntaxTextArea currentSettings;
 
     public NetworkEmulatorGui() {
         controller = NetworkEmulatorController.getInstance();
@@ -78,7 +78,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JPanel createStatePanel() {
         JPanel statePanel = new JPanel(new BorderLayout());
 
-        currentSettings = new JSyntaxTextArea();
+        currentSettings = new RSyntaxTextArea();
         currentSettings.setSyntaxEditingStyle("text/css");
 
         JScrollPane scrollPane = new JScrollPane(currentSettings);
