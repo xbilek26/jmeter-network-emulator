@@ -6,11 +6,8 @@ import cz.vutbr.networkemulator.utils.Constants;
 
 public class Filter {
 
-    public static final String UDP = "UDP";
-    public static final String TCP = "TCP";
-    public static final String ICMP = "ICMP";
-
-    private String ipProtocol;
+    private String ipVersion;
+    private String protocol;
     private String srcAddress;
     private String srcSubnetMask;
     private String dstAddress;
@@ -20,16 +17,28 @@ public class Filter {
     private String icmpType;
     private String icmpCode;
 
-    public String getIpProtocol() {
-        return ipProtocol;
+    public String getIpVersion() {
+        return ipVersion;
     }
 
-    public void setIpProtocol(String ipProtocol) {
-        this.ipProtocol = ipProtocol;
+    public void setIpVersion(String ipVersion) {
+        this.ipVersion = ipVersion;
     }
 
-    public boolean isIpProtocolSet() {
-        return ipProtocol != null && !ipProtocol.isEmpty();
+    public boolean isIpVersionSet() {
+        return ipVersion != null && !ipVersion.isEmpty();
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String ipProtocol) {
+        this.protocol = ipProtocol;
+    }
+
+    public boolean isProtocolSet() {
+        return protocol != null && !protocol.isEmpty();
     }
 
     public String getSrcAddress() {
@@ -129,44 +138,58 @@ public class Filter {
     }
 
     public void appendToCommand(StringBuilder cmd) {
+        String ipCmd = resolveIpVersion();
         if (isSrcAddressSet() && isSrcSubnetMaskSet()) {
-            cmd.append(String.format(" match ip src %s%s", getSrcAddress(), getSrcSubnetMask()));
+            cmd.append(String.format(" match %s src %s%s", ipCmd, this.srcAddress, this.srcSubnetMask));
         }
 
         if (isDstAddressSet() && isDstSubnetMaskSet()) {
-            cmd.append(String.format(" match ip dst %s%s", getDstAddress(), getDstSubnetMask()));
+            cmd.append(String.format(" match %s dst %s%s", ipCmd, this.dstAddress, this.dstSubnetMask));
         }
 
-        if (isIpProtocolSet()) {
-            String protocol = getIpProtocol();
+        if (isProtocolSet()) {
+            cmd.append(String.format(" match %s protocol %s 0xff", ipCmd, resolveProtocolNumber()));
 
-            cmd.append(" match ip protocol ")
-                    .append(getProtocolNumber(protocol))
-                    .append(" 0xff");
-
-            switch (protocol) {
+            switch (this.protocol) {
                 case Constants.UDP_PROTOCOL, Constants.TCP_PROTOCOL -> {
                     if (isSrcPortSet()) {
-                        cmd.append(String.format(" match ip sport %s 0xffff", getSrcPort()));
+                        cmd.append(String.format(" match %s sport %s 0xffff", ipCmd, this.srcPort));
                     }
                     if (isDstPortSet()) {
-                        cmd.append(String.format(" match ip dport %s 0xffff", getDstPort()));
+                        cmd.append(String.format(" match %s dport %s 0xffff", ipCmd, this.dstPort));
                     }
                 }
                 case Constants.ICMP_PROTOCOL -> {
                     if (isIcmpTypeSet()) {
-                        cmd.append(String.format(" match ip icmp_type %s 0xff", getIcmpType()));
+                        cmd.append(String.format(" match %s icmp_type %s 0xff", ipCmd, this.icmpType));
                     }
                     if (isIcmpCodeSet()) {
-                        cmd.append(String.format(" match ip icmp_code %s 0xff", getIcmpCode()));
+                        cmd.append(String.format(" match %s icmp_code %s 0xff", ipCmd, this.icmpCode));
                     }
                 }
             }
         }
     }
 
-    private String getProtocolNumber(String protocol) {
-        return switch (protocol) {
+    private String resolveIpVersion() {
+        if (!isIpVersionSet()) {
+            throw new IllegalStateException("IP version must be set.");
+        }
+        return switch (this.ipVersion) {
+            case Constants.IPV4 ->
+                "ip";
+            case Constants.IPV6 ->
+                "ip6";
+            default ->
+                throw new IllegalArgumentException("Unknown ipVersion: " + ipVersion);
+        };
+    }
+
+    private String resolveProtocolNumber() {
+        if (!isProtocolSet()) {
+            throw new IllegalStateException("Protocol must be set.");
+        }
+        return switch (this.protocol) {
             case Constants.UDP_PROTOCOL ->
                 "17";
             case Constants.ICMP_PROTOCOL ->
@@ -179,25 +202,24 @@ public class Filter {
     }
 
     public void appendToTable(DefaultTableModel model) {
-        if (isIpProtocolSet()) {
-            String protocol = getIpProtocol();
+        if (isProtocolSet()) {
             model.addRow(new Object[]{
-                Constants.IP_PROTOCOL,
-                protocol
+                Constants.PROTOCOL,
+                this.protocol
             });
 
-            switch (protocol) {
+            switch (this.protocol) {
                 case Constants.TCP_PROTOCOL, Constants.UDP_PROTOCOL -> {
                     if (isSrcPortSet()) {
                         model.addRow(new Object[]{
                             Constants.SRC_PORT,
-                            getSrcPort()
+                            this.srcPort
                         });
                     }
                     if (isDstPortSet()) {
                         model.addRow(new Object[]{
                             Constants.DST_PORT,
-                            getDstPort()
+                            this.dstPort
                         });
                     }
                 }
@@ -205,13 +227,13 @@ public class Filter {
                     if (isIcmpTypeSet()) {
                         model.addRow(new Object[]{
                             Constants.ICMP_TYPE,
-                            getIcmpType()
+                            this.icmpType
                         });
                     }
                     if (isIcmpCodeSet()) {
                         model.addRow(new Object[]{
                             Constants.ICMP_CODE,
-                            getIcmpCode()
+                            this.icmpCode
                         });
                     }
                 }
@@ -221,13 +243,13 @@ public class Filter {
         if (isSrcAddressSet()) {
             model.addRow(new Object[]{
                 Constants.SRC_ADDRESS,
-                getSrcAddress() + getSrcSubnetMask()
+                this.srcAddress + this.srcSubnetMask
             });
         }
         if (isDstAddressSet()) {
             model.addRow(new Object[]{
                 Constants.DST_ADDRESS,
-                getDstAddress() + getDstSubnetMask()
+                this.dstAddress + this.dstSubnetMask
             });
         }
     }

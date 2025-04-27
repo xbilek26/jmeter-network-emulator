@@ -31,7 +31,10 @@ public final class Constants {
 
     public static final String ROOT_NODE_NAME = "Network Interfaces";
 
-    public static final String IP_PROTOCOL = "IP protocol";
+    public static final String IP_VERSION = "IP version";
+    public static final String IPV4 = "IPv4";
+    public static final String IPV6 = "IPv6";
+    public static final String PROTOCOL = "Protocol";
     public static final String TCP_PROTOCOL = "TCP";
     public static final String UDP_PROTOCOL = "UDP";
     public static final String ICMP_PROTOCOL = "ICMP";
@@ -56,7 +59,8 @@ public final class Constants {
     public static final String CORRUPTION = "Corruption";
     public static final String CORRELATION = "Correlation";
 
-    public static final String LABEL_IP_PROTOCOL = IP_PROTOCOL + ":";
+    public static final String LABEL_IP_VERSION = IP_VERSION + ":";
+    public static final String LABEL_PROTOCOL = PROTOCOL + ":";
     public static final String LABEL_SRC_ADDRESS = SRC_ADDRESS + ":";
     public static final String LABEL_DST_ADDRESS = DST_ADDRESS + ":";
     public static final String LABEL_SRC_PORT = SRC_PORT + ":";
@@ -77,24 +81,14 @@ public final class Constants {
     public static final String LABEL_DUPLICATION_CORRELATION = CORRELATION + " (%):";
     public static final String LABEL_CORRUPTION = CORRUPTION + " (%):";
 
-    public static final String[] SUBNET_MASKS = {
-        "/32",
-        "/31",
-        "/30",
-        "/29",
-        "/28",
-        "/27",
-        "/26",
-        "/25",
-        "/24",
-        "/23",
-        "/22",
-        "/21",
-        "/20",
-        "/19",
-        "/18",
-        "/17",
-        "/16"
+    public static final String[] PREFIX_LENGTHS_IPV4 = {
+        "/32", "/31", "/30", "/29", "/28", "/27", "/26", "/25",
+        "/24", "/23", "/22", "/21", "/20", "/19", "/18", "/17", "/16"
+    };
+
+    public static final String[] PREFIX_LENGTHS_IPV6 = {
+        "/128", "/124", "/120", "/116", "/112", "/108", "/104", "/100",
+        "/96", "/92", "/88", "/84", "/80", "/76", "/72", "/68", "/64"
     };
 
     public static final String[] PROTOCOLS = {
@@ -121,7 +115,7 @@ public final class Constants {
     );
 
     public static final String[] DISTRIBUTIONS = {
-        // "uniform", not present in  /usr/lib/tc
+        // "uniform", not present in /usr/lib/tc
         "",
         "normal",
         "pareto",

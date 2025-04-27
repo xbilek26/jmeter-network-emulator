@@ -55,11 +55,12 @@ public class TrafficClassPanel extends JPanel {
 
     public Filter getFilter() {
         Filter filter = new Filter();
-        filter.setIpProtocol(filterPanel.getIpProtocol());
+        filter.setIpVersion(filterPanel.getIpVersion());
+        filter.setProtocol(filterPanel.getProtocol());
         filter.setSrcAddress(filterPanel.getSrcAddress());
-        filter.setSrcSubnetMask(filterPanel.getSrcSubnetMask());
+        filter.setSrcSubnetMask(filterPanel.getSrcPrefix());
         filter.setDstAddress(filterPanel.getDstAddress());
-        filter.setDstSubnetMask(filterPanel.getDstSubnetMask());
+        filter.setDstSubnetMask(filterPanel.getDstPrefix());
         filter.setSrcPort(filterPanel.getSrcPort());
         filter.setDstPort(filterPanel.getDstPort());
         filter.setIcmpType(filterPanel.getIcmpType());
@@ -135,11 +136,12 @@ public class TrafficClassPanel extends JPanel {
 
     public void modifyTestElement(TestElement te) {
         CollectionProperty filter = new CollectionProperty(PROPERTY_FILTER + getName(), new ArrayList<>());
-        filter.addItem(filterPanel.getIpProtocol());
+        filter.addItem(filterPanel.getIpVersion());
+        filter.addItem(filterPanel.getProtocol());
         filter.addItem(filterPanel.getSrcAddress());
-        filter.addItem(filterPanel.getSrcSubnetMask());
+        filter.addItem(filterPanel.getSrcPrefix());
         filter.addItem(filterPanel.getDstAddress());
-        filter.addItem(filterPanel.getDstSubnetMask());
+        filter.addItem(filterPanel.getDstPrefix());
         filter.addItem(filterPanel.getSrcPort());
         filter.addItem(filterPanel.getDstPort());
         filter.addItem(filterPanel.getIcmpType());
@@ -166,15 +168,16 @@ public class TrafficClassPanel extends JPanel {
     public void configure(TestElement te) {
         JMeterProperty filterPropery = (CollectionProperty) te.getProperty(PROPERTY_FILTER + getName());
         if (filterPropery instanceof CollectionProperty filter) {
-            filterPanel.setIpProtocol(filter.get(0).getStringValue());
-            filterPanel.setSrcAddress(filter.get(1).getStringValue());
-            filterPanel.setSrcSubnetMask(filter.get(2).getStringValue());
-            filterPanel.setDstAddress(filter.get(3).getStringValue());
-            filterPanel.setDstSubnetMask(filter.get(4).getStringValue());
-            filterPanel.setSrcPort(filter.get(5).getStringValue());
-            filterPanel.setDstPort(filter.get(6).getStringValue());
-            filterPanel.setIcmpType(filter.get(7).getStringValue());
-            filterPanel.setIcmpCode(filter.get(8).getStringValue());
+            filterPanel.setIpVersion(filter.get(0).getStringValue());
+            filterPanel.setProtocol(filter.get(1).getStringValue());
+            filterPanel.setSrcAddress(filter.get(2).getStringValue());
+            filterPanel.setSrcPrefix(filter.get(3).getStringValue());
+            filterPanel.setDstAddress(filter.get(4).getStringValue());
+            filterPanel.setDstPrefix(filter.get(5).getStringValue());
+            filterPanel.setSrcPort(filter.get(6).getStringValue());
+            filterPanel.setDstPort(filter.get(7).getStringValue());
+            filterPanel.setIcmpType(filter.get(8).getStringValue());
+            filterPanel.setIcmpCode(filter.get(9).getStringValue());
         }
 
         JMeterProperty parametersProperty = te.getPropertyOrNull(PROPERTY_PARAMETERS + getName());
