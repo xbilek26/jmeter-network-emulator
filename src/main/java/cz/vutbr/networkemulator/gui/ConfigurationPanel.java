@@ -124,8 +124,11 @@ public class ConfigurationPanel extends JPanel {
         rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
         niPanel = new NetworkInterfacePanel(NETWORK_INTERFACE_PANEL);
 
-        JScrollPane scrollPane = new JScrollPane(niPanel);
-        rightPanel.add(scrollPane, niPanel.getName());
+        JScrollPane niScrollPane = new JScrollPane(niPanel);
+        niScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        niScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        niScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+        rightPanel.add(niScrollPane, niPanel.getName());
 
         return rightPanel;
     }
@@ -180,11 +183,11 @@ public class ConfigurationPanel extends JPanel {
         String tcName = String.format("1:%s", newTcNodeNumber);
 
         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
-        JScrollPane scrollPane = new JScrollPane(tcPanel);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
-        rightPanel.add(scrollPane, tcPanel.getName());
+        JScrollPane tcScrollPane = new JScrollPane(tcPanel);
+        tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tcScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+        rightPanel.add(tcScrollPane, tcPanel.getName());
 
         ConfigTreeNode tcNode = new ConfigTreeNode(false);
         tcNode.setUserObject(tcPanel);
@@ -328,11 +331,11 @@ public class ConfigurationPanel extends JPanel {
                     for (int j = 0; j < tcNames.size(); j++) {
                         String tcName = tcNames.get(j).getStringValue();
                         TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
-                        JScrollPane scrollPane = new JScrollPane(tcPanel);
-                        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                        scrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
-                        rightPanel.add(scrollPane, tcPanel.getName());
+                        JScrollPane tcScrollPane = new JScrollPane(tcPanel);
+                        tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+                        tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                        tcScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+                        rightPanel.add(tcScrollPane, tcPanel.getName());
                         ConfigTreeNode tcNode = new ConfigTreeNode(false);
                         tcNode.setUserObject(tcPanel);
                         tcNode.setName(tcName);
