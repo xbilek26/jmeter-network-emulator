@@ -49,7 +49,7 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     }
 
     private void registerAddToTreeListener() {
-        ActionRouter.getInstance().addPostActionListener(AddToTree.class, (ActionEvent e) -> {
+        ActionRouter.getInstance().addPostActionListener(AddToTree.class, (ActionEvent _) -> {
             GuiPackage guiPack = GuiPackage.getInstance();
             List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
             if (networkEmulatorNodes.size() > 1) {
@@ -70,7 +70,7 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     }
 
     private void registerDuplicateListener() {
-        ActionRouter.getInstance().addPostActionListener(Duplicate.class, (ActionEvent e) -> {
+        ActionRouter.getInstance().addPostActionListener(Duplicate.class, (ActionEvent _) -> {
             GuiPackage guiPack = GuiPackage.getInstance();
             List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
             if (networkEmulatorNodes.size() > 1) {
@@ -91,7 +91,7 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
     }
 
     private void registerPasteListener() {
-        ActionRouter.getInstance().addPostActionListener(Paste.class, (ActionEvent e) -> {
+        ActionRouter.getInstance().addPostActionListener(Paste.class, (ActionEvent _) -> {
             GuiPackage guiPack = GuiPackage.getInstance();
             List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
             if (networkEmulatorNodes.size() > 1) {
