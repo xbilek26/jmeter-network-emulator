@@ -4,16 +4,10 @@ import javax.swing.table.DefaultTableModel;
 
 public abstract class Parameter {
 
-    private final String name;
     private String value;
 
-    protected Parameter(String name, String value) {
-        this.name = name;
+    protected Parameter(String value) {
         this.value = value;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getValue() {

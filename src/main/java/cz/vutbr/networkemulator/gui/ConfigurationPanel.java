@@ -33,8 +33,8 @@ import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
-import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.utils.Converter;
+import cz.vutbr.networkemulator.utils.Messages;
 
 public class ConfigurationPanel extends JPanel {
 
@@ -80,14 +80,14 @@ public class ConfigurationPanel extends JPanel {
 
         JSplitPane splitPane;
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createLeftPanel(), createRightPanel());
-        splitPane.setBorder(BorderFactory.createTitledBorder(Constants.TITLE_CONFIG_PANEL));
+        splitPane.setBorder(BorderFactory.createTitledBorder(Messages.get("title_configuration")));
         splitPane.setOneTouchExpandable(true);
         add(splitPane);
     }
 
     private JPanel createLeftPanel() {
         rootNode = new ConfigTreeNode();
-        rootNode.setName(Constants.ROOT_NODE_NAME);
+        rootNode.setName(Messages.get("root_node_name"));
         treeModel = new DefaultTreeModel(rootNode);
         tree = new ConfigTree(treeModel);
         tree.setRootVisible(true);
@@ -96,11 +96,11 @@ public class ConfigurationPanel extends JPanel {
         tree.setCellRenderer(new ConfigTreeNodeRenderer());
         tree.addTreeSelectionListener(this::updateView);
 
-        btnRefresh = new JButton(Constants.BTN_REFRESH_INTERFACES);
+        btnRefresh = new JButton(Messages.get("button_refresh"));
         btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
-        btnAdd = new JButton(Constants.BTN_ADD_TRAFFIC_CLASS);
+        btnAdd = new JButton(Messages.get("button_add"));
         btnAdd.addActionListener(_ -> addTrafficClass());
-        btnRemove = new JButton(Constants.BTN_REMOVE_TRAFFIC_CLASS);
+        btnRemove = new JButton(Messages.get("button_remove"));
         btnRemove.addActionListener(_ -> removeTrafficClass());
 
         buttonPanel = new JPanel(new CardLayout());

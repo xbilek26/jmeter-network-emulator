@@ -3,6 +3,7 @@ package cz.vutbr.networkemulator.gui.filter;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.utils.IpVersion;
+import cz.vutbr.networkemulator.utils.Messages;
 import cz.vutbr.networkemulator.utils.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -29,6 +30,38 @@ public class FilterPanel extends JPanel {
     private static final int MAX_ICMP_TYPE_VALUE = 255;
     private static final int MIN_ICMP_CODE_VALUE = 0;
     private static final int MAX_ICMP_CODE_VALUE = 255;
+
+    private static final String[] PREFIX_LENGTHS_IPV4 = {
+            "/32", "/31", "/30", "/29", "/28", "/27", "/26", "/25",
+            "/24", "/23", "/22", "/21", "/20", "/19", "/18", "/17", "/16"
+    };
+
+    private static final String[] PREFIX_LENGTHS_IPV6 = {
+            "/128", "/124", "/120", "/116", "/112", "/108", "/104", "/100",
+            "/96", "/92", "/88", "/84", "/80", "/76", "/72", "/68", "/64"
+    };
+
+    private static final String[] PROTOCOLS = {
+            "",
+            "HTTP",
+            "HTTPS",
+            "FTP",
+            "SSH",
+            "DNS",
+            "SMTP",
+            "POP3",
+            "IMAP"
+    };
+
+    private static final Map<String, Integer> label_PROTOCOL_PORTS = Map.of(
+            "HTTP", 80,
+            "HTTPS", 443,
+            "FTP", 21,
+            "SSH", 22,
+            "DNS", 53,
+            "SMTP", 25,
+            "POP3", 110,
+            "IMAP", 143);
 
     private final JRadioButton ipv4Button;
     private final JRadioButton ipv6Button;
@@ -46,26 +79,23 @@ public class FilterPanel extends JPanel {
     private final JTextField icmpCodeField;
     private final JPanel cards;
 
-    private final DefaultComboBoxModel<String> modelIpv4;
-    private final DefaultComboBoxModel<String> modelIpv6;
-
     private final IpAddressVerifier iPv4AddressVerifier;
     private final IpAddressVerifier iPv6AddressVerifier;
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_FILTER_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Messages.get("title_reordering")));
 
-        ipv4Button = new JRadioButton(Constants.IPV4);
-        ipv6Button = new JRadioButton(Constants.IPV6);
+        ipv4Button = new JRadioButton(Messages.get("label_ip_version_ipv4"));
+        ipv6Button = new JRadioButton(Messages.get("label_ip_version_ipv6"));
         ipv4Button.setSelected(true);
         ButtonGroup ipVersionGroup = new ButtonGroup();
         ipVersionGroup.add(ipv4Button);
         ipVersionGroup.add(ipv6Button);
 
-        tcpButton = new JRadioButton(Constants.TCP_PROTOCOL);
-        udpButton = new JRadioButton(Constants.UDP_PROTOCOL);
-        icmpButton = new JRadioButton(Constants.ICMP_PROTOCOL);
+        tcpButton = new JRadioButton(Messages.get("label_protocol_tcp"));
+        udpButton = new JRadioButton(Messages.get("label_protocol_udp"));
+        icmpButton = new JRadioButton(Messages.get("label_protocol_icmp"));
         tcpButton.setSelected(true);
         ButtonGroup protocolGroup = new ButtonGroup();
         protocolGroup.add(tcpButton);
@@ -75,42 +105,39 @@ public class FilterPanel extends JPanel {
         icmpTypeField = new JTextField(8);
         icmpCodeField = new JTextField(8);
 
-        modelIpv4 = new DefaultComboBoxModel<>(Constants.PREFIX_LENGTHS_IPV4);
-        modelIpv6 = new DefaultComboBoxModel<>(Constants.PREFIX_LENGTHS_IPV6);
-
         srcAddressField = new JTextField(20);
         srcSubnetPrefixBox = new JComboBox<>();
-        srcSubnetPrefixBox.setModel(modelIpv4);
+        srcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
         srcPortField = new JTextField(7);
         dstAddressField = new JTextField(20);
         dstSubnetPrefixBox = new JComboBox<>();
-        dstSubnetPrefixBox.setModel(modelIpv4);
+        dstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
         dstPortField = new JTextField(7);
 
-        JLabel ipVersionLabel = new JLabel(Constants.LABEL_IP_VERSION);
-        JLabel protocolLabel = new JLabel(Constants.LABEL_PROTOCOL);
-        JLabel srcAddressLabel = new JLabel(Constants.LABEL_SRC_ADDRESS);
+        JLabel ipVersionLabel = new JLabel(Messages.get("label_ip_version"));
+        JLabel protocolLabel = new JLabel(Messages.get("label_protocol"));
+        JLabel srcAddressLabel = new JLabel(Messages.get("label_src_address"));
         srcAddressLabel.setLabelFor(srcAddressField);
-        JLabel dstAddressLabel = new JLabel(Constants.LABEL_DST_ADDRESS);
+        JLabel dstAddressLabel = new JLabel(Messages.get("label_dst_address"));
         dstAddressLabel.setLabelFor(dstAddressField);
-        JLabel srcPortLabel = new JLabel(Constants.LABEL_SRC_PORT);
+        JLabel srcPortLabel = new JLabel(Messages.get("label_src_port"));
         srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstPortLabel = new JLabel(Constants.LABEL_DST_PORT);
+        JLabel dstPortLabel = new JLabel(Messages.get("label_dst_port"));
         dstPortLabel.setLabelFor(dstPortField);
-        JLabel icmpTypeLabel = new JLabel(Constants.LABEL_ICMP_TYPE);
+        JLabel icmpTypeLabel = new JLabel(Messages.get("label_icmp_type"));
         icmpTypeLabel.setLabelFor(icmpTypeField);
-        JLabel icmpCodeLabel = new JLabel(Constants.LABEL_ICMP_CODE);
+        JLabel icmpCodeLabel = new JLabel(Messages.get("label_icmp_code"));
         icmpCodeLabel.setLabelFor(icmpCodeField);
 
         srcSubnetPrefixBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
         dstSubnetPrefixBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
 
-        l4protocolsBox = new JComboBox<>(Constants.PROTOCOLS);
+        l4protocolsBox = new JComboBox<>(PROTOCOLS);
         l4protocolsBox.setPreferredSize(new Dimension(120, srcPortField.getPreferredSize().height));
 
         l4protocolsBox.addActionListener(_ -> {
             String selectedL4Protocol = (String) l4protocolsBox.getSelectedItem();
-            Integer port = Constants.PROTOCOL_PORTS.get(selectedL4Protocol);
+            Integer port = label_PROTOCOL_PORTS.get(selectedL4Protocol);
             if (!selectedL4Protocol.isEmpty()) {
                 dstPortField.setText(port.toString());
             }
@@ -179,13 +206,13 @@ public class FilterPanel extends JPanel {
         if (ipv6Button.isSelected()) {
             srcAddressField.setInputVerifier(iPv6AddressVerifier);
             dstAddressField.setInputVerifier(iPv6AddressVerifier);
-            srcSubnetPrefixBox.setModel(modelIpv6);
-            dstSubnetPrefixBox.setModel(modelIpv6);
+            srcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
+            dstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
         } else {
             srcAddressField.setInputVerifier(iPv4AddressVerifier);
             dstAddressField.setInputVerifier(iPv4AddressVerifier);
-            srcSubnetPrefixBox.setModel(modelIpv4);
-            dstSubnetPrefixBox.setModel(modelIpv4);
+            srcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
+            dstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
         }
     }
 

@@ -2,6 +2,8 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
+import cz.vutbr.networkemulator.utils.Messages;
+
 public class Delay extends Parameter {
 
     private String jitter;
@@ -9,7 +11,7 @@ public class Delay extends Parameter {
     private String distribution;
 
     public Delay(String delay, String jitter, String correlation, String distribution) {
-        super("Delay", delay);
+        super(delay);
         this.jitter = jitter;
         this.correlation = correlation;
         this.distribution = distribution;
@@ -82,7 +84,7 @@ public class Delay extends Parameter {
                 }
             }
 
-            tableModel.addRow(new Object[]{"Delay", sb.toString()});
+            tableModel.addRow(new Object[]{Messages.get("table_delay"), sb.toString()});
         }
     }
 }

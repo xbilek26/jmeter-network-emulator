@@ -2,12 +2,14 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
+import cz.vutbr.networkemulator.utils.Messages;
+
 public class Loss extends Parameter {
 
     private String correlation;
 
     public Loss(String value, String correlation) {
-        super("Loss", value);
+        super(value);
         this.correlation = correlation;
     }
 
@@ -42,7 +44,7 @@ public class Loss extends Parameter {
                 sb.append(", corr=").append(getCorrelation()).append("%");
             }
 
-            tableModel.addRow(new Object[]{getName(), sb.toString()});
+            tableModel.addRow(new Object[]{Messages.get("table_loss"), sb.toString()});
         }
     }
 }

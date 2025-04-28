@@ -2,8 +2,8 @@ package cz.vutbr.networkemulator.model.filter;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.utils.IpVersion;
+import cz.vutbr.networkemulator.utils.Messages;
 import cz.vutbr.networkemulator.utils.Protocol;
 
 public class Filter {
@@ -176,7 +176,7 @@ public class Filter {
     public void appendToTable(DefaultTableModel model) {
         if (isProtocolSet()) {
             model.addRow(new Object[]{
-                Constants.PROTOCOL,
+                Messages.get("table_protocol"),
                 this.protocol
             });
 
@@ -184,13 +184,13 @@ public class Filter {
                 case Protocol.TCP, Protocol.UDP -> {
                     if (isSrcPortSet()) {
                         model.addRow(new Object[]{
-                            Constants.SRC_PORT,
+                            Messages.get("table_src_port"),
                             this.srcPort
                         });
                     }
                     if (isDstPortSet()) {
                         model.addRow(new Object[]{
-                            Constants.DST_PORT,
+                            Messages.get("table_dst_port"),
                             this.dstPort
                         });
                     }
@@ -198,13 +198,13 @@ public class Filter {
                 case Protocol.ICMP -> {
                     if (isIcmpTypeSet()) {
                         model.addRow(new Object[]{
-                            Constants.ICMP_TYPE,
+                            Messages.get("table_icmp_type"),
                             this.icmpType
                         });
                     }
                     if (isIcmpCodeSet()) {
                         model.addRow(new Object[]{
-                            Constants.ICMP_CODE,
+                            Messages.get("table_icmp_code"),
                             this.icmpCode
                         });
                     }
@@ -214,13 +214,13 @@ public class Filter {
 
         if (isSrcAddressSet()) {
             model.addRow(new Object[]{
-                Constants.SRC_ADDRESS,
+                Messages.get("table_src_address"),
                 this.srcAddress + this.srcSubnetPrefix
             });
         }
         if (isDstAddressSet()) {
             model.addRow(new Object[]{
-                Constants.DST_ADDRESS,
+                Messages.get("table_dst_address"),
                 this.dstAddress + this.dstSubnetPrefix
             });
         }

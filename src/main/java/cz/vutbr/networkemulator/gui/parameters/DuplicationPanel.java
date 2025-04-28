@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.Messages;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class DuplicationPanel extends JPanel {
@@ -22,14 +22,14 @@ public class DuplicationPanel extends JPanel {
 
     public DuplicationPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_DUPLICATION_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Messages.get("title_duplication")));
 
         valueField = new JTextField(8);
         correlationField = new JTextField(8);
 
-        JLabel valueLabel = new JLabel(Constants.LABEL_DUPLICATION_VALUE);
+        JLabel valueLabel = new JLabel(Messages.get("label_duplication_value"));
         valueLabel.setLabelFor(valueField);
-        JLabel correlationLabel = new JLabel(Constants.LABEL_DUPLICATION_CORRELATION);
+        JLabel correlationLabel = new JLabel(Messages.get("label_duplication_correlation"));
         correlationLabel.setLabelFor(correlationField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

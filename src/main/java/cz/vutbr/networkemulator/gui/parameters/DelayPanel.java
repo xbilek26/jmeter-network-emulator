@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.Messages;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class DelayPanel extends JPanel {
@@ -21,6 +21,14 @@ public class DelayPanel extends JPanel {
     private static final int MIN_CORRELATION = 0;
     private static final int MAX_CORRELATION = 100;
 
+    private static final String[] DISTRIBUTIONS = {
+            // "uniform", not present in /usr/lib/tc
+            "",
+            "normal",
+            "pareto",
+            "paretonormal"
+    };
+
     private final JTextField valueField;
     private final JTextField jitterField;
     private final JTextField correlationField;
@@ -28,21 +36,21 @@ public class DelayPanel extends JPanel {
 
     public DelayPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_DELAY_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Messages.get("title_delay")));
 
         valueField = new JTextField(8);
         jitterField = new JTextField(8);
         correlationField = new JTextField(8);
-        distributionsBox = new JComboBox<>(Constants.DISTRIBUTIONS);
+        distributionsBox = new JComboBox<>(DISTRIBUTIONS);
         distributionsBox.setPreferredSize(new Dimension(180, correlationField.getPreferredSize().height));
 
-        JLabel valueLabel = new JLabel(Constants.LABEL_DELAY_VALUE);
+        JLabel valueLabel = new JLabel(Messages.get("label_delay_value"));
         valueLabel.setLabelFor(valueField);
-        JLabel jitterLabel = new JLabel(Constants.LABEL_JITTER);
+        JLabel jitterLabel = new JLabel(Messages.get("label_delay_jitter"));
         jitterLabel.setLabelFor(jitterField);
-        JLabel correlationLabel = new JLabel(Constants.LABEL_DELAY_CORRELATION);
+        JLabel correlationLabel = new JLabel(Messages.get("label_delay_correlation"));
         correlationLabel.setLabelFor(correlationField);
-        JLabel distributionsLabel = new JLabel(Constants.LABEL_DISTRIBUTION);
+        JLabel distributionsLabel = new JLabel(Messages.get("label_delay_distribution"));
         distributionsLabel.setLabelFor(distributionsBox);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

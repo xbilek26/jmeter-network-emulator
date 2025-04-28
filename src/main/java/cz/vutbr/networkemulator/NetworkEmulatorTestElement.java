@@ -16,7 +16,7 @@ import org.apache.jmeter.testelement.TestElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.Messages;
 
 /**
  * Represents a Network Emulator test element in JMeter. This class ensures that
@@ -61,8 +61,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.updateCurrentGui();
                 JOptionPane.showMessageDialog(
                         null,
-                        Constants.MSG_ONE_INSTANCE_ALLOWED,
-                        Constants.MSG_GENERAL_ERROR,
+                        Messages.get("msg_one_instance_allowed"),
+                        Messages.get("msg_general_error"),
                         JOptionPane.ERROR_MESSAGE
                 );
             }
@@ -82,8 +82,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.updateCurrentGui();
                 JOptionPane.showMessageDialog(
                         null,
-                        Constants.MSG_ONE_INSTANCE_ALLOWED,
-                        Constants.MSG_GENERAL_ERROR,
+                        Messages.get("msg_one_instance_allowed"),
+                        Messages.get("msg_general_error"),
                         JOptionPane.ERROR_MESSAGE
                 );
             }
@@ -103,8 +103,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.updateCurrentGui();
                 JOptionPane.showMessageDialog(
                         null,
-                        Constants.MSG_ONE_INSTANCE_ALLOWED,
-                        Constants.MSG_GENERAL_ERROR,
+                        Messages.get("msg_one_instance_allowed"),
+                        Messages.get("msg_general_error"),
                         JOptionPane.ERROR_MESSAGE
                 );
             }

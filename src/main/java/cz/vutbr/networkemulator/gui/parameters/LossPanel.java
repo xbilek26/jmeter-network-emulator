@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.Messages;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class LossPanel extends JPanel {
@@ -22,14 +22,14 @@ public class LossPanel extends JPanel {
 
     public LossPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(Constants.TITLE_LOSS_PANEL));
+        setBorder(BorderFactory.createTitledBorder(Messages.get("title_loss")));
 
         valueField = new JTextField(8);
         correlationField = new JTextField(8);
 
-        JLabel lossValueLabel = new JLabel(Constants.LABEL_LOSS_VALUE);
+        JLabel lossValueLabel = new JLabel(Messages.get("label_loss_value"));
         lossValueLabel.setLabelFor(valueField);
-        JLabel correlationLabel = new JLabel(Constants.LABEL_LOSS_CORRELATION);
+        JLabel correlationLabel = new JLabel(Messages.get("label_loss_correlation"));
         correlationLabel.setLabelFor(correlationField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
