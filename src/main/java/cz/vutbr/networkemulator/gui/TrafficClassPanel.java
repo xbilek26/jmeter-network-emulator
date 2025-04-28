@@ -58,9 +58,9 @@ public class TrafficClassPanel extends JPanel {
         filter.setIpVersion(filterPanel.getIpVersion());
         filter.setProtocol(filterPanel.getProtocol());
         filter.setSrcAddress(filterPanel.getSrcAddress());
-        filter.setSrcSubnetMask(filterPanel.getSrcPrefix());
+        filter.setSrcSubnetPrefix(filterPanel.getSrcSubnetPrefix());
         filter.setDstAddress(filterPanel.getDstAddress());
-        filter.setDstSubnetMask(filterPanel.getDstPrefix());
+        filter.setDstSubnetPrefix(filterPanel.getDstSubnetPrefix());
         filter.setSrcPort(filterPanel.getSrcPort());
         filter.setDstPort(filterPanel.getDstPort());
         filter.setIcmpType(filterPanel.getIcmpType());
@@ -136,12 +136,12 @@ public class TrafficClassPanel extends JPanel {
 
     public void modifyTestElement(TestElement te) {
         CollectionProperty filter = new CollectionProperty(PROPERTY_FILTER + getName(), new ArrayList<>());
-        filter.addItem(filterPanel.getIpVersion());
-        filter.addItem(filterPanel.getProtocol());
+        filter.addItem(filterPanel.getIpVersion().getName());
+        filter.addItem(filterPanel.getProtocol().getName());
         filter.addItem(filterPanel.getSrcAddress());
-        filter.addItem(filterPanel.getSrcPrefix());
+        filter.addItem(filterPanel.getSrcSubnetPrefix());
         filter.addItem(filterPanel.getDstAddress());
-        filter.addItem(filterPanel.getDstPrefix());
+        filter.addItem(filterPanel.getDstSubnetPrefix());
         filter.addItem(filterPanel.getSrcPort());
         filter.addItem(filterPanel.getDstPort());
         filter.addItem(filterPanel.getIcmpType());
@@ -171,16 +171,16 @@ public class TrafficClassPanel extends JPanel {
             filterPanel.setIpVersion(filter.get(0).getStringValue());
             filterPanel.setProtocol(filter.get(1).getStringValue());
             filterPanel.setSrcAddress(filter.get(2).getStringValue());
-            filterPanel.setSrcPrefix(filter.get(3).getStringValue());
+            filterPanel.setSrcSubnetPrefix(filter.get(3).getStringValue());
             filterPanel.setDstAddress(filter.get(4).getStringValue());
-            filterPanel.setDstPrefix(filter.get(5).getStringValue());
+            filterPanel.setDstSubnetPrefix(filter.get(5).getStringValue());
             filterPanel.setSrcPort(filter.get(6).getStringValue());
             filterPanel.setDstPort(filter.get(7).getStringValue());
             filterPanel.setIcmpType(filter.get(8).getStringValue());
             filterPanel.setIcmpCode(filter.get(9).getStringValue());
         }
 
-        JMeterProperty parametersProperty = te.getPropertyOrNull(PROPERTY_PARAMETERS + getName());
+        JMeterProperty parametersProperty = te.getProperty(PROPERTY_PARAMETERS + getName());
         if (parametersProperty instanceof CollectionProperty parameters) {
             delayPanel.setValue(parameters.get(0).getStringValue());
             delayPanel.setJitter(parameters.get(1).getStringValue());

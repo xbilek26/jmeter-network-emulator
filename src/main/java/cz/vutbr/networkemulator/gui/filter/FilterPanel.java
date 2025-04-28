@@ -16,6 +16,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.IpVersion;
+import cz.vutbr.networkemulator.utils.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
@@ -34,9 +36,9 @@ public class FilterPanel extends JPanel {
     private final JRadioButton udpButton;
     private final JRadioButton icmpButton;
     private final JTextField srcAddressField;
-    private final JComboBox<String> srcPrefixBox;
+    private final JComboBox<String> srcSubnetPrefixBox;
     private final JTextField dstAddressField;
-    private final JComboBox<String> dstPrefixBox;
+    private final JComboBox<String> dstSubnetPrefixBox;
     private final JTextField srcPortField;
     private final JTextField dstPortField;
     private final JComboBox<String> l4protocolsBox;
@@ -46,6 +48,9 @@ public class FilterPanel extends JPanel {
 
     private final DefaultComboBoxModel<String> modelIpv4;
     private final DefaultComboBoxModel<String> modelIpv6;
+
+    private final IpAddressVerifier iPv4AddressVerifier;
+    private final IpAddressVerifier iPv6AddressVerifier;
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -74,12 +79,12 @@ public class FilterPanel extends JPanel {
         modelIpv6 = new DefaultComboBoxModel<>(Constants.PREFIX_LENGTHS_IPV6);
 
         srcAddressField = new JTextField(20);
-        srcPrefixBox = new JComboBox<>();
-        srcPrefixBox.setModel(modelIpv4);
+        srcSubnetPrefixBox = new JComboBox<>();
+        srcSubnetPrefixBox.setModel(modelIpv4);
         srcPortField = new JTextField(7);
         dstAddressField = new JTextField(20);
-        dstPrefixBox = new JComboBox<>();
-        dstPrefixBox.setModel(modelIpv4);
+        dstSubnetPrefixBox = new JComboBox<>();
+        dstSubnetPrefixBox.setModel(modelIpv4);
         dstPortField = new JTextField(7);
 
         JLabel ipVersionLabel = new JLabel(Constants.LABEL_IP_VERSION);
@@ -97,8 +102,8 @@ public class FilterPanel extends JPanel {
         JLabel icmpCodeLabel = new JLabel(Constants.LABEL_ICMP_CODE);
         icmpCodeLabel.setLabelFor(icmpCodeField);
 
-        srcPrefixBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
-        dstPrefixBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
+        srcSubnetPrefixBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));
+        dstSubnetPrefixBox.setPreferredSize(new Dimension(90, dstAddressField.getPreferredSize().height));
 
         l4protocolsBox = new JComboBox<>(Constants.PROTOCOLS);
         l4protocolsBox.setPreferredSize(new Dimension(120, srcPortField.getPreferredSize().height));
@@ -116,8 +121,12 @@ public class FilterPanel extends JPanel {
         tcpButton.addItemListener(_ -> updateCards());
         udpButton.addItemListener(_ -> updateCards());
         icmpButton.addItemListener(_ -> updateCards());
-        srcAddressField.setInputVerifier(new IpAddressVerifier());
-        dstAddressField.setInputVerifier(new IpAddressVerifier());
+
+        iPv4AddressVerifier = new IpAddressVerifier(IpVersion.IPv4);
+        iPv6AddressVerifier = new IpAddressVerifier(IpVersion.IPv6);
+
+        srcAddressField.setInputVerifier(iPv4AddressVerifier);
+        dstAddressField.setInputVerifier(iPv4AddressVerifier);
         srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         icmpTypeField.setInputVerifier(new RangeVerifier(MIN_ICMP_TYPE_VALUE, MAX_ICMP_TYPE_VALUE, false));
@@ -136,10 +145,10 @@ public class FilterPanel extends JPanel {
         JPanel addressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         addressPanel.add(srcAddressLabel);
         addressPanel.add(srcAddressField);
-        addressPanel.add(srcPrefixBox);
+        addressPanel.add(srcSubnetPrefixBox);
         addressPanel.add(dstAddressLabel);
         addressPanel.add(dstAddressField);
-        addressPanel.add(dstPrefixBox);
+        addressPanel.add(dstSubnetPrefixBox);
 
         JPanel portPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         portPanel.add(srcPortLabel);
@@ -168,59 +177,65 @@ public class FilterPanel extends JPanel {
 
     private void updatePrefixBoxes() {
         if (ipv6Button.isSelected()) {
-            srcPrefixBox.setModel(modelIpv6);
-            dstPrefixBox.setModel(modelIpv6);
+            srcAddressField.setInputVerifier(iPv6AddressVerifier);
+            dstAddressField.setInputVerifier(iPv6AddressVerifier);
+            srcSubnetPrefixBox.setModel(modelIpv6);
+            dstSubnetPrefixBox.setModel(modelIpv6);
         } else {
-            srcPrefixBox.setModel(modelIpv4);
-            dstPrefixBox.setModel(modelIpv4);
+            srcAddressField.setInputVerifier(iPv4AddressVerifier);
+            dstAddressField.setInputVerifier(iPv4AddressVerifier);
+            srcSubnetPrefixBox.setModel(modelIpv4);
+            dstSubnetPrefixBox.setModel(modelIpv4);
         }
     }
 
     private void updateCards() {
-        boolean isIcmp = getProtocol().equals(Constants.ICMP_PROTOCOL);
         CardLayout cl = (CardLayout) cards.getLayout();
-        if (isIcmp) {
+        if (isIcmpSelected()) {
             cl.show(cards, "icmp");
         } else {
             cl.show(cards, "port");
         }
     }
 
-    public String getIpVersion() {
+    public IpVersion getIpVersion() {
         if (ipv6Button.isSelected()) {
-            return Constants.IPV6;
+            return IpVersion.IPv6;
         }
-        return Constants.IPV4;
+        return IpVersion.IPv4;
     }
 
     public void setIpVersion(String ipVersion) {
-        switch (ipVersion) {
-            case Constants.IPV6 -> {
-                ipv6Button.setSelected(true);
-            }
-            default -> {
-                ipv4Button.setSelected(true);
-            }
+        if (ipVersion.equals(IpVersion.IPv6.getName())) {
+            ipv6Button.setSelected(true);
+        } else {
+            ipv4Button.setSelected(true);
         }
     }
 
-    public String getProtocol() {
+    public Protocol getProtocol() {
         if (udpButton.isSelected()) {
-            return Constants.UDP_PROTOCOL;
+            return Protocol.UDP;
         }
         if (icmpButton.isSelected()) {
-            return Constants.ICMP_PROTOCOL;
+            return Protocol.ICMP;
         }
 
-        return Constants.TCP_PROTOCOL;
+        return Protocol.TCP;
     }
 
     public void setProtocol(String protocol) {
-        switch (protocol) {
-            case Constants.UDP_PROTOCOL -> udpButton.setSelected(true);
-            case Constants.ICMP_PROTOCOL -> icmpButton.setSelected(true);
-            default -> tcpButton.setSelected(true);
+        if (protocol.equals(Protocol.UDP.getName())) {
+            udpButton.setSelected(true);
+        } else if (protocol.equals(Protocol.ICMP.getName())) {
+            icmpButton.setSelected(true);
+        } else {
+            tcpButton.setSelected(true);
         }
+    }
+
+    private boolean isIcmpSelected() {
+        return icmpButton.isSelected();
     }
 
     public String getSrcAddress() {
@@ -231,12 +246,12 @@ public class FilterPanel extends JPanel {
         srcAddressField.setText(srcAddress);
     }
 
-    public String getSrcPrefix() {
-        return (String) srcPrefixBox.getSelectedItem();
+    public String getSrcSubnetPrefix() {
+        return (String) srcSubnetPrefixBox.getSelectedItem();
     }
 
-    public void setSrcPrefix(String srcPrefix) {
-        srcPrefixBox.setSelectedItem(srcPrefix);
+    public void setSrcSubnetPrefix(String srcSubnetPrefix) {
+        srcSubnetPrefixBox.setSelectedItem(srcSubnetPrefix);
     }
 
     public String getDstAddress() {
@@ -247,12 +262,12 @@ public class FilterPanel extends JPanel {
         dstAddressField.setText(dstAddress);
     }
 
-    public String getDstPrefix() {
-        return (String) dstPrefixBox.getSelectedItem();
+    public String getDstSubnetPrefix() {
+        return (String) dstSubnetPrefixBox.getSelectedItem();
     }
 
-    public void setDstPrefix(String dstSubnetPrefix) {
-        dstPrefixBox.setSelectedItem(dstSubnetPrefix);
+    public void setDstSubnetPrefix(String dstSubnetPrefix) {
+        dstSubnetPrefixBox.setSelectedItem(dstSubnetPrefix);
     }
 
     public String getSrcPort() {

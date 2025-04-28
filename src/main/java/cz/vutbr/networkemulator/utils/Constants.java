@@ -14,8 +14,10 @@ public final class Constants {
     public static final String MSG_ONE_INSTANCE_ALLOWED = "Only one instance of Network Emulator is allowed in JMeter Tree.";
     public static final String MSG_EMULATION_RUNNING = "Emulation is running.";
     public static final String MSG_EMULATION_STOPPED = "Emulation is stopped.";
-    public static final String MSG_ENTER_VALID_IP_ADDRESS = "Enter a valid IPv4 Address.";
-    public static final String MSG_BAD_ADDRESS = "Bad Address";
+    public static final String MSG_ENTER_VALID_IPV4_ADDRESS = "Enter a valid IPv4 Address.";
+    public static final String MSG_BAD_IPV4_ADDRESS = "Bad IPv4 Address";
+    public static final String MSG_ENTER_VALID_IPV6_ADDRESS = "Enter a valid IPv6 Address.";
+    public static final String MSG_BAD_IPV6_ADDRESS = "Bad IPv6 Address";
     public static final String BTN_START_EMULATION = "Start";
     public static final String BTN_STOP_EMULATION = "Stop";
 

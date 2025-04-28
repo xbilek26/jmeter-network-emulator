@@ -11,19 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.utils.Constants;
+import cz.vutbr.networkemulator.utils.IpVersion;
 
 public class IpAddressVerifier extends InputVerifier {
 
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(IpAddressVerifier.class);
 
-    private static final Pattern IPV4_PATTERN = createIpv4Pattern();
+    private final IpVersion version;
 
-    public static boolean isValid(String text) {
-        if (text == null || text.trim().isEmpty()) {
-            return false;
-        }
-        return IPV4_PATTERN.matcher(text.trim()).matches();
+    private static final Pattern IPV4_PATTERN = createIpv4Pattern();
+    private static final Pattern IPV6_PATTERN = createIpv6Pattern();
+
+    public IpAddressVerifier(IpVersion version) {
+        this.version = version;
     }
 
     @Override
@@ -35,17 +36,29 @@ public class IpAddressVerifier extends InputVerifier {
                 return true;
             }
 
-            boolean isValidIpv4Address = IPV4_PATTERN.matcher(text).matches();
-
-            if (isValidIpv4Address) {
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(
-                        null, Constants.MSG_ENTER_VALID_IP_ADDRESS,
-                        Constants.MSG_BAD_ADDRESS,
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
+            if (version == IpVersion.IPv4) {
+                if (IPV4_PATTERN.matcher(text).matches()) {
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(
+                            null, Constants.MSG_ENTER_VALID_IPV4_ADDRESS,
+                            Constants.MSG_BAD_IPV4_ADDRESS,
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
             }
+            if (version == IpVersion.IPv6) {
+                if (IPV6_PATTERN.matcher(text).matches()) {
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(
+                            null, Constants.MSG_ENTER_VALID_IPV6_ADDRESS,
+                            Constants.MSG_BAD_IPV6_ADDRESS,
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+
         }
         return true;
     }
