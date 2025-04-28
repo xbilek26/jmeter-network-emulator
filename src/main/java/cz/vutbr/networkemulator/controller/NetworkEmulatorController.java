@@ -161,7 +161,14 @@ public class NetworkEmulatorController {
     }
 
     public String getNetworkConfiguration() {
-        return TrafficControl.showQDiscs();
+        StringBuilder sb = new StringBuilder();
+        sb.append(TrafficControl.showQDiscs());
+        for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
+            String dev = ni.getName();
+            sb.append(TrafficControl.showFilter(dev));
+        }
+
+        return sb.toString();
     }
 
     public void runEmulation() {

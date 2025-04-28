@@ -42,6 +42,10 @@ public class TrafficControl {
         return CommandRunner.runCommand("tc qdisc show");
     }
 
+    public static String showFilter(String dev) {
+        return CommandRunner.runCommand(String.format("tc filter show dev %s", dev));
+    }
+
     public static void restoreDefaults(String dev) {
         CommandRunner.runCommand(String.format("tc qdisc del dev %s root", dev));
     }

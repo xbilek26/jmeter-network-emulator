@@ -48,9 +48,6 @@ public class DelayPanel extends JPanel {
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
         jitterField.setInputVerifier(new RangeVerifier(MIN_JITTER, MAX_JITTER, true));
         correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
-        jitterField.setEnabled(false);
-        correlationField.setEnabled(false);
-        distributionsBox.setEnabled(false);
 
         add(valueLabel);
         add(valueField);

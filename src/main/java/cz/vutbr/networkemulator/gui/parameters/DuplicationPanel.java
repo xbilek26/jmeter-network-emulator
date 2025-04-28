@@ -34,7 +34,6 @@ public class DuplicationPanel extends JPanel {
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
         correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
-        correlationField.setEnabled(false);
 
         add(valueLabel);
         add(valueField);
