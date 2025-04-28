@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
+import cz.vutbr.networkemulator.utils.NetworkEmulator;
 
 public class NetworkInterfacePanel extends JPanel {
 
@@ -48,7 +49,7 @@ public class NetworkInterfacePanel extends JPanel {
             Filter filter = controller.getFilter(niName, classId);
             List<Parameter> parameters = controller.getParameters(niName, classId);
             if (filter != null) {
-                JLabel label = new JLabel("Traffic Class: " + classId);
+                JLabel label = new JLabel(NetworkEmulator.getString("label_traffic_class") + " " + classId);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 contentPanel.add(label);
 
