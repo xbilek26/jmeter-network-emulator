@@ -53,7 +53,7 @@ public class FilterPanel extends JPanel {
             "IMAP"
     };
 
-    private static final Map<String, Integer> label_PROTOCOL_PORTS = Map.of(
+    private static final Map<String, Integer> PROTOCOL_PORTS = Map.of(
             "HTTP", 80,
             "HTTPS", 443,
             "FTP", 21,
@@ -137,7 +137,7 @@ public class FilterPanel extends JPanel {
 
         l4protocolsBox.addActionListener(_ -> {
             String selectedL4Protocol = (String) l4protocolsBox.getSelectedItem();
-            Integer port = label_PROTOCOL_PORTS.get(selectedL4Protocol);
+            Integer port = PROTOCOL_PORTS.get(selectedL4Protocol);
             if (!selectedL4Protocol.isEmpty()) {
                 dstPortField.setText(port.toString());
             }
