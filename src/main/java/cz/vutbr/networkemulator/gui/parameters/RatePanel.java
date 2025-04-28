@@ -6,8 +6,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -15,9 +13,9 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 public class RatePanel extends JPanel {
 
     private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 1000000;
+    private static final int MAX_VALUE = 10000;
     private static final int MIN_OVERHEAD = 0;
-    private static final int MAX_OVERHEAD = 1000000;
+    private static final int MAX_OVERHEAD = 10000;
 
     private final JTextField valueField;
     private final JTextField overheadField;
@@ -37,38 +35,11 @@ public class RatePanel extends JPanel {
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
         overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD, false));
         overheadField.setEnabled(false);
-        addInputListener();
 
         add(valueLabel);
         add(valueField);
         add(overheadLabel);
         add(overheadField);
-    }
-
-    private void addInputListener() {
-        DocumentListener inputListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateFields();
-            }
-        };
-
-        valueField.getDocument().addDocumentListener(inputListener);
-    }
-
-    private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE, true);
-        overheadField.setEnabled(isValueValid);
     }
 
     public String getValue() {

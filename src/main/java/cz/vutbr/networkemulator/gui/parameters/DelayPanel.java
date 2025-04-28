@@ -8,8 +8,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import cz.vutbr.networkemulator.utils.Constants;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -53,7 +51,6 @@ public class DelayPanel extends JPanel {
         jitterField.setEnabled(false);
         correlationField.setEnabled(false);
         distributionsBox.setEnabled(false);
-        addInputListener();
 
         add(valueLabel);
         add(valueField);
@@ -63,36 +60,6 @@ public class DelayPanel extends JPanel {
         add(correlationField);
         add(distributionsLabel);
         add(distributionsBox);
-    }
-
-    private void addInputListener() {
-        DocumentListener inputListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateFields();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateFields();
-            }
-        };
-
-        valueField.getDocument().addDocumentListener(inputListener);
-        jitterField.getDocument().addDocumentListener(inputListener);
-    }
-
-    private void updateFields() {
-        boolean isValueValid = RangeVerifier.isValid(valueField.getText(), MIN_VALUE, MAX_VALUE, true);
-        boolean isJitterValid = RangeVerifier.isValid(jitterField.getText(), MIN_JITTER, MAX_JITTER, true);
-        jitterField.setEnabled(isValueValid);
-        correlationField.setEnabled(isValueValid && isJitterValid);
-        distributionsBox.setEnabled(isValueValid && isJitterValid);
     }
 
     public String getValue() {
@@ -113,22 +80,18 @@ public class DelayPanel extends JPanel {
 
     public void setValue(String value) {
         valueField.setText(value);
-        updateFields();
     }
 
     public void setJitter(String jitter) {
         jitterField.setText(jitter);
-        updateFields();
     }
 
     public void setCorrelation(String correlation) {
         correlationField.setText(correlation);
-        updateFields();
     }
 
     public void setDistribution(String distribution) {
         distributionsBox.setSelectedItem(distribution);
-        updateFields();
     }
 
 }
