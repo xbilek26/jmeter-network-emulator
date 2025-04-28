@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.Messages;
+import cz.vutbr.networkemulator.utils.NetworkEmulator;
 
 public class Rate extends Parameter {
 
@@ -43,7 +43,7 @@ public class Rate extends Parameter {
             if (isOverheadSet()) {
                 sb.append(", overhead=").append(getOverhead()).append("B");
             }
-            tableModel.addRow(new Object[]{Messages.get("table_rate"), sb.toString()});
+            tableModel.addRow(new Object[]{NetworkEmulator.getString("table_rate"), sb.toString()});
         }
     }
 }

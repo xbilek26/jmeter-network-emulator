@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.Messages;
+import cz.vutbr.networkemulator.utils.NetworkEmulator;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class RatePanel extends JPanel {
@@ -22,14 +22,14 @@ public class RatePanel extends JPanel {
 
     public RatePanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(Messages.get("title_rate")));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulator.getString("title_rate")));
 
         valueField = new JTextField(8);
         overheadField = new JTextField(8);
 
-        JLabel valueLabel = new JLabel(Messages.get("label_rate"));
+        JLabel valueLabel = new JLabel(NetworkEmulator.getString("label_rate"));
         valueLabel.setLabelFor(valueLabel);
-        JLabel overheadLabel = new JLabel(Messages.get("label_overhead"));
+        JLabel overheadLabel = new JLabel(NetworkEmulator.getString("label_overhead"));
         overheadLabel.setLabelFor(overheadField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
