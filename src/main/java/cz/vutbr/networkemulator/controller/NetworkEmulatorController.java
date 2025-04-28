@@ -168,10 +168,7 @@ public class NetworkEmulatorController {
             sb.append(TrafficControl.showQdiscAndFilters(dev));
         }
 
-        return sb.toString()
-                .replaceAll("bit", "bps")
-                .replaceAll("Kbit", "kbps")
-                .replaceAll("Mbit", "Mbps");
+        return sb.toString();
     }
 
     public void runEmulation() {

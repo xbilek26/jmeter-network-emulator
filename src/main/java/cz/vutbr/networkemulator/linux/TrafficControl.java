@@ -65,6 +65,11 @@ public class TrafficControl {
             if (qdiscLine.contains("root") && qdiscLine.contains("htb")) {
                 continue;
             }
+
+            qdiscLine = qdiscLine.replace("Kbit", "kbps")
+                    .replace("Mbit", "Mbps")
+                    .replace("bit", "bps")
+                    .replaceAll("\\s+", " ");
             output.append(qdiscLine).append("\n");
 
             // find parent x:y
