@@ -78,65 +78,65 @@ public class NetworkEmulatorController {
         networkEmulator.clearNetworkInterfaces();
     }
 
-    public void addTrafficClass(String niName, String tcName) {
+    public void addTrafficClass(String niName, String classId) {
         Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .findFirst();
 
-        networkInterface.ifPresent(ni -> ni.addTrafficClass(tcName));
+        networkInterface.ifPresent(ni -> ni.addTrafficClass(classId));
     }
 
-    public void removeTrafficClass(String niName, String tcName) {
+    public void removeTrafficClass(String niName, String classId) {
         Optional<NetworkInterface> networkInterface = networkEmulator.getNetworkInterfaces()
                 .stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .findFirst();
 
-        networkInterface.ifPresent(ni -> ni.removeTrafficClass(tcName));
+        networkInterface.ifPresent(ni -> ni.removeTrafficClass(classId));
     }
 
     public List<String> getTrafficClasses(String niName) {
         return networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .map(TrafficClass::getName)
+                .map(TrafficClass::getClassId)
                 .collect(Collectors.toList());
     }
 
-    public Filter getFilter(String niName, String tcName) {
+    public Filter getFilter(String niName, String classId) {
         return networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(tcName))
+                .filter(tc -> tc.getClassId().equals(classId))
                 .findFirst()
                 .map(TrafficClass::getFilter)
                 .orElse(null);
     }
 
-    public void setFilter(String niName, String tcName, Filter filter) {
+    public void setFilter(String niName, String classId, Filter filter) {
         networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(tcName))
+                .filter(tc -> tc.getClassId().equals(classId))
                 .findFirst()
                 .ifPresent(tc -> tc.setFilter(filter));
     }
 
-    public void setParameters(String niName, String tcName, List<Parameter> parameters) {
+    public void setParameters(String niName, String classId, List<Parameter> parameters) {
         networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(tcName))
+                .filter(tc -> tc.getClassId().equals(classId))
                 .findFirst()
                 .ifPresent(tc -> tc.setParameters(parameters));
     }
 
-    public List<Parameter> getParameters(String niName, String tcName) {
+    public List<Parameter> getParameters(String niName, String classId) {
         return networkEmulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getTrafficClasses().stream())
-                .filter(tc -> tc.getName().equals(tcName))
+                .filter(tc -> tc.getClassId().equals(classId))
                 .findFirst()
                 .map(TrafficClass::getParameters)
                 .orElse(null);
@@ -162,10 +162,10 @@ public class NetworkEmulatorController {
 
     public String getNetworkConfiguration() {
         StringBuilder sb = new StringBuilder();
-        sb.append(TrafficControl.showQDiscs());
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             String dev = ni.getName();
-            sb.append(TrafficControl.showFilter(dev));
+            sb.append(dev).append(": ");
+            sb.append(TrafficControl.showQdiscAndFilters(dev));
         }
 
         return sb.toString();
@@ -179,8 +179,8 @@ public class NetworkEmulatorController {
             TrafficControl.setupRootQdisc(ni.getName());
             for (TrafficClass tc : ni.getTrafficClasses()) {
                 String dev = ni.getName();
-                String classId = tc.getName() + "0";
-                String handleId = tc.getName().substring(2) + "0:";
+                String classId = tc.getClassId();
+                String handleId = tc.getHandleId();
                 List<Parameter> parameters = tc.getParameters();
                 Filter filter = tc.getFilter();
                 TrafficControl.setupTrafficClass(dev, classId, handleId, parameters);

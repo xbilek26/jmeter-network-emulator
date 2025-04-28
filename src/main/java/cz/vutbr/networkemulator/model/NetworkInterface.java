@@ -36,20 +36,20 @@ public class NetworkInterface {
         return new ArrayList<>(trafficClasses);
     }
 
-    public void addTrafficClass(String tcName) {
-        if (tcName != null && !hasTrafficClass(tcName)) {
-            trafficClasses.add(new TrafficClass(tcName));
+    public void addTrafficClass(String classId) {
+        if (classId != null && !hasTrafficClass(classId)) {
+            trafficClasses.add(new TrafficClass(classId));
         }
     }
 
-    public void removeTrafficClass(String tcName) {
-        if (tcName != null) {
-            trafficClasses.removeIf(tc -> tc.getName().equals(tcName));
+    public void removeTrafficClass(String classId) {
+        if (classId != null) {
+            trafficClasses.removeIf(tc -> tc.getClassId().equals(classId));
         }
     }
 
-    public boolean hasTrafficClass(String tcName) {
-        return trafficClasses.stream().anyMatch(tc -> tc.getName().equals(tcName));
+    public boolean hasTrafficClass(String classId) {
+        return trafficClasses.stream().anyMatch(tc -> tc.getClassId().equals(classId));
     }
 
 }

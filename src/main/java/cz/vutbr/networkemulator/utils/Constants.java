@@ -21,8 +21,9 @@ public final class Constants {
     public static final String BTN_START_EMULATION = "Start";
     public static final String BTN_STOP_EMULATION = "Stop";
 
-    public static final String TITLE_CONTROL_PANEL = "Controls";
-    public static final String TITLE_CONFIG_PANEL = "Configuration";
+    public static final String TITLE_NETWORK_SETTINGS = "Network Settings";
+    public static final String TITLE_CONTROLS = "Controls";
+    public static final String TITLE_CONFIG_PANEL = "Configuration Panel";
     public static final String TITLE_FILTER_PANEL = "Filter";
     public static final String TITLE_DELAY_PANEL = "Delay";
     public static final String TITLE_REORDERING_PANEL = "Reordering";

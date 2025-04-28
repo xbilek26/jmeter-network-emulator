@@ -56,18 +56,17 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         setLayout(new BorderLayout(0, 5));
         setBorder(makeBorder());
         add(makeTitlePanel(), BorderLayout.NORTH);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createMainPanel(), createConfigurationPanel());
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createTopPanel(), createConfigurationPanel());
         add(splitPane, BorderLayout.CENTER);
     }
 
-    private JSplitPane createMainPanel() {
-        JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createStatePanel(), createControlPanel());
-        mainPanel.setResizeWeight(0.98);
-        mainPanel.setDividerLocation(0.98);
-        mainPanel.setOneTouchExpandable(true);
-        mainPanel.setBorder(BorderFactory.createTitledBorder(Constants.TITLE_CONTROL_PANEL));
+    private JSplitPane createTopPanel() {
+        JSplitPane topPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSettingsPanel(), createControlPanel());
+        topPanel.setResizeWeight(0.98);
+        topPanel.setDividerLocation(0.98);
+        topPanel.setOneTouchExpandable(true);
 
-        return mainPanel;
+        return topPanel;
     }
 
     private JPanel createConfigurationPanel() {
@@ -75,10 +74,12 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         return configurationPanel;
     }
 
-    private JPanel createStatePanel() {
-        JPanel statePanel = new JPanel(new BorderLayout());
+    private JPanel createSettingsPanel() {
+        JPanel settingsPanel = new JPanel(new BorderLayout());
+        settingsPanel.setBorder(BorderFactory.createTitledBorder(Constants.TITLE_NETWORK_SETTINGS));
 
         currentSettings = new RSyntaxTextArea();
+        currentSettings.setEditable(false);
         currentSettings.setSyntaxEditingStyle("text/css");
 
         JScrollPane scrollPane = new JScrollPane(currentSettings);
@@ -87,13 +88,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
         currentSettings.setText(controller.getNetworkConfiguration());
 
-        statePanel.add(scrollPane, BorderLayout.CENTER);
+        settingsPanel.add(scrollPane, BorderLayout.CENTER);
 
-        return statePanel;
+        return settingsPanel;
     }
 
     private JPanel createControlPanel() {
         JPanel controlPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+        controlPanel.setBorder(BorderFactory.createTitledBorder(Constants.TITLE_CONTROLS));
 
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
                 JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE);

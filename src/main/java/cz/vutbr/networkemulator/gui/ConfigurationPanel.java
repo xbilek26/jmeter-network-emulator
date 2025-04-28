@@ -177,13 +177,13 @@ public class ConfigurationPanel extends JPanel {
 
         ConfigTreeNode niNode = (ConfigTreeNode) path.getLastPathComponent();
         String niName = niNode.getName();
-        int newTcNodeNumber = 1;
+        int newTcNodeNumber = 10;
         if (niNode.getChildCount() > 0) {
             newTcNodeNumber = Integer.parseInt(((ConfigTreeNode) niNode.getLastChild()).getName().substring(2)) + 1;
         }
-        String tcName = String.format("1:%s", newTcNodeNumber);
+        String classId = String.format("1:%s", newTcNodeNumber);
 
-        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
+        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, classId);
         JScrollPane tcScrollPane = new JScrollPane(tcPanel);
         tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -197,7 +197,7 @@ public class ConfigurationPanel extends JPanel {
 
         ConfigTreeNode tcNode = new ConfigTreeNode(false);
         tcNode.setUserObject(tcPanel);
-        tcNode.setName(tcName);
+        tcNode.setName(classId);
         niNode.add(tcNode);
 
         treeModel.reload();
@@ -274,13 +274,13 @@ public class ConfigurationPanel extends JPanel {
 
             for (int j = 0; j < niNode.getChildCount(); j++) {
                 ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
-                String tcName = tcNode.getName();
+                String classId = tcNode.getName();
 
-                controller.addTrafficClass(niName, tcName);
+                controller.addTrafficClass(niName, classId);
 
                 TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
-                controller.setFilter(niName, tcName, tcPanel.getFilter());
-                controller.setParameters(niName, tcName, tcPanel.getParameters());
+                controller.setFilter(niName, classId, tcPanel.getFilter());
+                controller.setParameters(niName, classId, tcPanel.getParameters());
             }
         }
     }
@@ -301,16 +301,16 @@ public class ConfigurationPanel extends JPanel {
             String niName = niNode.getName();
             niNames.addItem(niName);
 
-            CollectionProperty tcNames = new CollectionProperty(PROPERTY_TRAFFIC_CLASSES + niName, new ArrayList<>());
+            CollectionProperty classIds = new CollectionProperty(PROPERTY_TRAFFIC_CLASSES + niName, new ArrayList<>());
             for (int j = 0; j < niNode.getChildCount(); j++) {
                 ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
                 TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
-                String tcName = tcNode.getName();
-                tcNames.addItem(tcName);
+                String classId = tcNode.getName();
+                classIds.addItem(classId);
 
                 tcPanel.modifyTestElement(te);
             }
-            te.setProperty(tcNames);
+            te.setProperty(classIds);
         }
         te.setProperty(niNames);
 
@@ -325,8 +325,8 @@ public class ConfigurationPanel extends JPanel {
         rootNode.removeAllChildren();
         rightPanel.removeAll();
 
-        JMeterProperty niNamesProp = te.getProperty(PROPERTY_NETWORK_INTERFACES);
-        if (niNamesProp instanceof CollectionProperty niNames) {
+        JMeterProperty niNamesProperty = te.getProperty(PROPERTY_NETWORK_INTERFACES);
+        if (niNamesProperty instanceof CollectionProperty niNames) {
             for (int i = 0; i < niNames.size(); i++) {
                 String niName = niNames.get(i).getStringValue();
                 ConfigTreeNode niNode = new ConfigTreeNode();
@@ -334,11 +334,11 @@ public class ConfigurationPanel extends JPanel {
                 niNode.setName(niName);
                 rootNode.add(niNode);
 
-                JMeterProperty tcNamesProp = te.getProperty(PROPERTY_TRAFFIC_CLASSES + niName);
-                if (tcNamesProp instanceof CollectionProperty tcNames) {
-                    for (int j = 0; j < tcNames.size(); j++) {
-                        String tcName = tcNames.get(j).getStringValue();
-                        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, tcName);
+                JMeterProperty classIdsPropery = te.getProperty(PROPERTY_TRAFFIC_CLASSES + niName);
+                if (classIdsPropery instanceof CollectionProperty classIds) {
+                    for (int j = 0; j < classIds.size(); j++) {
+                        String classId = classIds.get(j).getStringValue();
+                        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, classId);
                         JScrollPane tcScrollPane = new JScrollPane(tcPanel);
                         tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
                         tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -346,7 +346,7 @@ public class ConfigurationPanel extends JPanel {
                         rightPanel.add(tcScrollPane, tcPanel.getName());
                         ConfigTreeNode tcNode = new ConfigTreeNode(false);
                         tcNode.setUserObject(tcPanel);
-                        tcNode.setName(tcName);
+                        tcNode.setName(classId);
                         niNode.add(tcNode);
 
                         tcPanel.configure(te);

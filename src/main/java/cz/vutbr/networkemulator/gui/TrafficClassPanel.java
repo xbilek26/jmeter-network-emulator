@@ -46,10 +46,8 @@ public class TrafficClassPanel extends JPanel {
     private DuplicationPanel duplicationPanel;
     private CorruptionPanel corruptionPanel;
 
-    private final String UNDERSCORE = "_";
-
-    public TrafficClassPanel(String niName, String tcName) {
-        setName(niName + UNDERSCORE + tcName);
+    public TrafficClassPanel(String niName, String classId) {
+        setName(String.format("%s_%s", niName, classId));
         init();
     }
 

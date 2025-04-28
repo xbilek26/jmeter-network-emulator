@@ -18,20 +18,24 @@ public class TrafficClass {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(TrafficClass.class);
 
-    String name;
+    String classId;
     Filter filter;
     List<Parameter> parameters;
 
-    public TrafficClass(String name) {
-        this.name = name;
+    public TrafficClass(String classId) {
+        this.classId = classId;
     }
 
-    public String getName() {
-        return name;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getHandleId() {
+        return classId.substring(2);
     }
 
     public Filter getFilter() {

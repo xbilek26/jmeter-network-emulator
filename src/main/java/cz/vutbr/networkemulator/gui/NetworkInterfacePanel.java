@@ -43,12 +43,12 @@ public class NetworkInterfacePanel extends JPanel {
     public void update(String niName) {
         contentPanel.removeAll();
 
-        List<String> tcNames = controller.getTrafficClasses(niName);
-        tcNames.forEach(tcName -> {
-            Filter filter = controller.getFilter(niName, tcName);
-            List<Parameter> parameters = controller.getParameters(niName, tcName);
+        List<String> classIds = controller.getTrafficClasses(niName);
+        classIds.forEach(classId -> {
+            Filter filter = controller.getFilter(niName, classId);
+            List<Parameter> parameters = controller.getParameters(niName, classId);
             if (filter != null) {
-                JLabel label = new JLabel("Traffic Class: " + tcName);
+                JLabel label = new JLabel("Traffic Class: " + classId);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 contentPanel.add(label);
 
