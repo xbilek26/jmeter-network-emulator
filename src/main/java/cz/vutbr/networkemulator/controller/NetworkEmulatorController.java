@@ -164,7 +164,7 @@ public class NetworkEmulatorController {
         StringBuilder sb = new StringBuilder();
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             String dev = ni.getName();
-            sb.append(dev).append(": ");
+            sb.append(dev).append(": ").append("\n");
             sb.append(TrafficControl.showQdiscAndFilters(dev));
         }
 

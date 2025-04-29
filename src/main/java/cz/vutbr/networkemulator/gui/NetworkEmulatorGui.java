@@ -143,8 +143,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     public static void registerIcon() {
-        String iconPath = "/cz/vutbr/networkemulator/images/network_emulator.gif";
-        ImageIcon icon = new ImageIcon(NetworkEmulatorGui.class.getResource(iconPath));
+        ImageIcon icon = NetworkEmulatorUtils.getImage("network_emulator.gif");
         GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
     }
 
