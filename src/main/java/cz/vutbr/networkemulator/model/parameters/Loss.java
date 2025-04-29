@@ -30,7 +30,7 @@ public class Loss extends Parameter {
         if (isValueSet()) {
             cmd.append(String.format(" loss %s%%", getValue()));
             if (isCorrelationSet()) {
-                cmd.append(String.format(" %s%%", getCorrelation()));
+                cmd.append(String.format(" %s%%", this.correlation));
             }
         }
     }
@@ -39,9 +39,9 @@ public class Loss extends Parameter {
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
             StringBuilder sb = new StringBuilder();
-            sb.append(getValue()).append("%");
+            sb.append(String.format("%s%%", getValue()));
             if (isCorrelationSet()) {
-                sb.append(", corr=").append(getCorrelation()).append("%");
+                sb.append(String.format(", corr=%s%%", this.correlation));
             }
 
             tableModel.addRow(new Object[]{NetworkEmulator.getString("table_loss"), sb.toString()});

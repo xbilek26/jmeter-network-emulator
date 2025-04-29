@@ -58,12 +58,12 @@ public class Delay extends Parameter {
         if (isValueSet()) {
             cmd.append(String.format(" delay %sms", getValue()));
             if (isJitterSet()) {
-                cmd.append(String.format(" %sms", getJitter()));
+                cmd.append(String.format(" %sms", this.jitter));
                 if (isCorrelationSet()) {
-                    cmd.append(String.format(" %s%%", getCorrelation()));
+                    cmd.append(String.format(" %s%%", this.correlation));
                 }
                 if (isDistributionSet()) {
-                    cmd.append(String.format(" distribution %s", getDistribution()));
+                    cmd.append(String.format(" distribution %s", this.distribution));
                 }
             }
         }
@@ -75,12 +75,12 @@ public class Delay extends Parameter {
             StringBuilder sb = new StringBuilder();
             sb.append(getValue()).append("ms");
             if (isJitterSet()) {
-                sb.append(" ±").append(getJitter()).append("ms");
+                sb.append(String.format(" ±%sms", this.jitter));
                 if (isCorrelationSet()) {
-                    sb.append(", corr=").append(getCorrelation()).append("%");
+                    sb.append(String.format(", corr=%s%%", this.correlation));
                 }
                 if (isDistributionSet()) {
-                    sb.append(", dist=").append(getDistribution());
+                    sb.append(String.format(", dist=%s", this.distribution));
                 }
             }
 
