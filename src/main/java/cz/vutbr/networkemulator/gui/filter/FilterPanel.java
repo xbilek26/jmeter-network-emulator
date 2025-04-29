@@ -84,7 +84,7 @@ public class FilterPanel extends JPanel {
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_reordering")));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_filter")));
 
         ipv4Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv4"));
         ipv6Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv6"));
