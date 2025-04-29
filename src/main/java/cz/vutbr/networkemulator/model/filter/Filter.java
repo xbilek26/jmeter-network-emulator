@@ -10,10 +10,14 @@ public class Filter {
 
     private IpVersion ipVersion;
     private Protocol protocol;
-    private String srcAddress;
-    private String srcSubnetPrefix;
-    private String dstAddress;
-    private String dstSubnetPrefix;
+    private String ipv4SrcAddress;
+    private String ipv4SrcSubnetPrefix;
+    private String ipv4DstAddress;
+    private String ipv4DstSubnetPrefix;
+    private String ipv6SrcAddress;
+    private String ipv6SrcSubnetPrefix;
+    private String ipv6DstAddress;
+    private String ipv6DstSubnetPrefix;
     private String srcPort;
     private String dstPort;
     private String icmpType;
@@ -43,52 +47,100 @@ public class Filter {
         return protocol != null;
     }
 
-    public String getSrcAddress() {
-        return srcAddress;
+    public String getIpv4SrcAddress() {
+        return ipv4SrcAddress;
     }
 
-    public void setSrcAddress(String srcAddress) {
-        this.srcAddress = srcAddress;
+    public void setIpv4SrcAddress(String address) {
+        this.ipv4SrcAddress = address;
     }
 
-    public boolean isSrcAddressSet() {
-        return srcAddress != null && !srcAddress.isEmpty();
+    public boolean isIpv4SrcAddressSet() {
+        return ipv4SrcAddress != null && !ipv4SrcAddress.isEmpty();
     }
 
-    public String getSrcSubnetPrefix() {
-        return srcSubnetPrefix;
+    public String getIpv4SrcSubnetPrefix() {
+        return ipv4SrcSubnetPrefix;
     }
 
-    public void setSrcSubnetPrefix(String srcsubnetPrefix) {
-        this.srcSubnetPrefix = srcsubnetPrefix;
+    public void setIpv4SrcSubnetPrefix(String subnetPrefix) {
+        this.ipv4SrcSubnetPrefix = subnetPrefix;
     }
 
-    public boolean isSrcsubnetPrefixSet() {
-        return srcSubnetPrefix != null && !srcSubnetPrefix.isEmpty();
+    public boolean isIpv4SrcsubnetPrefixSet() {
+        return ipv4SrcSubnetPrefix != null && !ipv4SrcSubnetPrefix.isEmpty();
     }
 
-    public String getDstAddress() {
-        return dstAddress;
+    public String getIpv4DstAddress() {
+        return ipv4DstAddress;
     }
 
-    public void setDstAddress(String dstAddress) {
-        this.dstAddress = dstAddress;
+    public void setIpv4DstAddress(String address) {
+        this.ipv4DstAddress = address;
     }
 
-    public boolean isDstAddressSet() {
-        return dstAddress != null && !dstAddress.isEmpty();
+    public boolean isIpv4DstAddressSet() {
+        return ipv4DstAddress != null && !ipv4DstAddress.isEmpty();
     }
 
-    public String getDstSubnetPrefix() {
-        return dstSubnetPrefix;
+    public String getIpv4DstSubnetPrefix() {
+        return ipv4DstSubnetPrefix;
     }
 
-    public void setDstSubnetPrefix(String dstSubnetPrefix) {
-        this.dstSubnetPrefix = dstSubnetPrefix;
+    public void setIpv4DstSubnetPrefix(String subnetPrefix) {
+        this.ipv4DstSubnetPrefix = subnetPrefix;
     }
 
-    public boolean isDstsubnetPrefixSet() {
-        return dstSubnetPrefix != null && !dstSubnetPrefix.isEmpty();
+    public boolean isIpv4DstsubnetPrefixSet() {
+        return ipv4DstSubnetPrefix != null && !ipv4DstSubnetPrefix.isEmpty();
+    }
+
+    public String getIpv6SrcAddress() {
+        return ipv6SrcAddress;
+    }
+
+    public void setIpv6SrcAddress(String address) {
+        this.ipv6SrcAddress = address;
+    }
+
+    public boolean isIpv6SrcAddressSet() {
+        return ipv6SrcAddress != null && !ipv6SrcAddress.isEmpty();
+    }
+
+    public String getIpv6SrcSubnetPrefix() {
+        return ipv6SrcSubnetPrefix;
+    }
+
+    public void setIpv6SrcSubnetPrefix(String subnetPrefix) {
+        this.ipv6SrcSubnetPrefix = subnetPrefix;
+    }
+
+    public boolean isIpv6SrcSubnetPrefixSet() {
+        return ipv6SrcSubnetPrefix != null && !ipv6SrcSubnetPrefix.isEmpty();
+    }
+
+    public String getIpv6DstAddress() {
+        return ipv6DstAddress;
+    }
+
+    public void setIpv6DstAddress(String address) {
+        this.ipv6DstAddress = address;
+    }
+
+    public boolean isIpv6DstAddressSet() {
+        return ipv6DstAddress != null && !ipv6DstAddress.isEmpty();
+    }
+
+    public String getIpv6DstSubnetPrefix() {
+        return ipv6DstSubnetPrefix;
+    }
+
+    public void setIpv6DstSubnetPrefix(String subnetPrefix) {
+        this.ipv6DstSubnetPrefix = subnetPrefix;
+    }
+
+    public boolean isIpv6DstSubnetPrefixSet() {
+        return ipv6DstSubnetPrefix != null && !ipv6DstSubnetPrefix.isEmpty();
     }
 
     public String getSrcPort() {
@@ -141,32 +193,43 @@ public class Filter {
 
     public void appendToCommand(StringBuilder cmd) {
         String ipCmd = this.ipVersion.getTcCommand();
-        if (isSrcAddressSet() && isSrcsubnetPrefixSet()) {
-            cmd.append(String.format(" match %s src %s%s", ipCmd, this.srcAddress, this.srcSubnetPrefix));
+        if (ipVersion.equals(IpVersion.IPv4)) {
+            if (isIpv4SrcAddressSet() && isIpv4SrcsubnetPrefixSet()) {
+                cmd.append(String.format(" match %s src %s%s", ipCmd, ipv4SrcAddress, ipv4SrcSubnetPrefix));
+            }
+    
+            if (isIpv4DstAddressSet() && isIpv4DstsubnetPrefixSet()) {
+                cmd.append(String.format(" match %s dst %s%s", ipCmd, ipv4DstAddress, ipv4DstSubnetPrefix));
+            }
+        } else if (ipVersion.equals(IpVersion.IPv6)) {
+            if (isIpv6SrcAddressSet() && isIpv6SrcSubnetPrefixSet()) {
+                cmd.append(String.format(" match %s src %s%s", ipCmd, ipv6SrcAddress, ipv6SrcSubnetPrefix));
+            }
+    
+            if (isIpv6DstAddressSet() && isIpv6DstSubnetPrefixSet()) {
+                cmd.append(String.format(" match %s dst %s%s", ipCmd, ipv6DstAddress, ipv6DstSubnetPrefix));
+            }
         }
-
-        if (isDstAddressSet() && isDstsubnetPrefixSet()) {
-            cmd.append(String.format(" match %s dst %s%s", ipCmd, this.dstAddress, this.dstSubnetPrefix));
-        }
+        
 
         if (isProtocolSet()) {
-            cmd.append(String.format(" match %s protocol %d 0xff", ipCmd, this.protocol.getNumber()));
+            cmd.append(String.format(" match %s protocol %d 0xff", ipCmd, protocol.getNumber()));
 
-            switch (this.protocol) {
+            switch (protocol) {
                 case Protocol.UDP, Protocol.TCP -> {
                     if (isSrcPortSet()) {
-                        cmd.append(String.format(" match %s sport %s 0xffff", ipCmd, this.srcPort));
+                        cmd.append(String.format(" match %s sport %s 0xffff", ipCmd, srcPort));
                     }
                     if (isDstPortSet()) {
-                        cmd.append(String.format(" match %s dport %s 0xffff", ipCmd, this.dstPort));
+                        cmd.append(String.format(" match %s dport %s 0xffff", ipCmd, dstPort));
                     }
                 }
                 case Protocol.ICMP -> {
                     if (isIcmpTypeSet()) {
-                        cmd.append(String.format(" match %s icmp_type %s 0xff", ipCmd, this.icmpType));
+                        cmd.append(String.format(" match %s icmp_type %s 0xff", ipCmd, icmpType));
                     }
                     if (isIcmpCodeSet()) {
-                        cmd.append(String.format(" match %s icmp_code %s 0xff", ipCmd, this.icmpCode));
+                        cmd.append(String.format(" match %s icmp_code %s 0xff", ipCmd, icmpCode));
                     }
                 }
             }
@@ -212,18 +275,35 @@ public class Filter {
             }
         }
 
-        if (isSrcAddressSet()) {
-            model.addRow(new Object[]{
-                NetworkEmulatorUtils.getString("table_src_address"),
-                this.srcAddress + this.srcSubnetPrefix
-            });
+        if (ipVersion.equals(IpVersion.IPv4)) {
+            if (isIpv4SrcAddressSet()) {
+                model.addRow(new Object[]{
+                    NetworkEmulatorUtils.getString("table_src_address"),
+                    ipv4SrcAddress + ipv4SrcSubnetPrefix
+                });
+            }
+            if (isIpv4DstAddressSet()) {
+                model.addRow(new Object[]{
+                    NetworkEmulatorUtils.getString("table_dst_address"),
+                    ipv4DstAddress + ipv4DstSubnetPrefix
+                });
+            }
+        } else if (ipVersion.equals(IpVersion.IPv6)) {
+            if (isIpv6SrcAddressSet()) {
+                model.addRow(new Object[]{
+                    NetworkEmulatorUtils.getString("table_src_address"),
+                    ipv6SrcAddress + ipv6SrcSubnetPrefix
+                });
+            }
+            if (isIpv6DstAddressSet()) {
+                model.addRow(new Object[]{
+                    NetworkEmulatorUtils.getString("table_dst_address"),
+                    ipv6DstAddress + ipv6DstSubnetPrefix
+                });
+            }
         }
-        if (isDstAddressSet()) {
-            model.addRow(new Object[]{
-                NetworkEmulatorUtils.getString("table_dst_address"),
-                this.dstAddress + this.dstSubnetPrefix
-            });
-        }
+
+        
     }
 
 }

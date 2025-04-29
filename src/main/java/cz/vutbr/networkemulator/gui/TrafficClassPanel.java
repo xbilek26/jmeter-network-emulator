@@ -55,10 +55,14 @@ public class TrafficClassPanel extends JPanel {
         Filter filter = new Filter();
         filter.setIpVersion(filterPanel.getIpVersion());
         filter.setProtocol(filterPanel.getProtocol());
-        filter.setSrcAddress(filterPanel.getSrcAddress());
-        filter.setSrcSubnetPrefix(filterPanel.getSrcSubnetPrefix());
-        filter.setDstAddress(filterPanel.getDstAddress());
-        filter.setDstSubnetPrefix(filterPanel.getDstSubnetPrefix());
+        filter.setIpv4SrcAddress(filterPanel.getIpv4SrcAddress());
+        filter.setIpv4SrcSubnetPrefix(filterPanel.getIpv4SrcSubnetPrefix());
+        filter.setIpv4DstAddress(filterPanel.getIpv4DstAddress());
+        filter.setIpv4DstSubnetPrefix(filterPanel.getIpv4DstSubnetPrefix());
+        filter.setIpv6SrcAddress(filterPanel.getIpv6SrcAddress());
+        filter.setIpv6SrcSubnetPrefix(filterPanel.getIpv6SrcSubnetPrefix());
+        filter.setIpv6DstAddress(filterPanel.getIpv6DstAddress());
+        filter.setIpv6DstSubnetPrefix(filterPanel.getIpv6DstSubnetPrefix());
         filter.setSrcPort(filterPanel.getSrcPort());
         filter.setDstPort(filterPanel.getDstPort());
         filter.setIcmpType(filterPanel.getIcmpType());
@@ -136,10 +140,14 @@ public class TrafficClassPanel extends JPanel {
         CollectionProperty filter = new CollectionProperty(PROPERTY_FILTER + getName(), new ArrayList<>());
         filter.addItem(filterPanel.getIpVersion().getName());
         filter.addItem(filterPanel.getProtocol().getName());
-        filter.addItem(filterPanel.getSrcAddress());
-        filter.addItem(filterPanel.getSrcSubnetPrefix());
-        filter.addItem(filterPanel.getDstAddress());
-        filter.addItem(filterPanel.getDstSubnetPrefix());
+        filter.addItem(filterPanel.getIpv4SrcAddress());
+        filter.addItem(filterPanel.getIpv4SrcSubnetPrefix());
+        filter.addItem(filterPanel.getIpv4DstAddress());
+        filter.addItem(filterPanel.getIpv4DstSubnetPrefix());
+        filter.addItem(filterPanel.getIpv6SrcAddress());
+        filter.addItem(filterPanel.getIpv6SrcSubnetPrefix());
+        filter.addItem(filterPanel.getIpv6DstAddress());
+        filter.addItem(filterPanel.getIpv6DstSubnetPrefix());
         filter.addItem(filterPanel.getSrcPort());
         filter.addItem(filterPanel.getDstPort());
         filter.addItem(filterPanel.getIcmpType());
@@ -168,14 +176,18 @@ public class TrafficClassPanel extends JPanel {
         if (filterPropery instanceof CollectionProperty filter) {
             filterPanel.setIpVersion(filter.get(0).getStringValue());
             filterPanel.setProtocol(filter.get(1).getStringValue());
-            filterPanel.setSrcAddress(filter.get(2).getStringValue());
-            filterPanel.setSrcSubnetPrefix(filter.get(3).getStringValue());
-            filterPanel.setDstAddress(filter.get(4).getStringValue());
-            filterPanel.setDstSubnetPrefix(filter.get(5).getStringValue());
-            filterPanel.setSrcPort(filter.get(6).getStringValue());
-            filterPanel.setDstPort(filter.get(7).getStringValue());
-            filterPanel.setIcmpType(filter.get(8).getStringValue());
-            filterPanel.setIcmpCode(filter.get(9).getStringValue());
+            filterPanel.setIpv4SrcAddress(filter.get(2).getStringValue());
+            filterPanel.setIpv4SrcSubnetPrefix(filter.get(3).getStringValue());
+            filterPanel.setIpv4DstAddress(filter.get(4).getStringValue());
+            filterPanel.setIpv4DstSubnetPrefix(filter.get(5).getStringValue());
+            filterPanel.setIpv6SrcAddress(filter.get(6).getStringValue());
+            filterPanel.setIpv6SrcSubnetPrefix(filter.get(7).getStringValue());
+            filterPanel.setIpv6DstAddress(filter.get(8).getStringValue());
+            filterPanel.setIpv6DstSubnetPrefix(filter.get(9).getStringValue());
+            filterPanel.setSrcPort(filter.get(10).getStringValue());
+            filterPanel.setDstPort(filter.get(11).getStringValue());
+            filterPanel.setIcmpType(filter.get(12).getStringValue());
+            filterPanel.setIcmpCode(filter.get(13).getStringValue());
         }
 
         JMeterProperty parametersProperty = te.getProperty(PROPERTY_PARAMETERS + getName());
