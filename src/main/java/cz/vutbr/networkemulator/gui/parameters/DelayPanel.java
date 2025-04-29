@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulator;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class DelayPanel extends JPanel {
@@ -36,7 +36,7 @@ public class DelayPanel extends JPanel {
 
     public DelayPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulator.getString("title_delay")));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_delay")));
 
         valueField = new JTextField(8);
         jitterField = new JTextField(8);
@@ -44,13 +44,13 @@ public class DelayPanel extends JPanel {
         distributionsBox = new JComboBox<>(DISTRIBUTIONS);
         distributionsBox.setPreferredSize(new Dimension(180, correlationField.getPreferredSize().height));
 
-        JLabel valueLabel = new JLabel(NetworkEmulator.getString("label_delay_value"));
+        JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_value"));
         valueLabel.setLabelFor(valueField);
-        JLabel jitterLabel = new JLabel(NetworkEmulator.getString("label_delay_jitter"));
+        JLabel jitterLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_jitter"));
         jitterLabel.setLabelFor(jitterField);
-        JLabel correlationLabel = new JLabel(NetworkEmulator.getString("label_delay_correlation"));
+        JLabel correlationLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_correlation"));
         correlationLabel.setLabelFor(correlationField);
-        JLabel distributionsLabel = new JLabel(NetworkEmulator.getString("label_delay_distribution"));
+        JLabel distributionsLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_distribution"));
         distributionsLabel.setLabelFor(distributionsBox);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

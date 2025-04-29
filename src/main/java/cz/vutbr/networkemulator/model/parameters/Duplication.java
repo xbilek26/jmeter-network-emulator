@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulator;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class Duplication extends Parameter {
 
@@ -44,7 +44,7 @@ public class Duplication extends Parameter {
                 sb.append(String.format(", corr=%s%%", this.correlation));
             }
 
-            tableModel.addRow(new Object[]{NetworkEmulator.getString("table_duplication"), sb.toString()});
+            tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_duplication"), sb.toString()});
         }
     }
 

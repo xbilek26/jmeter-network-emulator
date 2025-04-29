@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulator;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
 public class CorruptionPanel extends JPanel {
@@ -19,11 +19,11 @@ public class CorruptionPanel extends JPanel {
 
     public CorruptionPanel() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulator.getString("title_corruption")));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_corruption")));
         
         valueField = new JTextField(8);
 
-        JLabel valueLabel = new JLabel(NetworkEmulator.getString("label_corruption"));
+        JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_corruption"));
         valueLabel.setLabelFor(valueField);
 
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));

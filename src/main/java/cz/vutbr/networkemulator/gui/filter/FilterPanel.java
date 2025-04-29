@@ -17,7 +17,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.utils.IpVersion;
-import cz.vutbr.networkemulator.utils.NetworkEmulator;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.utils.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
@@ -84,18 +84,18 @@ public class FilterPanel extends JPanel {
 
     public FilterPanel() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulator.getString("title_reordering")));
+        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_reordering")));
 
-        ipv4Button = new JRadioButton(NetworkEmulator.getString("label_ip_version_ipv4"));
-        ipv6Button = new JRadioButton(NetworkEmulator.getString("label_ip_version_ipv6"));
+        ipv4Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv4"));
+        ipv6Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv6"));
         ipv4Button.setSelected(true);
         ButtonGroup ipVersionGroup = new ButtonGroup();
         ipVersionGroup.add(ipv4Button);
         ipVersionGroup.add(ipv6Button);
 
-        tcpButton = new JRadioButton(NetworkEmulator.getString("label_protocol_tcp"));
-        udpButton = new JRadioButton(NetworkEmulator.getString("label_protocol_udp"));
-        icmpButton = new JRadioButton(NetworkEmulator.getString("label_protocol_icmp"));
+        tcpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_tcp"));
+        udpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_udp"));
+        icmpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_icmp"));
         tcpButton.setSelected(true);
         ButtonGroup protocolGroup = new ButtonGroup();
         protocolGroup.add(tcpButton);
@@ -114,19 +114,19 @@ public class FilterPanel extends JPanel {
         dstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
         dstPortField = new JTextField(7);
 
-        JLabel ipVersionLabel = new JLabel(NetworkEmulator.getString("label_ip_version"));
-        JLabel protocolLabel = new JLabel(NetworkEmulator.getString("label_protocol"));
-        JLabel srcAddressLabel = new JLabel(NetworkEmulator.getString("label_src_address"));
+        JLabel ipVersionLabel = new JLabel(NetworkEmulatorUtils.getString("label_ip_version"));
+        JLabel protocolLabel = new JLabel(NetworkEmulatorUtils.getString("label_protocol"));
+        JLabel srcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
         srcAddressLabel.setLabelFor(srcAddressField);
-        JLabel dstAddressLabel = new JLabel(NetworkEmulator.getString("label_dst_address"));
+        JLabel dstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
         dstAddressLabel.setLabelFor(dstAddressField);
-        JLabel srcPortLabel = new JLabel(NetworkEmulator.getString("label_src_port"));
+        JLabel srcPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_port"));
         srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstPortLabel = new JLabel(NetworkEmulator.getString("label_dst_port"));
+        JLabel dstPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_port"));
         dstPortLabel.setLabelFor(dstPortField);
-        JLabel icmpTypeLabel = new JLabel(NetworkEmulator.getString("label_icmp_type"));
+        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_type"));
         icmpTypeLabel.setLabelFor(icmpTypeField);
-        JLabel icmpCodeLabel = new JLabel(NetworkEmulator.getString("label_icmp_code"));
+        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_code"));
         icmpCodeLabel.setLabelFor(icmpCodeField);
 
         srcSubnetPrefixBox.setPreferredSize(new Dimension(90, srcAddressField.getPreferredSize().height));

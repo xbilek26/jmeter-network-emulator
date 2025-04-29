@@ -34,7 +34,7 @@ import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
 import cz.vutbr.networkemulator.utils.Converter;
-import cz.vutbr.networkemulator.utils.NetworkEmulator;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class ConfigurationPanel extends JPanel {
 
@@ -80,14 +80,14 @@ public class ConfigurationPanel extends JPanel {
 
         JSplitPane splitPane;
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createLeftPanel(), createRightPanel());
-        splitPane.setBorder(BorderFactory.createTitledBorder(NetworkEmulator.getString("title_configuration")));
+        splitPane.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_configuration")));
         splitPane.setOneTouchExpandable(true);
         add(splitPane);
     }
 
     private JPanel createLeftPanel() {
         rootNode = new ConfigTreeNode();
-        rootNode.setName(NetworkEmulator.getString("root_node_name"));
+        rootNode.setName(NetworkEmulatorUtils.getString("root_node_name"));
         treeModel = new DefaultTreeModel(rootNode);
         tree = new ConfigTree(treeModel);
         tree.setRootVisible(true);
@@ -96,11 +96,11 @@ public class ConfigurationPanel extends JPanel {
         tree.setCellRenderer(new ConfigTreeNodeRenderer());
         tree.addTreeSelectionListener(this::updateView);
 
-        btnRefresh = new JButton(NetworkEmulator.getString("button_refresh"));
+        btnRefresh = new JButton(NetworkEmulatorUtils.getString("button_refresh"));
         btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
-        btnAdd = new JButton(NetworkEmulator.getString("button_add"));
+        btnAdd = new JButton(NetworkEmulatorUtils.getString("button_add"));
         btnAdd.addActionListener(_ -> addTrafficClass());
-        btnRemove = new JButton(NetworkEmulator.getString("button_remove"));
+        btnRemove = new JButton(NetworkEmulatorUtils.getString("button_remove"));
         btnRemove.addActionListener(_ -> removeTrafficClass());
 
         buttonPanel = new JPanel(new CardLayout());
