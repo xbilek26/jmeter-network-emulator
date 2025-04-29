@@ -152,7 +152,7 @@ public class NetworkEmulatorController {
         isEmulationRunning = false;
     }
 
-    public void restoreNetworkConfiguration() {
+    public void stopEmulation() {
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             String dev = ni.getName();
             TrafficControl.restoreDefaults(dev);

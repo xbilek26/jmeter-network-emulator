@@ -252,7 +252,7 @@ public class ConfigurationPanel extends JPanel {
             }
             case NetworkInterfacePanel niPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_ADD);
-                applySettingsToController();
+                applySettings();
                 rightPanelCards.show(rightPanel, niPanel.getName());
                 niPanel.update(name);
             }
@@ -265,7 +265,7 @@ public class ConfigurationPanel extends JPanel {
         }
     }
 
-    public void applySettingsToController() {
+    public void applySettings() {
         controller.clearNetworkInterfaces();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);

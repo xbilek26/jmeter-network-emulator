@@ -2,10 +2,8 @@ package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collection;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.action.ActionNames;
@@ -104,14 +101,14 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStart.setIcon(startImage);
         btnStart.setFocusable(false);
         btnStart.setEnabled(true);
-        btnStart.addActionListener(this::toggleEmulator);
+        btnStart.addActionListener(_ -> startEmulator());
 
         btnStop = new JButton(NetworkEmulatorUtils.getString("button_stop"));
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
         btnStop.setIcon(stopImage);
         btnStop.setFocusable(false);
         btnStop.setEnabled(false);
-        btnStop.addActionListener(this::toggleEmulator);
+        btnStop.addActionListener(_ -> stopEmulator());
 
         emulatorState = new JLabel(NetworkEmulatorUtils.getString("msg_emulation_stopped"), JLabel.CENTER);
 
@@ -122,24 +119,23 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         return controlPanel;
     }
 
-    private void toggleEmulator(ActionEvent evt) {
-        final Object source = evt.getSource();
-        if (source == btnStart) {
-            configurationPanel.applySettingsToController();
-            controller.runEmulation();
-            btnStart.setEnabled(false);
-            btnStop.setEnabled(true);
-            configurationPanel.setEditable(false);
-            currentSettings.setText(controller.getNetworkConfiguration());
-            emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_running"));
-        } else if (source == btnStop) {
-            controller.restoreNetworkConfiguration();
-            btnStart.setEnabled(true);
-            btnStop.setEnabled(false);
-            configurationPanel.setEditable(true);
-            currentSettings.setText(controller.getNetworkConfiguration());
-            emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_stopped"));
-        }
+    private void startEmulator() {
+        configurationPanel.setEditable(false);
+        configurationPanel.applySettings();
+        controller.runEmulation();
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(true);
+        currentSettings.setText(controller.getNetworkConfiguration());
+        emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_running"));
+    }
+    
+    private void stopEmulator() {
+        controller.stopEmulation();
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
+        configurationPanel.setEditable(true);
+        currentSettings.setText(controller.getNetworkConfiguration());
+        emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_stopped"));
     }
 
     public static void registerIcon() {
