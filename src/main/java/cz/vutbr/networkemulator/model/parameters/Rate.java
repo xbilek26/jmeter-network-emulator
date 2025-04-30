@@ -30,7 +30,7 @@ public class Rate extends Parameter {
         if (isValueSet()) {
             cmd.append(String.format(" rate %skbit", getValue()));
             if (isOverheadSet()) {
-                cmd.append(String.format(" %s", this.overhead));
+                cmd.append(String.format(" %s", overhead));
             }
         }
     }
@@ -41,7 +41,7 @@ public class Rate extends Parameter {
             StringBuilder sb = new StringBuilder();
             sb.append(String.format("%skbps", getValue()));
             if (isOverheadSet()) {
-                sb.append(String.format(", overhead=%sB", this.overhead));
+                sb.append(String.format(", overhead=%sB", overhead));
             }
             tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_rate"), sb.toString()});
         }

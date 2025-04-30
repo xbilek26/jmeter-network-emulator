@@ -30,7 +30,7 @@ public class Duplication extends Parameter {
         if (isValueSet()) {
             cmd.append(String.format(" duplicate %s%%", getValue()));
             if (isCorrelationSet()) {
-                cmd.append(String.format(" %s%%", this.correlation));
+                cmd.append(String.format(" %s%%", correlation));
             }
         }
     }
@@ -41,7 +41,7 @@ public class Duplication extends Parameter {
             StringBuilder sb = new StringBuilder();
             sb.append(String.format("%s%%", getValue()));
             if (isCorrelationSet()) {
-                sb.append(String.format(", corr=%s%%", this.correlation));
+                sb.append(String.format(", corr=%s%%", correlation));
             }
 
             tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_duplication"), sb.toString()});
