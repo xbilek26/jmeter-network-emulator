@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.apache.jmeter.util.JMeterUtils;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class RangeVerifier extends InputVerifier {
 
@@ -58,24 +58,19 @@ public class RangeVerifier extends InputVerifier {
                 if (isInRange) {
                     return true;
                 } else {
-                    String minFormatted = (min % 1 == 0) ? String.format("%d", (int) min) : String.format("%.2f", min);
-                    String maxFormatted = (max % 1 == 0) ? String.format("%d", (int) max) : String.format("%.2f", max);
-
                     JOptionPane.showMessageDialog(
                             null,
-                            String.format("Enter a value between %s and %s.", minFormatted, maxFormatted),
-                            JMeterUtils.getLocaleString("Bad Value"),
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                            NetworkEmulatorUtils.getString("msg_enter_valid_number"),
+                            NetworkEmulatorUtils.getString("msg_bad_value"),
+                            JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Enter a valid number.",
-                        JMeterUtils.getLocaleString("Bad Value"),
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        NetworkEmulatorUtils.getString("msg_enter_valid_value"),
+                        NetworkEmulatorUtils.getString("msg_bad_value"),
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
