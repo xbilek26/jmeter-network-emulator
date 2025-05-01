@@ -26,12 +26,11 @@ public class StartEmulation extends AbstractAction {
 
     @Override
     public void doAction(ActionEvent e) {
-        System.out.println("start emulation call");
         NetworkEmulatorController controller = NetworkEmulatorController.getInstance();
         controller.startEmulation();
         JMeterGUIComponent gui = GuiPackage.getInstance().getCurrentGui();
-        if (gui instanceof NetworkEmulatorGui) {
-            ((NetworkEmulatorGui) GuiPackage.getInstance().getCurrentGui()).onEmulationStarted();
+        if (gui instanceof NetworkEmulatorGui networkEmulatorGui) {
+            networkEmulatorGui.onEmulationStarted();
             ((NetworkEmulatorTestElement) GuiPackage.getInstance().getCurrentElement()).setEmulationRunning(true);
         }
     }

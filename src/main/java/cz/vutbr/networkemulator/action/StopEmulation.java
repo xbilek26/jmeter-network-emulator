@@ -29,8 +29,8 @@ public class StopEmulation extends AbstractAction {
         NetworkEmulatorController controller = NetworkEmulatorController.getInstance();
         controller.stopEmulation();
         JMeterGUIComponent gui = GuiPackage.getInstance().getCurrentGui();
-        if (gui instanceof NetworkEmulatorGui) {
-            ((NetworkEmulatorGui) GuiPackage.getInstance().getCurrentGui()).onEmulationStopped();
+        if (gui instanceof NetworkEmulatorGui networkEmulatorGui) {
+            networkEmulatorGui.onEmulationStopped();
             ((NetworkEmulatorTestElement) GuiPackage.getInstance().getCurrentElement()).setEmulationRunning(false);
         }
     }
