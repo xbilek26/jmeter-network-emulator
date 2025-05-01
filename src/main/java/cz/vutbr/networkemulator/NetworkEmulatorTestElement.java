@@ -3,8 +3,6 @@ package cz.vutbr.networkemulator;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.AddToTree;
@@ -13,6 +11,7 @@ import org.apache.jmeter.gui.action.Paste;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestElement;
+import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,12 +58,9 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
-                JOptionPane.showMessageDialog(
-                        null,
+                JMeterUtils.reportInfoToUser(
                         NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_general_error"),
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }
@@ -80,12 +76,9 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
-                JOptionPane.showMessageDialog(
-                        null,
+                JMeterUtils.reportInfoToUser(
                         NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_general_error"),
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }
@@ -101,12 +94,9 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
-                JOptionPane.showMessageDialog(
-                        null,
+                JMeterUtils.reportInfoToUser(
                         NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_general_error"),
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }
