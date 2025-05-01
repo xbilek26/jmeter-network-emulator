@@ -19,8 +19,6 @@ import cz.vutbr.networkemulator.model.parameters.Parameter;
 
 public class NetworkEmulatorController {
 
-    private boolean isEmulationRunning;
-
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorController.class);
 
@@ -33,7 +31,6 @@ public class NetworkEmulatorController {
 
     private NetworkEmulatorController(NetworkEmulator networkEmulator) {
         this.networkEmulator = networkEmulator;
-        isEmulationRunning = false;
     }
 
     public static NetworkEmulatorController getInstance() {
@@ -142,22 +139,9 @@ public class NetworkEmulatorController {
                 .orElse(null);
     }
 
-    public boolean isEmulationRunning() {
-        return isEmulationRunning;
-    }
-
     public void initialize() {
         refreshNetworkInterfaces();
         getNetworkInterfaces().stream().forEach(TrafficControl::restoreDefaults);
-        isEmulationRunning = false;
-    }
-
-    public void stopEmulation() {
-        for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
-            String dev = ni.getName();
-            TrafficControl.restoreDefaults(dev);
-        }
-        isEmulationRunning = false;
     }
 
     public String getNetworkConfiguration() {
@@ -171,7 +155,7 @@ public class NetworkEmulatorController {
         return sb.toString();
     }
 
-    public void runEmulation() {
+    public void startEmulation() {
         for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
             if (ni.getTrafficClasses().isEmpty()) {
                 continue;
@@ -187,6 +171,12 @@ public class NetworkEmulatorController {
                 TrafficControl.setupFilter(dev, classId, handleId, filter);
             }
         }
-        isEmulationRunning = true;
+    }
+
+    public void stopEmulation() {
+        for (NetworkInterface ni : networkEmulator.getNetworkInterfaces()) {
+            String dev = ni.getName();
+            TrafficControl.restoreDefaults(dev);
+        }
     }
 }

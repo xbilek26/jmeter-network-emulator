@@ -18,6 +18,7 @@ import javax.swing.JSplitPane;
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.action.ActionNames;
+import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.JMeterToolBar;
 import org.apache.jmeter.gui.util.MenuFactory;
@@ -37,6 +38,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
 
     private final NetworkEmulatorController controller;
+    private boolean isRunning;
 
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
@@ -47,6 +49,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public NetworkEmulatorGui() {
         controller = NetworkEmulatorController.getInstance();
         controller.initialize();
+        isRunning = false;
         init();
     }
 
@@ -103,14 +106,16 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStart.setIcon(startImage);
         btnStart.setFocusable(false);
         btnStart.setEnabled(true);
-        btnStart.addActionListener(_ -> startEmulator());
+        btnStart.addActionListener(ActionRouter.getInstance());
+        btnStart.setActionCommand("start_emulation");
 
         btnStop = new JButton(NetworkEmulatorUtils.getString("button_stop"));
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
         btnStop.setIcon(stopImage);
         btnStop.setFocusable(false);
         btnStop.setEnabled(false);
-        btnStop.addActionListener(_ -> stopEmulator());
+        btnStop.addActionListener(ActionRouter.getInstance());
+        btnStop.setActionCommand("stop_emulation");
 
         emulatorState = new JLabel(NetworkEmulatorUtils.getString("msg_emulation_stopped"), JLabel.CENTER);
 
@@ -121,23 +126,26 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         return controlPanel;
     }
 
-    private void startEmulator() {
-        configurationPanel.setEditable(false);
-        configurationPanel.applySettings();
-        controller.runEmulation();
+    public void onEmulationStarted() {
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);
-        currentSettings.setText(controller.getNetworkConfiguration());
         emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_running"));
+        currentSettings.setText(controller.getNetworkConfiguration());
+        configurationPanel.setEditable(false);
+        isRunning = true;
     }
-    
-    private void stopEmulator() {
-        controller.stopEmulation();
+
+    public void onEmulationStopped() {
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
-        configurationPanel.setEditable(true);
-        currentSettings.setText(controller.getNetworkConfiguration());
         emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_stopped"));
+        currentSettings.setText(controller.getNetworkConfiguration());
+        configurationPanel.setEditable(true);
+        isRunning = false;
+    }
+
+    public ConfigurationPanel getConfigurationPanel() {
+        return configurationPanel;
     }
 
     public static void registerIcon() {
@@ -157,17 +165,11 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     @Override
     public TestElement makeTestElement() {
-        return new NetworkEmulatorTestElement();
-    }
+        NetworkEmulatorTestElement element = new NetworkEmulatorTestElement();
+        configureTestElement(element);
 
-    @Override
-    public void clearGui() {
-        super.clearGui();
-        btnStart.setEnabled(true);
-        btnStop.setEnabled(false);
-        configurationPanel.setEditable(true);
-        currentSettings.setText(controller.getNetworkConfiguration());
-        emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_stopped"));
+        element.setEmulationRunning(false);
+        return element;
     }
 
     @Override
@@ -176,7 +178,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         configurationPanel.modifyTestElement(element);
 
         if (element instanceof NetworkEmulatorTestElement networkEmulatorTestElement) {
-            networkEmulatorTestElement.setEmulationRunning(controller.isEmulationRunning());
+            networkEmulatorTestElement.setEmulationRunning(isRunning);
         }
     }
 
@@ -185,16 +187,16 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         super.configure(element);
         configurationPanel.configure(element);
 
-        NetworkEmulatorTestElement networkEmulatorTestElement = (NetworkEmulatorTestElement) element;
-        boolean running = networkEmulatorTestElement.isEmulationRunning();
+        boolean running = ((NetworkEmulatorTestElement) element).isEmulationRunning();
+
+        isRunning = running;
+
         btnStart.setEnabled(!running);
         btnStop.setEnabled(running);
         configurationPanel.setEditable(!running);
-        currentSettings.setText(controller.getNetworkConfiguration());
         emulatorState.setText(running
                 ? NetworkEmulatorUtils.getString("msg_emulation_running")
                 : NetworkEmulatorUtils.getString("msg_emulation_stopped"));
-
     }
 
     @Override
