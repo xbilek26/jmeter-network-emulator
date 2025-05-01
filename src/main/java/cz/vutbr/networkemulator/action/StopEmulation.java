@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.jmeter.gui.GuiPackage;
+import org.apache.jmeter.gui.JMeterGUIComponent;
 import org.apache.jmeter.gui.action.AbstractAction;
 import org.apache.jmeter.gui.action.Command;
 
@@ -27,8 +28,11 @@ public class StopEmulation extends AbstractAction {
     public void doAction(ActionEvent e) {
         NetworkEmulatorController controller = NetworkEmulatorController.getInstance();
         controller.stopEmulation();
-        ((NetworkEmulatorGui) GuiPackage.getInstance().getCurrentGui()).onEmulationStopped();
-        ((NetworkEmulatorTestElement) GuiPackage.getInstance().getCurrentElement()).setEmulationRunning(false);
+        JMeterGUIComponent gui = GuiPackage.getInstance().getCurrentGui();
+        if (gui instanceof NetworkEmulatorGui) {
+            ((NetworkEmulatorGui) GuiPackage.getInstance().getCurrentGui()).onEmulationStopped();
+            ((NetworkEmulatorTestElement) GuiPackage.getInstance().getCurrentElement()).setEmulationRunning(false);
+        }
     }
 
     @Override

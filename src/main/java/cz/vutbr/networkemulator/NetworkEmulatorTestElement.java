@@ -8,6 +8,7 @@ import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.AddToTree;
 import org.apache.jmeter.gui.action.Close;
 import org.apache.jmeter.gui.action.Duplicate;
+import org.apache.jmeter.gui.action.ExitCommand;
 import org.apache.jmeter.gui.action.Paste;
 import org.apache.jmeter.gui.action.Remove;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
@@ -40,6 +41,7 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
         registerPasteListener();
         registerRemoveListener();
         registerCloseListener();
+        registerExitListener();
     }
 
     public void setEmulationRunning(boolean running) {
@@ -119,6 +121,13 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
 
     private void registerCloseListener() {
         ActionRouter.getInstance().addPreActionListener(Close.class, (ActionEvent _) -> {
+            setEmulationRunning(false);
+            ActionRouter.getInstance().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "stop_emulation"));
+        });
+    }
+
+    private void registerExitListener() {
+        ActionRouter.getInstance().addPreActionListener(ExitCommand.class, (ActionEvent _) -> {
             setEmulationRunning(false);
             ActionRouter.getInstance().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "stop_emulation"));
         });

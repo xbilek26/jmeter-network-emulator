@@ -189,8 +189,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
         boolean running = ((NetworkEmulatorTestElement) element).isEmulationRunning();
 
-        isRunning = running;
-
         btnStart.setEnabled(!running);
         btnStop.setEnabled(running);
         configurationPanel.setEditable(!running);
