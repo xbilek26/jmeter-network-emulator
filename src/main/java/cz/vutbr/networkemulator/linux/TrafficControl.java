@@ -70,7 +70,8 @@ public class TrafficControl {
                     .replace("Mbit", "Mbps")
                     .replace("bit", "bps")
                     .replaceAll("\\s+", " ");
-            output.append(qdiscLine).append("\n");
+
+            output.append("    ").append(qdiscLine).append("\n"); // přidáno odsazení před qdisc
 
             // find parent x:y
             String parent = null;
@@ -89,7 +90,7 @@ public class TrafficControl {
 
                 if (matchingFilter) {
                     if (filterLine.trim().startsWith("match")) {
-                        output.append("    ").append(filterLine.trim()).append("\n");
+                        output.append("        ").append(filterLine.trim()).append("\n"); // přidáno větší odsazení pro match
                     } else if (!filterLine.startsWith(" ")) {
                         matchingFilter = false;
                     }
@@ -99,5 +100,4 @@ public class TrafficControl {
 
         return output.toString();
     }
-
 }
