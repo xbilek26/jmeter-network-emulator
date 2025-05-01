@@ -2,9 +2,9 @@ package cz.vutbr.networkemulator.model.filter;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.IpVersion;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
-import cz.vutbr.networkemulator.utils.Protocol;
+import cz.vutbr.networkemulator.utils.enums.IpVersion;
+import cz.vutbr.networkemulator.utils.enums.Protocol;
 
 public class Filter {
 

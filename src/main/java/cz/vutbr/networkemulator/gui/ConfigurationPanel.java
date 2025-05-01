@@ -33,7 +33,7 @@ import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.gui.tree.ConfigTree;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
 import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
-import cz.vutbr.networkemulator.utils.Converter;
+import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class ConfigurationPanel extends JPanel {
@@ -251,8 +251,8 @@ public class ConfigurationPanel extends JPanel {
                 rootPanel.update();
             }
             case NetworkInterfacePanel niPanel -> {
-                buttonPanelCards.show(buttonPanel, BTN_ADD);
                 applySettings();
+                buttonPanelCards.show(buttonPanel, BTN_ADD);
                 rightPanelCards.show(rightPanel, niPanel.getName());
                 niPanel.update(name);
             }
@@ -289,11 +289,11 @@ public class ConfigurationPanel extends JPanel {
         btnRefresh.setEnabled(enabled);
         btnAdd.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
-
         tree.getTcPanels().stream().forEach(tcPanel -> tcPanel.setEnabled(enabled));
     }
 
     public void modifyTestElement(TestElement te) {
+
         CollectionProperty niNames = new CollectionProperty(PROPERTY_NETWORK_INTERFACES, new ArrayList<>());
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
@@ -367,9 +367,11 @@ public class ConfigurationPanel extends JPanel {
         treeModel.reload();
 
         CollectionProperty expandedPaths = (CollectionProperty) te.getPropertyOrNull(PROPERTY_EXPANDED_PATHS);
-        tree.expandPaths(Converter.convertToList(expandedPaths));
+        tree.expandPaths(NetworkEmulatorConverter.convertToList(expandedPaths));
 
         StringProperty selectedPath = (StringProperty) te.getPropertyOrNull(PROPERTY_SELECTED_PATH);
-        tree.selectPath(Converter.convertToString(selectedPath));
+        tree.selectPath(NetworkEmulatorConverter.convertToString(selectedPath));
+
+        applySettings();
     }
 }

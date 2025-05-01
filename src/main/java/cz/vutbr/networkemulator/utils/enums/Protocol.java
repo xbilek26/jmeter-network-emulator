@@ -1,4 +1,4 @@
-package cz.vutbr.networkemulator.utils;
+package cz.vutbr.networkemulator.utils.enums;
 
 public enum Protocol {
     TCP("tcp", 6),

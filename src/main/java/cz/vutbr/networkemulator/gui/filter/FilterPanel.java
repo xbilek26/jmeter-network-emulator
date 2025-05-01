@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.IpVersion;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
-import cz.vutbr.networkemulator.utils.Protocol;
+import cz.vutbr.networkemulator.utils.enums.IpVersion;
+import cz.vutbr.networkemulator.utils.enums.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 
@@ -110,10 +110,10 @@ public class FilterPanel extends JPanel {
         icmpTypeField = new JTextField(8);
         icmpCodeField = new JTextField(8);
 
-        ipv4SrcAddressField = new JTextField(20);
+        ipv4SrcAddressField = new JTextField(10);
         ipv4SrcSubnetPrefixBox = new JComboBox<>();
         ipv4SrcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
-        ipv4DstAddressField = new JTextField(20);
+        ipv4DstAddressField = new JTextField(10);
         ipv4DstSubnetPrefixBox = new JComboBox<>();
         ipv4DstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
         

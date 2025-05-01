@@ -10,8 +10,8 @@ import javax.swing.JTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.utils.IpVersion;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.enums.IpVersion;
 
 public class IpAddressVerifier extends InputVerifier {
 

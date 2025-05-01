@@ -1,4 +1,4 @@
-package cz.vutbr.networkemulator.utils;
+package cz.vutbr.networkemulator.utils.enums;
 
 public enum IpVersion {
     IPv4("ipv4", "ip"),
