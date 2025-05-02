@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -59,10 +60,13 @@ public class DelayPanel extends JPanel {
 
         add(valueLabel);
         add(valueField);
+        add(Box.createHorizontalStrut(5));
         add(jitterLabel);
         add(jitterField);
+        add(Box.createHorizontalStrut(5));
         add(correlationLabel);
         add(correlationField);
+        add(Box.createHorizontalStrut(5));
         add(distributionsLabel);
         add(distributionsBox);
     }

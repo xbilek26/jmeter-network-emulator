@@ -3,6 +3,7 @@ package cz.vutbr.networkemulator.gui.parameters;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -37,6 +38,7 @@ public class ReorderingPanel extends JPanel {
 
         add(valueLabel);
         add(valueField);
+        add(Box.createHorizontalStrut(5));
         add(correlationLabel);
         add(correlationField);
     }
