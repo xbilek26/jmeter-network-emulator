@@ -1,7 +1,6 @@
 package cz.vutbr.networkemulator.gui.tree;
 
 import java.awt.Component;
-import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -14,17 +13,14 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class ConfigTreeNodeRenderer extends DefaultTreeCellRenderer {
 
+    private final ImageIcon defaultRootIcon;
     private final ImageIcon networkInterfaceIcon;
     private final ImageIcon trafficClassIcon;
 
     public ConfigTreeNodeRenderer() {
+        this.defaultRootIcon = NetworkEmulatorUtils.getImage("root_node.gif");
         this.networkInterfaceIcon = NetworkEmulatorUtils.getImage("network_interface.gif");
         this.trafficClassIcon = NetworkEmulatorUtils.getImage("traffic_class.gif");
-    }
-
-    private ImageIcon getScaledIcon(ImageIcon icon) {
-        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        return new ImageIcon(image);
     }
 
     @Override
@@ -34,11 +30,11 @@ public class ConfigTreeNodeRenderer extends DefaultTreeCellRenderer {
 
         Object node = ((ConfigTreeNode) value).getUserObject();
         if (node instanceof DefaultRootPanel) {
-            // this.setIcon();
+            this.setIcon(NetworkEmulatorUtils.getScaledIcon(defaultRootIcon, 16, 16));
         } else if (node instanceof TrafficClassPanel) {
-            this.setIcon(getScaledIcon(trafficClassIcon));
+            this.setIcon(NetworkEmulatorUtils.getScaledIcon(trafficClassIcon, 16, 16));
         } else if (node instanceof NetworkInterfacePanel) {
-            this.setIcon(getScaledIcon(networkInterfaceIcon));
+            this.setIcon(NetworkEmulatorUtils.getScaledIcon(networkInterfaceIcon, 16, 16));
         } else {
             this.setIcon(null);
         }

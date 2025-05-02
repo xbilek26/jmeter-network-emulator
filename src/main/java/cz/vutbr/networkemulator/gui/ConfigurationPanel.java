@@ -109,7 +109,7 @@ public class ConfigurationPanel extends JPanel {
         buttonPanel.add(btnRemove, BTN_REMOVE);
 
         JScrollPane treeScrollPane = new JScrollPane(tree);
-        treeScrollPane.setPreferredSize(new Dimension(100, 0));
+        treeScrollPane.setPreferredSize(new Dimension(200, 0));
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(treeScrollPane, BorderLayout.CENTER);

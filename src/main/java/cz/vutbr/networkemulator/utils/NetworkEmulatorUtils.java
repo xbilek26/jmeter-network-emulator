@@ -1,5 +1,6 @@
 package cz.vutbr.networkemulator.utils;
 
+import java.awt.Image;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,5 +20,10 @@ public class NetworkEmulatorUtils {
         } else {
             return null;
         }
+    }
+
+    public static ImageIcon getScaledIcon(ImageIcon icon, int width, int height) {
+        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        return new ImageIcon(image);
     }
 }

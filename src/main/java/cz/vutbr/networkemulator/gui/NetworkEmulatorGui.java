@@ -21,10 +21,11 @@ import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.JMeterToolBar;
+import org.apache.jmeter.gui.util.JSyntaxTextArea;
+import org.apache.jmeter.gui.util.JTextScrollPane;
 import org.apache.jmeter.gui.util.MenuFactory;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private JButton btnStart;
     private JButton btnStop;
     private JLabel emulatorState;
-    private RSyntaxTextArea currentSettings;
+    private JSyntaxTextArea currentSettings;
 
     public NetworkEmulatorGui() {
         controller = NetworkEmulatorController.getInstance();
@@ -80,11 +81,13 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         JPanel settingsPanel = new JPanel(new BorderLayout());
         settingsPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_network_settings")));
 
-        currentSettings = new RSyntaxTextArea();
+        currentSettings = JSyntaxTextArea.getInstance(20, 80, true);
         currentSettings.setEditable(false);
+        currentSettings.setLineWrap(true);
+        currentSettings.setWrapStyleWord(true);
         currentSettings.setSyntaxEditingStyle("text/css");
+        JScrollPane scrollPane = JTextScrollPane.getInstance(currentSettings);
 
-        JScrollPane scrollPane = new JScrollPane(currentSettings);
         scrollPane.setPreferredSize(scrollPane.getMinimumSize());
         scrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
@@ -150,6 +153,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     public static void registerIcon() {
         ImageIcon icon = NetworkEmulatorUtils.getImage("network_emulator.gif");
+        icon = NetworkEmulatorUtils.getScaledIcon(icon, 16, 16);
         GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
     }
 
