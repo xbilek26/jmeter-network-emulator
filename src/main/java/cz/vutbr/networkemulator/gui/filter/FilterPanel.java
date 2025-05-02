@@ -62,6 +62,25 @@ public class FilterPanel extends JPanel {
             "SMTP", 25,
             "POP3", 110,
             "IMAP", 143);
+    
+    private static final String[] ICMP_TYPES = {
+                "",
+                "Echo Reply",
+                "Destination Unreachable",
+                "Redirect",
+                "Echo Request",
+                "Time Exceeded",
+                "Parameter Problem",
+        };
+
+    private static final Map<String, Integer> ICMP_TYPE_NAMES = Map.of(
+        "Echo Reply", 0,
+        "Destination Unreachable", 3,
+        "Redirect", 5,
+        "Echo Request", 8,
+        "Time Exceeded", 11,
+        "Parameter Problem", 12
+    );
 
     private final JRadioButton ipv4Button;
     private final JRadioButton ipv6Button;
@@ -80,6 +99,7 @@ public class FilterPanel extends JPanel {
     private final JTextField dstPortField;
     private final JComboBox<String> l4protocolsBox;
     private final JTextField icmpTypeField;
+    private final JComboBox<String> icmpTypeBox;
     private final JTextField icmpCodeField;
     private final JPanel ipVersionCards;
     private final JPanel protocolCards;
@@ -157,13 +177,27 @@ public class FilterPanel extends JPanel {
                 ipv6DstAddressField.getPreferredSize().height));
 
         l4protocolsBox = new JComboBox<>(PROTOCOLS);
-        l4protocolsBox.setPreferredSize(new Dimension(120, srcPortField.getPreferredSize().height));
+        l4protocolsBox.setPreferredSize(new Dimension(110, srcPortField.getPreferredSize().height));
 
         l4protocolsBox.addActionListener(_ -> {
             String selectedL4Protocol = (String) l4protocolsBox.getSelectedItem();
             Integer port = PROTOCOL_PORTS.get(selectedL4Protocol);
             if (!selectedL4Protocol.isEmpty()) {
                 dstPortField.setText(port.toString());
+            } else {
+                dstPortField.setText("");
+            }
+        });
+
+        icmpTypeBox = new JComboBox<>(ICMP_TYPES);
+        icmpTypeBox.setPreferredSize(new Dimension(240, icmpTypeField.getPreferredSize().height));
+        icmpTypeBox.addActionListener(_ -> {
+            String selectedIcmpTypeName = (String) icmpTypeBox.getSelectedItem();
+            Integer icmpType = ICMP_TYPE_NAMES.get(selectedIcmpTypeName);
+            if (!selectedIcmpTypeName.isEmpty()) {
+                icmpTypeField.setText(icmpType.toString());
+            } else {
+                icmpTypeField.setText("");
             }
         });
 
@@ -199,6 +233,7 @@ public class FilterPanel extends JPanel {
         ipv4AddressPanel.add(ipv4SrcAddressLabel);
         ipv4AddressPanel.add(ipv4SrcAddressField);
         ipv4AddressPanel.add(ipv4SrcSubnetPrefixBox);
+        ipv4AddressPanel.add(Box.createHorizontalStrut(5));
         ipv4AddressPanel.add(ipv4DstAddressLabel);
         ipv4AddressPanel.add(ipv4DstAddressField);
         ipv4AddressPanel.add(ipv4DstSubnetPrefixBox);
@@ -207,6 +242,7 @@ public class FilterPanel extends JPanel {
         ipv6AddressPanel.add(ipv6SrcAddressLabel);
         ipv6AddressPanel.add(ipv6SrcAddressField);
         ipv6AddressPanel.add(ipv6SrcSubnetPrefixBox);
+        ipv6AddressPanel.add(Box.createHorizontalStrut(5));
         ipv6AddressPanel.add(ipv6DstAddressLabel);
         ipv6AddressPanel.add(ipv6DstAddressField);
         ipv6AddressPanel.add(ipv6DstSubnetPrefixBox);
@@ -221,6 +257,7 @@ public class FilterPanel extends JPanel {
         JPanel portPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         portPanel.add(srcPortLabel);
         portPanel.add(srcPortField);
+        portPanel.add(Box.createHorizontalStrut(5));
         portPanel.add(dstPortLabel);
         portPanel.add(dstPortField);
         portPanel.add(l4protocolsBox);
@@ -228,6 +265,8 @@ public class FilterPanel extends JPanel {
         JPanel icmpPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         icmpPanel.add(icmpTypeLabel);
         icmpPanel.add(icmpTypeField);
+        icmpPanel.add(icmpTypeBox);
+        icmpPanel.add(Box.createHorizontalStrut(5));
         icmpPanel.add(icmpCodeLabel);
         icmpPanel.add(icmpCodeField);
 
