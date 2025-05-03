@@ -31,7 +31,7 @@ public class ReorderingPanel extends JPanel {
         correlationLabel.setLabelFor(correlationField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Reordering.MIN_VALUE, Reordering.MAX_VALUE, true));
+        valueField.setInputVerifier(new RangeVerifier(Reordering.MIN_VALUE, Reordering.MAX_VALUE, Reordering.IS_VALUE_DOUBLE));
         correlationField.setInputVerifier(new RangeVerifier(Reordering.MIN_CORRELATION, Reordering.MAX_CORRELATION, true));
 
         // add components

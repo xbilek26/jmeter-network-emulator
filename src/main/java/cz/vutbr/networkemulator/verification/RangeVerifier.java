@@ -12,10 +12,10 @@ public class RangeVerifier extends InputVerifier {
     private final double min, max;
     private final boolean isDouble;
 
-    public RangeVerifier(double min, double max, boolean allowDecimal) {
+    public RangeVerifier(double min, double max, boolean isDouble) {
         this.min = min;
         this.max = max;
-        this.isDouble = allowDecimal;
+        this.isDouble = isDouble;
     }
 
     public static boolean isValid(String text, double min, double max, boolean isDouble) {

@@ -27,7 +27,7 @@ public class CorruptionPanel extends JPanel {
         valueLabel.setLabelFor(valueField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Corruption.MIN_VALUE, Corruption.MAX_VALUE, true));
+        valueField.setInputVerifier(new RangeVerifier(Corruption.MIN_VALUE, Corruption.MAX_VALUE, Corruption.IS_VALUE_DOUBLE));
 
         // add components
         add(valueLabel);

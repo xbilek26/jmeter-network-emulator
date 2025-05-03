@@ -18,9 +18,7 @@ public abstract class Parameter {
         this.value = value;
     }
 
-    public boolean isValueSet() {
-        return value != null && !value.isEmpty();
-    }
+    public abstract boolean isValueValid();
 
     public abstract void appendToCommand(StringBuilder cmd);
 

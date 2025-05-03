@@ -31,8 +31,9 @@ public class DuplicationPanel extends JPanel {
         correlationLabel.setLabelFor(correlationField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Duplication.MIN_VALUE, Duplication.MAX_VALUE, true));
-        correlationField.setInputVerifier(new RangeVerifier(Duplication.MIN_CORRELATION, Duplication.MAX_CORRELATION, true));
+        valueField.setInputVerifier(new RangeVerifier(Duplication.MIN_VALUE, Duplication.MAX_VALUE, Duplication.IS_VALUE_DOUBLE));
+        correlationField
+                .setInputVerifier(new RangeVerifier(Duplication.MIN_CORRELATION, Duplication.MAX_CORRELATION, Duplication.IS_CORRELATION_DOUBLE));
 
         // add components
         add(valueLabel);

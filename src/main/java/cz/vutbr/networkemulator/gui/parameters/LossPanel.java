@@ -31,8 +31,8 @@ public class LossPanel extends JPanel {
         correlationLabel.setLabelFor(correlationField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Loss.MIN_VALUE, Loss.MAX_VALUE, true));
-        correlationField.setInputVerifier(new RangeVerifier(Loss.MIN_CORRELATION, Loss.MAX_CORRELATION, true));
+        valueField.setInputVerifier(new RangeVerifier(Loss.MIN_VALUE, Loss.MAX_VALUE, Loss.IS_VALUE_DOUBLE));
+        correlationField.setInputVerifier(new RangeVerifier(Loss.MIN_CORRELATION, Loss.MAX_CORRELATION, Loss.IS_CORRELATION_DOUBLE));
 
         // add components
         add(valueLabel);

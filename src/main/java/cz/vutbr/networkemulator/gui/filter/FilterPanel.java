@@ -13,6 +13,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
+import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.utils.enums.IpVersion;
 import cz.vutbr.networkemulator.utils.enums.Protocol;
@@ -21,19 +22,6 @@ import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
 public class FilterPanel extends JPanel {
-
-    private static final int MIN_PORT_VALUE = 0;
-    private static final int MAX_PORT_VALUE = 65535;
-    private static final int MIN_ICMP_TYPE_VALUE = 0;
-    private static final int MAX_ICMP_TYPE_VALUE = 255;
-    private static final int MIN_ICMP_CODE_VALUE = 0;
-    private static final int MAX_ICMP_CODE_VALUE = 255;
-    private static final int MIN_DSCP_VALUE = 0;
-    private static final int MAX_DSCP_VALUE = 63;
-    private static final int MIN_ECN_VALUE = 0;
-    private static final int MAX_ECN_VALUE = 3;
-    private static final int MIN_FLOW_LABEL_VALUE = 0;
-    private static final int MAX_FLOW_LABEL_VALUE = 1048575;
 
     private static final String[] PREFIX_LENGTHS_IPV4 = {
             "/32", "/31", "/30", "/29", "/28", "/27", "/26", "/25",
@@ -210,15 +198,15 @@ public class FilterPanel extends JPanel {
         ipv4DstAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv4));
         ipv6SrcAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv6));
         ipv6DstAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv6));
-        srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
-        dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
-        icmpTypeField.setInputVerifier(new RangeVerifier(MIN_ICMP_TYPE_VALUE, MAX_ICMP_TYPE_VALUE, false));
-        icmpCodeField.setInputVerifier(new RangeVerifier(MIN_ICMP_CODE_VALUE, MAX_ICMP_CODE_VALUE, false));
-        ipv4DscpField.setInputVerifier(new RangeVerifier(MIN_DSCP_VALUE, MAX_DSCP_VALUE, false));
-        ipv6DscpField.setInputVerifier(new RangeVerifier(MIN_DSCP_VALUE, MAX_DSCP_VALUE, false));
-        ipv4EcnField.setInputVerifier(new RangeVerifier(MIN_ECN_VALUE, MAX_ECN_VALUE, false));
-        ipv6EcnField.setInputVerifier(new RangeVerifier(MIN_ECN_VALUE, MAX_ECN_VALUE, false));
-        flowLabelField.setInputVerifier(new RangeVerifier(MIN_FLOW_LABEL_VALUE, MAX_FLOW_LABEL_VALUE, false));
+        srcPortField.setInputVerifier(new RangeVerifier(Filter.MIN_PORT, Filter.MAX_PORT, Filter.IS_PORT_DOUBLE));
+        dstPortField.setInputVerifier(new RangeVerifier(Filter.MIN_PORT, Filter.MAX_PORT, Filter.IS_PORT_DOUBLE));
+        icmpTypeField.setInputVerifier(new RangeVerifier(Filter.MIN_ICMP_TYPE, Filter.MAX_ICMP_TYPE, Filter.IS_ICMP_TYPE_DOUBLE));
+        icmpCodeField.setInputVerifier(new RangeVerifier(Filter.MIN_ICMP_CODE, Filter.MAX_ICMP_CODE, Filter.IS_ICMP_CODE_DOUBLE));
+        ipv4DscpField.setInputVerifier(new RangeVerifier(Filter.MIN_DSCP, Filter.MAX_DSCP, Filter.IS_DSCP_DOUBLE));
+        ipv6DscpField.setInputVerifier(new RangeVerifier(Filter.MIN_DSCP, Filter.MAX_DSCP, Filter.IS_DSCP_DOUBLE));
+        ipv4EcnField.setInputVerifier(new RangeVerifier(Filter.MIN_ECN, Filter.MAX_ECN, Filter.IS_ECN_DOUBLE));
+        ipv6EcnField.setInputVerifier(new RangeVerifier(Filter.MIN_ECN, Filter.MAX_ECN, Filter.IS_ECN_DOUBLE));
+        flowLabelField.setInputVerifier(new RangeVerifier(Filter.MIN_FLOW_LABEL, Filter.MAX_FLOW_LABEL, Filter.IS_FLOW_LABEL_DOUBLE));
 
         // panels
         JPanel ipVersionPanel = new JPanel(new MigLayout("flowx, alignx center, aligny center"));

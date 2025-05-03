@@ -27,7 +27,7 @@ public class LimitPanel extends JPanel {
         valueLabel.setLabelFor(valueField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Limit.MIN_VALUE, Limit.MAX_VALUE, true));
+        valueField.setInputVerifier(new RangeVerifier(Limit.MIN_VALUE, Limit.MAX_VALUE, Limit.IS_VALUE_DOUBLE));
 
         // add components
         add(valueLabel);

@@ -18,13 +18,29 @@ public class IpAddressVerifier extends InputVerifier {
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(IpAddressVerifier.class);
 
-    private final IpVersion version;
+    private final IpVersion ipVersion;
 
     private static final Pattern IPV4_PATTERN = createIpv4Pattern();
     private static final Pattern IPV6_PATTERN = createIpv6Pattern();
 
-    public IpAddressVerifier(IpVersion version) {
-        this.version = version;
+    public IpAddressVerifier(IpVersion ipVersion) {
+        this.ipVersion = ipVersion;
+    }
+
+    public static boolean isValid(String text, IpVersion version) {
+        if (text.isEmpty()) {
+            return false;
+        }
+
+        if (version.equals(IpVersion.IPv4)) {
+            return IPV4_PATTERN.matcher(text).matches();
+        }
+
+        if (version.equals(IpVersion.IPv6)) {
+            return IPV6_PATTERN.matcher(text).matches();
+        }
+
+        return false;
     }
 
     @Override
@@ -36,7 +52,7 @@ public class IpAddressVerifier extends InputVerifier {
                 return true;
             }
 
-            if (version == IpVersion.IPv4) {
+            if (ipVersion.equals(IpVersion.IPv4)) {
                 if (IPV4_PATTERN.matcher(text).matches()) {
                     return true;
                 } else {
@@ -47,7 +63,8 @@ public class IpAddressVerifier extends InputVerifier {
                     return false;
                 }
             }
-            if (version == IpVersion.IPv6) {
+
+            if (ipVersion.equals(IpVersion.IPv6)) {
                 if (IPV6_PATTERN.matcher(text).matches()) {
                     return true;
                 } else {

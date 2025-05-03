@@ -31,8 +31,8 @@ public class RatePanel extends JPanel {
         overheadLabel.setLabelFor(overheadField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(Rate.MIN_VALUE, Rate.MAX_VALUE, true));
-        overheadField.setInputVerifier(new RangeVerifier(Rate.MIN_OVERHEAD, Rate.MAX_OVERHEAD, false));
+        valueField.setInputVerifier(new RangeVerifier(Rate.MIN_VALUE, Rate.MAX_VALUE, Rate.IS_VALUE_DOUBLE));
+        overheadField.setInputVerifier(new RangeVerifier(Rate.MIN_OVERHEAD, Rate.MAX_OVERHEAD, Rate.IS_OVERHEAD_DOUBLE));
 
         // add components
         add(valueLabel);
