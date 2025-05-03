@@ -256,7 +256,7 @@ public class FilterPanel extends JPanel {
 
         // add components
         add(ipVersionPanel, "growx, growy");
-        add(protocolPanel, "growx, growy, span, wrap");
+        add(protocolPanel, "growx, growy, wrap");
         add(ipVersionCards, "growx, growy, span, wrap");
         add(protocolCards, "growx, growy");
         add(diffServPanel, "growx, growy");
