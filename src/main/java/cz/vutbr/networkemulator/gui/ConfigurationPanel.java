@@ -182,12 +182,14 @@ public class ConfigurationPanel extends JPanel {
         }
         String classId = String.format("1:%s", newClassNumber);
 
-        EmulationRulePanel tcPanel = new EmulationRulePanel(niName, classId);
-        JScrollPane tcScrollPane = new JScrollPane(tcPanel);
-        tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        tcScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
-        rightPanel.add(tcScrollPane, tcPanel.getName());
+        EmulationRulePanel rulePanel = new EmulationRulePanel(niName, classId);
+        JScrollPane ruleScrollPane = new JScrollPane(rulePanel);
+        ruleScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        ruleScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        ruleScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+        rightPanel.add(ruleScrollPane, rulePanel.getName());
+        System.out.println("comp count=" + rightPanel.getComponentCount());
+        System.out.println("component at 1 is = " + rightPanel.getComponent(1));
 
         SwingUtilities.invokeLater(() -> {
             rightPanel.revalidate();
@@ -195,7 +197,7 @@ public class ConfigurationPanel extends JPanel {
         });
 
         EmulatorTreeNode ruleNode = new EmulatorTreeNode(false);
-        ruleNode.setUserObject(tcPanel);
+        ruleNode.setUserObject(rulePanel);
         ruleNode.setName(classId);
         niNode.add(ruleNode);
 
@@ -219,8 +221,9 @@ public class ConfigurationPanel extends JPanel {
 
         niNode.remove(ruleNode);
 
-        EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
-        rightPanel.remove(tcPanel);
+        EmulationRulePanel rulePanel = (EmulationRulePanel) ruleNode.getUserObject();
+        rightPanel.remove(rulePanel);
+
         SwingUtilities.invokeLater(() -> {
             rightPanel.revalidate();
             rightPanel.repaint();
@@ -255,9 +258,9 @@ public class ConfigurationPanel extends JPanel {
                 rightPanelCards.show(rightPanel, niPanel.getName());
                 niPanel.update(name);
             }
-            case EmulationRulePanel tcPanel -> {
+            case EmulationRulePanel rulePanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REMOVE);
-                rightPanelCards.show(rightPanel, tcPanel.getName());
+                rightPanelCards.show(rightPanel, rulePanel.getName());
             }
             default -> {
             }
@@ -277,9 +280,9 @@ public class ConfigurationPanel extends JPanel {
 
                 controller.addEmulationRule(niName, classId);
 
-                EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
-                controller.setFilter(niName, classId, tcPanel.getFilter());
-                controller.setParameters(niName, classId, tcPanel.getParameters());
+                EmulationRulePanel rulePanel = (EmulationRulePanel) ruleNode.getUserObject();
+                controller.setFilter(niName, classId, rulePanel.getFilter());
+                controller.setParameters(niName, classId, rulePanel.getParameters());
             }
         }
     }
@@ -288,7 +291,7 @@ public class ConfigurationPanel extends JPanel {
         btnRefresh.setEnabled(enabled);
         btnAdd.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
-        tree.getTcPanels().stream().forEach(tcPanel -> tcPanel.setEnabled(enabled));
+        tree.getRulePanels().stream().forEach(rulePanels -> rulePanels.setEnabled(enabled));
     }
 
     public void modifyTestElement(TestElement te) {
@@ -303,11 +306,11 @@ public class ConfigurationPanel extends JPanel {
             CollectionProperty classIds = new CollectionProperty(PROPERTY_EMULATION_RULES + niName, new ArrayList<>());
             for (int j = 0; j < niNode.getChildCount(); j++) {
                 EmulatorTreeNode ruleNode = (EmulatorTreeNode) niNode.getChildAt(j);
-                EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
+                EmulationRulePanel rulePanel = (EmulationRulePanel) ruleNode.getUserObject();
                 String classId = ruleNode.getName();
                 classIds.addItem(classId);
 
-                tcPanel.modifyTestElement(te);
+                rulePanel.modifyTestElement(te);
             }
             te.setProperty(classIds);
         }
@@ -337,18 +340,18 @@ public class ConfigurationPanel extends JPanel {
                 if (classIdsPropery instanceof CollectionProperty classIds) {
                     for (int j = 0; j < classIds.size(); j++) {
                         String classId = classIds.get(j).getStringValue();
-                        EmulationRulePanel tcPanel = new EmulationRulePanel(niName, classId);
-                        JScrollPane tcScrollPane = new JScrollPane(tcPanel);
-                        tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-                        tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                        tcScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
-                        rightPanel.add(tcScrollPane, tcPanel.getName());
+                        EmulationRulePanel rulePanel = new EmulationRulePanel(niName, classId);
+                        JScrollPane ruleScrollPane = new JScrollPane(rulePanel);
+                        ruleScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+                        ruleScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                        ruleScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
+                        rightPanel.add(ruleScrollPane, rulePanel.getName());
                         EmulatorTreeNode ruleNode = new EmulatorTreeNode(false);
-                        ruleNode.setUserObject(tcPanel);
+                        ruleNode.setUserObject(rulePanel);
                         ruleNode.setName(classId);
                         niNode.add(ruleNode);
 
-                        tcPanel.configure(te);
+                        rulePanel.configure(te);
                     }
 
                 }

@@ -17,7 +17,7 @@ public class CorruptionPanel extends JPanel {
 
     public CorruptionPanel() {
         // layout and border
-        setLayout(new MigLayout("insets 5", "[][grow]", "grow"));
+        setLayout(new MigLayout("insets 5", "[][grow][][grow]", "grow"));
         setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_corruption")));
 
         // initialisations

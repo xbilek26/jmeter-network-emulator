@@ -66,14 +66,14 @@ public class EmulatorTree extends JTree {
                 expandPath(niPath);
             }
 
-            int tcCount = treeModel.getChildCount(ni);
-            for (int j = 0; j < tcCount; j++) {
-                Object tc = treeModel.getChild(ni, j);
-                String pathStr = ni.toString() + "/" + tc.toString();
+            int ruleCount = treeModel.getChildCount(ni);
+            for (int j = 0; j < ruleCount; j++) {
+                Object rule = treeModel.getChild(ni, j);
+                String pathStr = ni.toString() + "/" + rule.toString();
 
                 if (pathsToExpand.contains(pathStr)) {
-                    TreePath tcPath = niPath.pathByAddingChild(tc);
-                    expandPath(tcPath);
+                    TreePath rulePath = niPath.pathByAddingChild(rule);
+                    expandPath(rulePath);
                 }
             }
         }
@@ -114,17 +114,17 @@ public class EmulatorTree extends JTree {
         scrollPathToVisible(path);
     }
 
-    public Set<EmulationRulePanel> getTcPanels() {
-        Set<EmulationRulePanel> tcPanels = new HashSet<>();
+    public Set<EmulationRulePanel> getRulePanels() {
+        Set<EmulationRulePanel> rulePanels = new HashSet<>();
         EmulatorTreeNode rootNode = (EmulatorTreeNode) getModel().getRoot();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             EmulatorTreeNode niNode = (EmulatorTreeNode) rootNode.getChildAt(i);
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                tcPanels.add((EmulationRulePanel) ((EmulatorTreeNode) niNode.getChildAt(j)).getUserObject());
+                rulePanels.add((EmulationRulePanel) ((EmulatorTreeNode) niNode.getChildAt(j)).getUserObject());
             }
         }
 
-        return tcPanels;
+        return rulePanels;
     }
 
 }

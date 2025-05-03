@@ -26,7 +26,7 @@ public class Limit extends Parameter {
     @Override
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueValid()) {
-            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_limit"), getValue() });
+            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_limit"), String.format("%spackets", getValue()) });
         }
     }
 

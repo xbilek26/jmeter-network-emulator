@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.linux.TrafficControl;
+import cz.vutbr.networkemulator.model.EmulationRule;
 import cz.vutbr.networkemulator.model.Emulator;
 import cz.vutbr.networkemulator.model.NetworkInterface;
-import cz.vutbr.networkemulator.model.EmulationRule;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
 
@@ -105,7 +105,7 @@ public class EmulatorController {
         return emulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getEmulationRules().stream())
-                .filter(tc -> tc.getClassId().equals(classId))
+                .filter(er -> er.getClassId().equals(classId))
                 .findFirst()
                 .map(EmulationRule::getFilter)
                 .orElse(null);
@@ -115,25 +115,25 @@ public class EmulatorController {
         emulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getEmulationRules().stream())
-                .filter(tc -> tc.getClassId().equals(classId))
+                .filter(er -> er.getClassId().equals(classId))
                 .findFirst()
-                .ifPresent(tc -> tc.setFilter(filter));
+                .ifPresent(er -> er.setFilter(filter));
     }
 
     public void setParameters(String niName, String classId, List<Parameter> parameters) {
         emulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getEmulationRules().stream())
-                .filter(tc -> tc.getClassId().equals(classId))
+                .filter(er -> er.getClassId().equals(classId))
                 .findFirst()
-                .ifPresent(tc -> tc.setParameters(parameters));
+                .ifPresent(er -> er.setParameters(parameters));
     }
 
     public List<Parameter> getParameters(String niName, String classId) {
         return emulator.getNetworkInterfaces().stream()
                 .filter(ni -> ni.getName().equals(niName))
                 .flatMap(ni -> ni.getEmulationRules().stream())
-                .filter(tc -> tc.getClassId().equals(classId))
+                .filter(er -> er.getClassId().equals(classId))
                 .findFirst()
                 .map(EmulationRule::getParameters)
                 .orElse(null);
@@ -160,12 +160,12 @@ public class EmulatorController {
                 continue;
             }
             TrafficControl.setupRootQdisc(ni.getName());
-            for (EmulationRule tc : ni.getEmulationRules()) {
+            for (EmulationRule er : ni.getEmulationRules()) {
                 String dev = ni.getName();
-                String classId = tc.getClassId();
-                String handleId = tc.getHandleId();
-                List<Parameter> parameters = tc.getParameters();
-                Filter filter = tc.getFilter();
+                String classId = er.getClassId();
+                String handleId = er.getHandleId();
+                List<Parameter> parameters = er.getParameters();
+                Filter filter = er.getFilter();
                 TrafficControl.setupEmulationRule(dev, classId, handleId, parameters);
                 TrafficControl.setupFilter(dev, classId, handleId, filter);
             }
