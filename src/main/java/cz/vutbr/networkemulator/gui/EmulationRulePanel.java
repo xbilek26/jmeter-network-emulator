@@ -100,7 +100,8 @@ public class EmulationRulePanel extends JPanel {
                 duplicationPanel.getValue(),
                 duplicationPanel.getCorrelation()));
         parameters.add(new Corruption(
-                corruptionPanel.getValue()));
+                corruptionPanel.getValue(),
+                corruptionPanel.getCorrelation()));
         parameters.add(new Limit(
                 limitPanel.getValue()));
 
@@ -186,6 +187,7 @@ public class EmulationRulePanel extends JPanel {
         parameters.addItem(duplicationPanel.getValue());
         parameters.addItem(duplicationPanel.getCorrelation());
         parameters.addItem(corruptionPanel.getValue());
+        parameters.addItem(corruptionPanel.getCorrelation());
         parameters.addItem(limitPanel.getValue());
         te.setProperty(parameters);
     }
@@ -227,7 +229,8 @@ public class EmulationRulePanel extends JPanel {
             duplicationPanel.setValue(parameters.get(10).getStringValue());
             duplicationPanel.setCorrelation(parameters.get(11).getStringValue());
             corruptionPanel.setValue(parameters.get(12).getStringValue());
-            limitPanel.setValue(parameters.get(13).getStringValue());
+            corruptionPanel.setCorrelation(parameters.get(13).getStringValue());
+            limitPanel.setValue(parameters.get(14).getStringValue());
         }
     }
 }

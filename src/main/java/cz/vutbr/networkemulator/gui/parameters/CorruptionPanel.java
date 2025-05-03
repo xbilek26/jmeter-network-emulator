@@ -13,6 +13,7 @@ import net.miginfocom.swing.MigLayout;
 public class CorruptionPanel extends JPanel {
 
     private final JTextField valueField;
+    private final JTextField correlationField;
 
     public CorruptionPanel() {
         // layout and border
@@ -21,17 +22,25 @@ public class CorruptionPanel extends JPanel {
 
         // initialisations
         valueField = new JTextField(10);
+        correlationField = new JTextField(10);
+
 
         // labels
-        JLabel valueLabel = new JLabel(EmulatorUtils.getString("label_corruption"));
+        JLabel valueLabel = new JLabel(EmulatorUtils.getString("label_corruption_value"));
         valueLabel.setLabelFor(valueField);
+        JLabel correlationLabel = new JLabel(EmulatorUtils.getString("label_corruption_correlation"));
+        correlationLabel.setLabelFor(correlationField);
+
 
         // verifiers
         valueField.setInputVerifier(new RangeVerifier(Corruption.MIN_VALUE, Corruption.MAX_VALUE, Corruption.IS_VALUE_DOUBLE));
+        correlationField.setInputVerifier(new RangeVerifier(Corruption.MIN_VALUE, Corruption.MAX_VALUE, Corruption.IS_VALUE_DOUBLE));
 
         // add components
         add(valueLabel);
-        add(valueField, "growx, growy");
+        add(valueField, "growx, growy, gapright 5");
+        add(correlationLabel);
+        add(correlationField, "growx, growy");
     }
 
     public String getValue() {
@@ -42,4 +51,11 @@ public class CorruptionPanel extends JPanel {
         valueField.setText(value);
     }
 
+    public String getCorrelation() {
+        return correlationField.getText().trim();
+    }
+
+    public void setCorrelation(String correlation) {
+        correlationField.setText(correlation);
+    }
 }
