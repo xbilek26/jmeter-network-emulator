@@ -30,9 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
-import cz.vutbr.networkemulator.gui.tree.ConfigTree;
-import cz.vutbr.networkemulator.gui.tree.ConfigTreeNode;
-import cz.vutbr.networkemulator.gui.tree.ConfigTreeNodeRenderer;
+import cz.vutbr.networkemulator.gui.tree.EmulatorTree;
+import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNode;
+import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNodeRenderer;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
@@ -53,9 +53,9 @@ public class ConfigurationPanel extends JPanel {
     private final String ROOT_PANEL = "root_panel";
     private final String NETWORK_INTERFACE_PANEL = "network_interface_panel";
 
-    private ConfigTreeNode rootNode;
+    private EmulatorTreeNode rootNode;
     private DefaultTreeModel treeModel;
-    private ConfigTree tree;
+    private EmulatorTree tree;
 
     private JPanel buttonPanel;
     private JButton btnRefresh;
@@ -85,14 +85,14 @@ public class ConfigurationPanel extends JPanel {
     }
 
     private JPanel createLeftPanel() {
-        rootNode = new ConfigTreeNode();
+        rootNode = new EmulatorTreeNode();
         rootNode.setName(NetworkEmulatorUtils.getString("root_node_name"));
         treeModel = new DefaultTreeModel(rootNode);
-        tree = new ConfigTree(treeModel);
+        tree = new EmulatorTree(treeModel);
         tree.setRootVisible(true);
         tree.setShowsRootHandles(true);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.setCellRenderer(new ConfigTreeNodeRenderer());
+        tree.setCellRenderer(new EmulatorTreeNodeRenderer());
         tree.addTreeSelectionListener(this::updateView);
 
         btnRefresh = new JButton(NetworkEmulatorUtils.getString("button_refresh"));
@@ -135,13 +135,13 @@ public class ConfigurationPanel extends JPanel {
 
     private void refreshNetworkInterfaces() {
         Set<String> currentNetworkInterfaces = new HashSet<>();
-        List<ConfigTreeNode> nodesToRemove = new ArrayList<>();
+        List<EmulatorTreeNode> nodesToRemove = new ArrayList<>();
 
         controller.refreshNetworkInterfaces();
         Set<String> phyNetworkInterfaces = controller.getNetworkInterfaces();
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            EmulatorTreeNode niNode = (EmulatorTreeNode) rootNode.getChildAt(i);
             String niName = niNode.getName();
             currentNetworkInterfaces.add(niName);
             if (!phyNetworkInterfaces.contains(niName)) {
@@ -154,7 +154,7 @@ public class ConfigurationPanel extends JPanel {
         toAdd.removeAll(currentNetworkInterfaces);
         toAdd.stream()
                 .map(niName -> {
-                    ConfigTreeNode niNode = new ConfigTreeNode();
+                    EmulatorTreeNode niNode = new EmulatorTreeNode();
                     niNode.setUserObject(networkInterfacePanel);
                     niNode.setName(niName);
                     return niNode;
@@ -174,13 +174,13 @@ public class ConfigurationPanel extends JPanel {
             return;
         }
 
-        ConfigTreeNode niNode = (ConfigTreeNode) path.getLastPathComponent();
+        EmulatorTreeNode niNode = (EmulatorTreeNode) path.getLastPathComponent();
         String niName = niNode.getName();
-        int newTcNodeNumber = 10;
+        int newClassNumber = 10;
         if (niNode.getChildCount() > 0) {
-            newTcNodeNumber = Integer.parseInt(((ConfigTreeNode) niNode.getLastChild()).getName().substring(2)) + 1;
+            newClassNumber = Integer.parseInt(((EmulatorTreeNode) niNode.getLastChild()).getName().substring(2)) + 1;
         }
-        String classId = String.format("1:%s", newTcNodeNumber);
+        String classId = String.format("1:%s", newClassNumber);
 
         EmulationRulePanel tcPanel = new EmulationRulePanel(niName, classId);
         JScrollPane tcScrollPane = new JScrollPane(tcPanel);
@@ -194,14 +194,14 @@ public class ConfigurationPanel extends JPanel {
             rightPanel.repaint();
         });
 
-        ConfigTreeNode tcNode = new ConfigTreeNode(false);
-        tcNode.setUserObject(tcPanel);
-        tcNode.setName(classId);
-        niNode.add(tcNode);
+        EmulatorTreeNode ruleNode = new EmulatorTreeNode(false);
+        ruleNode.setUserObject(tcPanel);
+        ruleNode.setName(classId);
+        niNode.add(ruleNode);
 
         treeModel.reload();
         expandedPaths.stream().forEach(tree::expandPath);
-        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNode)));
+        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(ruleNode)));
     }
 
     private void removeEmulationRule() {
@@ -213,13 +213,13 @@ public class ConfigurationPanel extends JPanel {
             return;
         }
 
-        ConfigTreeNode tcNode = (ConfigTreeNode) path.getLastPathComponent();
-        ConfigTreeNode niNode = (ConfigTreeNode) tcNode.getParent();
-        ConfigTreeNode tcNodePrev = (ConfigTreeNode) tcNode.getPreviousNode();
+        EmulatorTreeNode ruleNode = (EmulatorTreeNode) path.getLastPathComponent();
+        EmulatorTreeNode niNode = (EmulatorTreeNode) ruleNode.getParent();
+        EmulatorTreeNode ruleNodePrev = (EmulatorTreeNode) ruleNode.getPreviousNode();
 
-        niNode.remove(tcNode);
+        niNode.remove(ruleNode);
 
-        EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
+        EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
         rightPanel.remove(tcPanel);
         SwingUtilities.invokeLater(() -> {
             rightPanel.revalidate();
@@ -228,7 +228,7 @@ public class ConfigurationPanel extends JPanel {
 
         treeModel.reload();
         expandedPaths.stream().forEach(tree::expandPath);
-        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNodePrev)));
+        tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(ruleNodePrev)));
     }
 
     private void updateView(TreeSelectionEvent tse) {
@@ -240,14 +240,14 @@ public class ConfigurationPanel extends JPanel {
             return;
         }
 
-        Object object = ((ConfigTreeNode) path.getLastPathComponent()).getUserObject();
-        String name = ((ConfigTreeNode) path.getLastPathComponent()).getName();
+        Object object = ((EmulatorTreeNode) path.getLastPathComponent()).getUserObject();
+        String name = ((EmulatorTreeNode) path.getLastPathComponent()).getName();
 
         switch (object) {
-            case RootPanel rootPanel -> {
+            case RootPanel rtPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REFRESH);
-                rightPanelCards.show(rightPanel, rootPanel.getName());
-                rootPanel.update();
+                rightPanelCards.show(rightPanel, rtPanel.getName());
+                rtPanel.update();
             }
             case NetworkInterfacePanel niPanel -> {
                 applySettings();
@@ -267,17 +267,17 @@ public class ConfigurationPanel extends JPanel {
     public void applySettings() {
         controller.clearNetworkInterfaces();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            EmulatorTreeNode niNode = (EmulatorTreeNode) rootNode.getChildAt(i);
             String niName = niNode.getName();
             controller.addNetworkInterface(niName);
 
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
-                String classId = tcNode.getName();
+                EmulatorTreeNode ruleNode = (EmulatorTreeNode) niNode.getChildAt(j);
+                String classId = ruleNode.getName();
 
                 controller.addEmulationRule(niName, classId);
 
-                EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
+                EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
                 controller.setFilter(niName, classId, tcPanel.getFilter());
                 controller.setParameters(niName, classId, tcPanel.getParameters());
             }
@@ -296,15 +296,15 @@ public class ConfigurationPanel extends JPanel {
         CollectionProperty niNames = new CollectionProperty(PROPERTY_NETWORK_INTERFACES, new ArrayList<>());
 
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            EmulatorTreeNode niNode = (EmulatorTreeNode) rootNode.getChildAt(i);
             String niName = niNode.getName();
             niNames.addItem(niName);
 
             CollectionProperty classIds = new CollectionProperty(PROPERTY_EMULATION_RULES + niName, new ArrayList<>());
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
-                EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
-                String classId = tcNode.getName();
+                EmulatorTreeNode ruleNode = (EmulatorTreeNode) niNode.getChildAt(j);
+                EmulationRulePanel tcPanel = (EmulationRulePanel) ruleNode.getUserObject();
+                String classId = ruleNode.getName();
                 classIds.addItem(classId);
 
                 tcPanel.modifyTestElement(te);
@@ -328,7 +328,7 @@ public class ConfigurationPanel extends JPanel {
         if (niNamesProperty instanceof CollectionProperty niNames) {
             for (int i = 0; i < niNames.size(); i++) {
                 String niName = niNames.get(i).getStringValue();
-                ConfigTreeNode niNode = new ConfigTreeNode();
+                EmulatorTreeNode niNode = new EmulatorTreeNode();
                 niNode.setUserObject(networkInterfacePanel);
                 niNode.setName(niName);
                 rootNode.add(niNode);
@@ -343,10 +343,10 @@ public class ConfigurationPanel extends JPanel {
                         tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                         tcScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
                         rightPanel.add(tcScrollPane, tcPanel.getName());
-                        ConfigTreeNode tcNode = new ConfigTreeNode(false);
-                        tcNode.setUserObject(tcPanel);
-                        tcNode.setName(classId);
-                        niNode.add(tcNode);
+                        EmulatorTreeNode ruleNode = new EmulatorTreeNode(false);
+                        ruleNode.setUserObject(tcPanel);
+                        ruleNode.setName(classId);
+                        niNode.add(ruleNode);
 
                         tcPanel.configure(te);
                     }

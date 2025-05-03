@@ -1,19 +1,16 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -77,7 +74,7 @@ public class NetworkInterfacePanel extends JPanel {
     }
 
     private DefaultTableModel buildTableModel(Filter filter, List<Parameter> parameters) {
-        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"", ""}, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "", "" }, 0);
 
         appendFilterRows(tableModel, filter);
         appendParameterRows(tableModel, parameters);

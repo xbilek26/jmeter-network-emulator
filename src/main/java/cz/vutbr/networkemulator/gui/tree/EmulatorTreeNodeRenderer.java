@@ -11,13 +11,13 @@ import cz.vutbr.networkemulator.gui.NetworkInterfacePanel;
 import cz.vutbr.networkemulator.gui.EmulationRulePanel;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
-public class ConfigTreeNodeRenderer extends DefaultTreeCellRenderer {
+public class EmulatorTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     private final ImageIcon rootIcon;
     private final ImageIcon networkInterfaceIcon;
     private final ImageIcon emulationRuleIcon;
 
-    public ConfigTreeNodeRenderer() {
+    public EmulatorTreeNodeRenderer() {
         this.rootIcon = NetworkEmulatorUtils.getImage("root_node.gif");
         this.networkInterfaceIcon = NetworkEmulatorUtils.getImage("network_interface.gif");
         this.emulationRuleIcon = NetworkEmulatorUtils.getImage("emulation_rule.gif");
@@ -28,7 +28,7 @@ public class ConfigTreeNodeRenderer extends DefaultTreeCellRenderer {
             boolean leaf, int row, boolean focus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, focus);
 
-        Object node = ((ConfigTreeNode) value).getUserObject();
+        Object node = ((EmulatorTreeNode) value).getUserObject();
         if (node instanceof RootPanel) {
             this.setIcon(NetworkEmulatorUtils.getScaledIcon(rootIcon, 16, 16));
         } else if (node instanceof EmulationRulePanel) {

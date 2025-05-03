@@ -2,23 +2,23 @@ package cz.vutbr.networkemulator.gui.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class ConfigTreeNode extends DefaultMutableTreeNode {
+public class EmulatorTreeNode extends DefaultMutableTreeNode {
 
     private String name;
 
-    public ConfigTreeNode(Object userObject, boolean allowsChildren) {
+    public EmulatorTreeNode(Object userObject, boolean allowsChildren) {
         super(userObject, allowsChildren);
     }
 
-    public ConfigTreeNode(Object userObject) {
+    public EmulatorTreeNode(Object userObject) {
         super(userObject, true);
     }
 
-    public ConfigTreeNode(boolean allowsChildren) {
+    public EmulatorTreeNode(boolean allowsChildren) {
         super(null, allowsChildren);
     }
 
-    public ConfigTreeNode() {
+    public EmulatorTreeNode() {
         super();
     }
 

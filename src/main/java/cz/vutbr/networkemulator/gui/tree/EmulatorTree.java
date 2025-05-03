@@ -11,15 +11,15 @@ import javax.swing.tree.TreePath;
 
 import cz.vutbr.networkemulator.gui.EmulationRulePanel;
 
-public class ConfigTree extends JTree {
+public class EmulatorTree extends JTree {
 
-    public ConfigTree(TreeModel model) {
+    public EmulatorTree(TreeModel model) {
         super(model);
     }
 
     public List<String> getExpandedPaths() {
         List<String> expanded = new ArrayList<>();
-        ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
+        EmulatorTreeNode rootNode = (EmulatorTreeNode) getModel().getRoot();
         TreePath rootPath = new TreePath(rootNode);
 
         if (isExpanded(rootPath)) {
@@ -50,7 +50,7 @@ public class ConfigTree extends JTree {
     }
 
     public void expandPaths(List<String> pathsToExpand) {
-        ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
+        EmulatorTreeNode rootNode = (EmulatorTreeNode) getModel().getRoot();
         TreePath rootPath = new TreePath(rootNode);
 
         if (pathsToExpand.contains(rootNode.getName())) {
@@ -84,7 +84,7 @@ public class ConfigTree extends JTree {
         Object[] pathComponents = selectedPath.getPath();
         StringBuilder pathBuilder = new StringBuilder();
         for (Object pathComponent : pathComponents) {
-            ConfigTreeNode node = (ConfigTreeNode) pathComponent;
+            EmulatorTreeNode node = (EmulatorTreeNode) pathComponent;
             pathBuilder.append(node.getName());
             pathBuilder.append("/");
         }
@@ -93,15 +93,15 @@ public class ConfigTree extends JTree {
     }
 
     public void selectPath(String pathToSelect) {
-        ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
+        EmulatorTreeNode rootNode = (EmulatorTreeNode) getModel().getRoot();
         String[] pathComponents = pathToSelect.split("/");
 
         TreePath path = new TreePath(rootNode);
-        ConfigTreeNode currentNode = rootNode;
+        EmulatorTreeNode currentNode = rootNode;
 
         for (String pathComponent : pathComponents) {
             for (int i = 0; i < currentNode.getChildCount(); i++) {
-                ConfigTreeNode child = (ConfigTreeNode) currentNode.getChildAt(i);
+                EmulatorTreeNode child = (EmulatorTreeNode) currentNode.getChildAt(i);
                 if (pathComponent.equals(child.getName())) {
                     path = path.pathByAddingChild(child);
                     currentNode = child;
@@ -116,11 +116,11 @@ public class ConfigTree extends JTree {
 
     public Set<EmulationRulePanel> getTcPanels() {
         Set<EmulationRulePanel> tcPanels = new HashSet<>();
-        ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
+        EmulatorTreeNode rootNode = (EmulatorTreeNode) getModel().getRoot();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
-            ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
+            EmulatorTreeNode niNode = (EmulatorTreeNode) rootNode.getChildAt(i);
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                tcPanels.add((EmulationRulePanel) ((ConfigTreeNode) niNode.getChildAt(j)).getUserObject());
+                tcPanels.add((EmulationRulePanel) ((EmulatorTreeNode) niNode.getChildAt(j)).getUserObject());
             }
         }
 
