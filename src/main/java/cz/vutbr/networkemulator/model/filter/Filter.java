@@ -300,13 +300,8 @@ public class Filter {
             }
         }
 
-        System.out.println("TADY OK");
-        System.out.println("Flow Label = " + flowLabel);
-
         if (isFlowLabelSet()) {
-            System.out.println("FLOW LABEL SET");
             if (ipVersion.equals(IpVersion.IPv6)) {
-                System.out.println("IP VERSION IS 6");
                 cmd.append(String.format(" match %s flowlabel %s 0x000fffff", ipCmd, flowLabel));
             }
         }

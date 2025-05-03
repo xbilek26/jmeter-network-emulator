@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 public class CommandRunner {
 
     public static String runCommand(String command) {
-        System.out.println(command);
         StringBuilder output = new StringBuilder();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command);
