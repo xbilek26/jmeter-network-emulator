@@ -67,32 +67,31 @@ public class DelayPanel extends JPanel {
         return valueField.getText().trim();
     }
 
-    public String getJitter() {
-        return jitterField.getText().trim();
-    }
-
-    public String getCorrelation() {
-        return correlationField.getText().trim();
-    }
-
-    public String getDistribution() {
-        return (String) distributionsBox.getSelectedItem();
-    }
-
     public void setValue(String value) {
         valueField.setText(value);
+    }
+
+    public String getJitter() {
+        return jitterField.getText().trim();
     }
 
     public void setJitter(String jitter) {
         jitterField.setText(jitter);
     }
 
+    public String getCorrelation() {
+        return correlationField.getText().trim();
+    }
+
     public void setCorrelation(String correlation) {
         correlationField.setText(correlation);
+    }
+
+    public String getDistribution() {
+        return (String) distributionsBox.getSelectedItem();
     }
 
     public void setDistribution(String distribution) {
         distributionsBox.setSelectedItem(distribution);
     }
-
 }

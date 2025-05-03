@@ -41,5 +41,4 @@ public class LimitPanel extends JPanel {
     public void setValue(String value) {
         valueField.setText(value);
     }
-
 }

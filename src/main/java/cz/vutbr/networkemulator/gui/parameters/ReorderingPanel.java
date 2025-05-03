@@ -45,16 +45,15 @@ public class ReorderingPanel extends JPanel {
         return valueField.getText().trim();
     }
 
-    public String getCorrelation() {
-        return correlationField.getText().trim();
-    }
-
     public void setValue(String value) {
         valueField.setText(value);
+    }
+
+    public String getCorrelation() {
+        return correlationField.getText().trim();
     }
 
     public void setCorrelation(String correlation) {
         correlationField.setText(correlation);
     }
-
 }

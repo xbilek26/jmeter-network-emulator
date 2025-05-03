@@ -45,16 +45,15 @@ public class RatePanel extends JPanel {
         return valueField.getText().trim();
     }
 
-    public String getOverhead() {
-        return overheadField.getText().trim();
-    }
-
     public void setValue(String value) {
         valueField.setText(value);
+    }
+
+    public String getOverhead() {
+        return overheadField.getText().trim();
     }
 
     public void setOverhead(String overhead) {
         overheadField.setText(overhead);
     }
-
 }
