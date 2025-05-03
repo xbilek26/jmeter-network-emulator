@@ -23,7 +23,7 @@ public class EmulatorUtils {
     }
 
     public static ImageIcon getScaledIcon(ImageIcon icon, int width, int height) {
-        Image image = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(image);
     }
 }
