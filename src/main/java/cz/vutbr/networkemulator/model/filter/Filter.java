@@ -24,6 +24,7 @@ public class Filter {
     private String icmpCode;
     private String dscp;
     private String ecn;
+    private String flowLabel;
 
     public String getIpVersion() {
         return ipVersion.getName();
@@ -217,6 +218,18 @@ public class Filter {
         return ecn != null && !ecn.isEmpty();
     }
 
+    public String getFlowLabel() {
+        return flowLabel;
+    }
+
+    public void setFlowLabel(String flowLabel) {
+        this.flowLabel = flowLabel;
+    }
+
+    public boolean isFlowLabelSet() {
+        return flowLabel != null && !flowLabel.isEmpty();
+    }
+
     private String calculateDiffServValue() {
         int dscpInt;
         int ecnInt;
@@ -284,6 +297,17 @@ public class Filter {
                 cmd.append(String.format(" match %s dsfield %s 0xff", ipCmd, calculateDiffServValue()));
             } else if (ipVersion.equals(IpVersion.IPv6)) {
                 cmd.append(String.format(" match %s priority %s 0xff", ipCmd, calculateDiffServValue()));
+            }
+        }
+
+        System.out.println("TADY OK");
+        System.out.println("Flow Label = " + flowLabel);
+
+        if (isFlowLabelSet()) {
+            System.out.println("FLOW LABEL SET");
+            if (ipVersion.equals(IpVersion.IPv6)) {
+                System.out.println("IP VERSION IS 6");
+                cmd.append(String.format(" match %s flowlabel %s 0x000fffff", ipCmd, flowLabel));
             }
         }
     }

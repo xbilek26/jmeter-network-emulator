@@ -1,5 +1,6 @@
 package cz.vutbr.networkemulator.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
@@ -18,6 +20,7 @@ import cz.vutbr.networkemulator.gui.filter.FilterPanel;
 import cz.vutbr.networkemulator.gui.parameters.CorruptionPanel;
 import cz.vutbr.networkemulator.gui.parameters.DelayPanel;
 import cz.vutbr.networkemulator.gui.parameters.DuplicationPanel;
+import cz.vutbr.networkemulator.gui.parameters.LimitPanel;
 import cz.vutbr.networkemulator.gui.parameters.LossPanel;
 import cz.vutbr.networkemulator.gui.parameters.RatePanel;
 import cz.vutbr.networkemulator.gui.parameters.ReorderingPanel;
@@ -25,6 +28,7 @@ import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Corruption;
 import cz.vutbr.networkemulator.model.parameters.Delay;
 import cz.vutbr.networkemulator.model.parameters.Duplication;
+import cz.vutbr.networkemulator.model.parameters.Limit;
 import cz.vutbr.networkemulator.model.parameters.Loss;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
 import cz.vutbr.networkemulator.model.parameters.Rate;
@@ -46,6 +50,7 @@ public class EmulationRulePanel extends JPanel {
     private RatePanel ratePanel;
     private DuplicationPanel duplicationPanel;
     private CorruptionPanel corruptionPanel;
+    private LimitPanel limitPanel;
 
     public EmulationRulePanel(String niName, String classId) {
         setName(String.format("%s_%s", niName, classId));
@@ -70,6 +75,7 @@ public class EmulationRulePanel extends JPanel {
         filter.setIcmpCode(filterPanel.getIcmpCode());
         filter.setDscp(filterPanel.getDscp());
         filter.setEcn(filterPanel.getEcn());
+        filter.setFlowLabel(filterPanel.getFlowLabel());
 
         return filter;
     }
@@ -95,12 +101,14 @@ public class EmulationRulePanel extends JPanel {
                 duplicationPanel.getCorrelation()));
         parameters.add(new Corruption(
                 corruptionPanel.getValue()));
+        parameters.add(new Limit(
+                limitPanel.getValue()));
 
         return parameters;
     }
 
     private void init() {
-        setLayout(new MigLayout("", "grow", "grow"));
+        setLayout(new BorderLayout());
 
         filterPanel = new FilterPanel();
         delayPanel = new DelayPanel();
@@ -109,6 +117,7 @@ public class EmulationRulePanel extends JPanel {
         ratePanel = new RatePanel();
         duplicationPanel = new DuplicationPanel();
         corruptionPanel = new CorruptionPanel();
+        limitPanel = new LimitPanel();
 
         JPanel parametersPanel = new JPanel(new MigLayout("", "[grow][grow]", "grow"));
         parametersPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
@@ -119,11 +128,12 @@ public class EmulationRulePanel extends JPanel {
         parametersPanel.add(lossPanel, "growx, growy, wrap");
         parametersPanel.add(ratePanel, "growx, growy");
         parametersPanel.add(duplicationPanel, "growx, growy, wrap");
-        parametersPanel.add(corruptionPanel, "growx, growy, span");
+        parametersPanel.add(corruptionPanel, "growx, growy");
+        parametersPanel.add(limitPanel, "growx, growy");
 
-        add(filterPanel, "growx, growy, wrap");
-        add(parametersPanel, "growx, growy");
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, parametersPanel);
 
+        add(splitPane, BorderLayout.CENTER);
     }
 
     @Override
@@ -159,6 +169,7 @@ public class EmulationRulePanel extends JPanel {
         filter.addItem(filterPanel.getIcmpCode());
         filter.addItem(filterPanel.getDscp());
         filter.addItem(filterPanel.getEcn());
+        filter.addItem(filterPanel.getFlowLabel());
         te.setProperty(filter);
 
         CollectionProperty parameters = new CollectionProperty(PROPERTY_PARAMETERS + getName(), new ArrayList<>());
@@ -175,6 +186,7 @@ public class EmulationRulePanel extends JPanel {
         parameters.addItem(duplicationPanel.getValue());
         parameters.addItem(duplicationPanel.getCorrelation());
         parameters.addItem(corruptionPanel.getValue());
+        parameters.addItem(limitPanel.getValue());
         te.setProperty(parameters);
     }
 
@@ -197,6 +209,7 @@ public class EmulationRulePanel extends JPanel {
             filterPanel.setIcmpCode(filter.get(13).getStringValue());
             filterPanel.setDscp(filter.get(14).getStringValue());
             filterPanel.setEcn(filter.get(15).getStringValue());
+            filterPanel.setFlowLabel(filter.get(16).getStringValue());
         }
 
         JMeterProperty parametersProperty = te.getProperty(PROPERTY_PARAMETERS + getName());
@@ -214,6 +227,7 @@ public class EmulationRulePanel extends JPanel {
             duplicationPanel.setValue(parameters.get(10).getStringValue());
             duplicationPanel.setCorrelation(parameters.get(11).getStringValue());
             corruptionPanel.setValue(parameters.get(12).getStringValue());
+            limitPanel.setValue(parameters.get(13).getStringValue());
         }
     }
 }
