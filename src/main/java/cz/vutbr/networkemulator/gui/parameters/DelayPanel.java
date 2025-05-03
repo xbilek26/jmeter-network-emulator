@@ -6,18 +6,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cz.vutbr.networkemulator.model.parameters.Delay;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
 public class DelayPanel extends JPanel {
-
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 1000000;
-    private static final int MIN_JITTER = 0;
-    private static final int MAX_JITTER = 1000000;
-    private static final int MIN_CORRELATION = 0;
-    private static final int MAX_CORRELATION = 100;
 
     private static final String[] DISTRIBUTIONS = {
             // "uniform", not present in /usr/lib/tc
@@ -54,9 +48,9 @@ public class DelayPanel extends JPanel {
         distributionsLabel.setLabelFor(distributionsBox);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
-        jitterField.setInputVerifier(new RangeVerifier(MIN_JITTER, MAX_JITTER, true));
-        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
+        valueField.setInputVerifier(new RangeVerifier(Delay.MIN_VALUE, Delay.MAX_VALUE, true));
+        jitterField.setInputVerifier(new RangeVerifier(Delay.MIN_JITTER, Delay.MAX_JITTER, true));
+        correlationField.setInputVerifier(new RangeVerifier(Delay.MIN_CORRELATION, Delay.MAX_CORRELATION, true));
 
         // add components
         add(valueLabel);

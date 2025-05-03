@@ -5,16 +5,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cz.vutbr.networkemulator.model.parameters.Rate;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
 public class RatePanel extends JPanel {
-
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 10000;
-    private static final int MIN_OVERHEAD = 0;
-    private static final int MAX_OVERHEAD = 10000;
 
     private final JTextField valueField;
     private final JTextField overheadField;
@@ -35,8 +31,8 @@ public class RatePanel extends JPanel {
         overheadLabel.setLabelFor(overheadField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
-        overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD, false));
+        valueField.setInputVerifier(new RangeVerifier(Rate.MIN_VALUE, Rate.MAX_VALUE, true));
+        overheadField.setInputVerifier(new RangeVerifier(Rate.MIN_OVERHEAD, Rate.MAX_OVERHEAD, false));
 
         // add components
         add(valueLabel);

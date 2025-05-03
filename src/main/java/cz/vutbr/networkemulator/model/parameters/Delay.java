@@ -6,6 +6,13 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class Delay extends Parameter {
 
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 1000000;
+    public static final int MIN_JITTER = 0;
+    public static final int MAX_JITTER = 1000000;
+    public static final int MIN_CORRELATION = 0;
+    public static final int MAX_CORRELATION = 100;
+
     private String jitter;
     private String correlation;
     private String distribution;
@@ -84,7 +91,7 @@ public class Delay extends Parameter {
                 }
             }
 
-            tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_delay"), sb.toString()});
+            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_delay"), sb.toString() });
         }
     }
 }

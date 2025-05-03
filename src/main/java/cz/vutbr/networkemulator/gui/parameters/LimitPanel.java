@@ -5,14 +5,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cz.vutbr.networkemulator.model.parameters.Limit;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
 public class LimitPanel extends JPanel {
-
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 100000000;
 
     private final JTextField valueField;
 
@@ -29,7 +27,7 @@ public class LimitPanel extends JPanel {
         valueLabel.setLabelFor(valueField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
+        valueField.setInputVerifier(new RangeVerifier(Limit.MIN_VALUE, Limit.MAX_VALUE, true));
 
         // add components
         add(valueLabel);

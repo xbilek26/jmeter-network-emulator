@@ -6,6 +6,11 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class Rate extends Parameter {
 
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 10000;
+    public static final int MIN_OVERHEAD = 0;
+    public static final int MAX_OVERHEAD = 10000;
+
     private String overhead;
 
     public Rate(String value, String overhead) {
@@ -43,7 +48,7 @@ public class Rate extends Parameter {
             if (isOverheadSet()) {
                 sb.append(String.format(", overhead=%sB", overhead));
             }
-            tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_rate"), sb.toString()});
+            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_rate"), sb.toString() });
         }
     }
 }

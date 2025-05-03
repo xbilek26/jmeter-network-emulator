@@ -5,16 +5,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import cz.vutbr.networkemulator.model.parameters.Reordering;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
 public class ReorderingPanel extends JPanel {
-
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 100;
-    private static final int MIN_CORRELATION = 0;
-    private static final int MAX_CORRELATION = 100;
 
     private final JTextField valueField;
     private final JTextField correlationField;
@@ -35,8 +31,8 @@ public class ReorderingPanel extends JPanel {
         correlationLabel.setLabelFor(correlationField);
 
         // verifiers
-        valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
-        correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
+        valueField.setInputVerifier(new RangeVerifier(Reordering.MIN_VALUE, Reordering.MAX_VALUE, true));
+        correlationField.setInputVerifier(new RangeVerifier(Reordering.MIN_CORRELATION, Reordering.MAX_CORRELATION, true));
 
         // add components
         add(valueLabel);

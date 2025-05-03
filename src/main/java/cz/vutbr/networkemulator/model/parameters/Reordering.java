@@ -6,6 +6,11 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class Reordering extends Parameter {
 
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 100;
+    public static final int MIN_CORRELATION = 0;
+    public static final int MAX_CORRELATION = 100;
+
     private String correlation;
 
     public Reordering(String value, String correlation) {
@@ -44,7 +49,7 @@ public class Reordering extends Parameter {
                 sb.append(String.format(", corr=%s%%", correlation));
             }
 
-            tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_reordering"), sb.toString()});
+            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_reordering"), sb.toString() });
         }
     }
 

@@ -6,6 +6,9 @@ import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 
 public class Corruption extends Parameter {
 
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 100;
+
     public Corruption(String value) {
         super(value);
     }
@@ -20,7 +23,7 @@ public class Corruption extends Parameter {
     @Override
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
-            tableModel.addRow(new Object[]{NetworkEmulatorUtils.getString("table_corruption"), getValue() + "%"});
+            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_corruption"), getValue() + "%" });
         }
     }
 }
