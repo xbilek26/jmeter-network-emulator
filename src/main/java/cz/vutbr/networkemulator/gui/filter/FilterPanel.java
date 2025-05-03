@@ -72,7 +72,7 @@ public class FilterPanel extends JPanel {
     private final JTextField srcPortField;
     private final JComboBox<String> srcL4ProtocolBox;
     private final JTextField dstPortField;
-    private final JComboBox<String> dstL4protocolBox;
+    private final JComboBox<String> dstL4ProtocolBox;
     private final JTextField icmpTypeField;
     private final JTextField icmpCodeField;
     private final JPanel protocolCards;
@@ -109,7 +109,7 @@ public class FilterPanel extends JPanel {
         srcPortField = new JTextField(10);
         srcL4ProtocolBox = new JComboBox<>(PROTOCOLS);
         dstPortField = new JTextField(10);
-        dstL4protocolBox = new JComboBox<>(PROTOCOLS);
+        dstL4ProtocolBox = new JComboBox<>(PROTOCOLS);
         icmpTypeField = new JTextField(10);
         icmpCodeField = new JTextField(10);
         ipv4DscpField = new JTextField(10);
@@ -183,8 +183,8 @@ public class FilterPanel extends JPanel {
             }
         });
 
-        dstL4protocolBox.addActionListener(_ -> {
-            String selected = (String) dstL4protocolBox.getSelectedItem();
+        dstL4ProtocolBox.addActionListener(_ -> {
+            String selected = (String) dstL4ProtocolBox.getSelectedItem();
             Integer port = PROTOCOL_PORTS.get(selected);
             if (!selected.isEmpty()) {
                 dstPortField.setText(port.toString());
@@ -249,7 +249,7 @@ public class FilterPanel extends JPanel {
         portPanel.add(srcL4ProtocolBox, "growx, growy, wrap");
         portPanel.add(dstPortLabel);
         portPanel.add(dstPortField, "growx, growy");
-        portPanel.add(dstL4protocolBox, "growx, growy");
+        portPanel.add(dstL4ProtocolBox, "growx, growy");
 
         JPanel icmpPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
         icmpPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_icmp")));
@@ -422,16 +422,32 @@ public class FilterPanel extends JPanel {
         return srcPortField.getText().trim();
     }
 
-    public void setSrcPort(String srcPort) {
-        srcPortField.setText(srcPort);
+    public void setSrcPort(String port) {
+        srcPortField.setText(port);
+    }
+
+    public String getSrcL4Protocol() {
+        return (String) srcL4ProtocolBox.getSelectedItem();
+    }
+
+    public void setSrcL4Protocol(String l4Protocol) {
+        srcL4ProtocolBox.setSelectedItem(l4Protocol);
     }
 
     public String getDstPort() {
         return dstPortField.getText().trim();
     }
 
-    public void setDstPort(String dstPort) {
-        dstPortField.setText(dstPort);
+    public void setDstPort(String port) {
+        dstPortField.setText(port);
+    }
+
+    public String getDstL4Protocol() {
+        return (String) dstL4ProtocolBox.getSelectedItem();
+    }
+
+    public void setDstL4Protocol(String l4Protocol) {
+        dstL4ProtocolBox.setSelectedItem(l4Protocol);
     }
 
     public String getIcmpType() {

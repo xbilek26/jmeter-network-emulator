@@ -165,7 +165,9 @@ public class EmulationRulePanel extends JPanel {
         filter.addItem(filterPanel.getIpv6DstAddress());
         filter.addItem(filterPanel.getIpv6DstSubnetPrefix());
         filter.addItem(filterPanel.getSrcPort());
+        filter.addItem(filterPanel.getSrcL4Protocol());
         filter.addItem(filterPanel.getDstPort());
+        filter.addItem(filterPanel.getDstL4Protocol());
         filter.addItem(filterPanel.getIcmpType());
         filter.addItem(filterPanel.getIcmpCode());
         filter.addItem(filterPanel.getDscp());
@@ -206,12 +208,14 @@ public class EmulationRulePanel extends JPanel {
             filterPanel.setIpv6DstAddress(filter.get(8).getStringValue());
             filterPanel.setIpv6DstSubnetPrefix(filter.get(9).getStringValue());
             filterPanel.setSrcPort(filter.get(10).getStringValue());
-            filterPanel.setDstPort(filter.get(11).getStringValue());
-            filterPanel.setIcmpType(filter.get(12).getStringValue());
-            filterPanel.setIcmpCode(filter.get(13).getStringValue());
-            filterPanel.setDscp(filter.get(14).getStringValue());
-            filterPanel.setEcn(filter.get(15).getStringValue());
-            filterPanel.setFlowLabel(filter.get(16).getStringValue());
+            filterPanel.setSrcL4Protocol(filter.get(11).getStringValue());
+            filterPanel.setDstPort(filter.get(12).getStringValue());
+            filterPanel.setDstL4Protocol(filter.get(13).getStringValue());
+            filterPanel.setIcmpType(filter.get(14).getStringValue());
+            filterPanel.setIcmpCode(filter.get(15).getStringValue());
+            filterPanel.setDscp(filter.get(16).getStringValue());
+            filterPanel.setEcn(filter.get(17).getStringValue());
+            filterPanel.setFlowLabel(filter.get(18).getStringValue());
         }
 
         JMeterProperty parametersProperty = te.getProperty(PROPERTY_PARAMETERS + getName());
