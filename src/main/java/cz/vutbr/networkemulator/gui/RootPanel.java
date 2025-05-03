@@ -2,9 +2,9 @@ package cz.vutbr.networkemulator.gui;
 
 import javax.swing.JPanel;
 
-public class DefaultRootPanel extends JPanel {
+public class RootPanel extends JPanel {
 
-    public DefaultRootPanel(String name) {
+    public RootPanel(String name) {
         setName(name);
     }
 

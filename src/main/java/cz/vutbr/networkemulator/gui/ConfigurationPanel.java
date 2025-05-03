@@ -50,7 +50,7 @@ public class ConfigurationPanel extends JPanel {
     private final String BTN_ADD = "add";
     private final String BTN_REMOVE = "remove";
 
-    private final String DEFAULT_ROOT_PANEL = "default_root_panel";
+    private final String ROOT_PANEL = "root_panel";
     private final String NETWORK_INTERFACE_PANEL = "network_interface_panel";
 
     private ConfigTreeNode rootNode;
@@ -64,7 +64,7 @@ public class ConfigurationPanel extends JPanel {
 
     private JPanel rightPanel;
 
-    private DefaultRootPanel defaultRootPanel;
+    private RootPanel rootPanel;
     private NetworkInterfacePanel networkInterfacePanel;
 
     private final NetworkEmulatorController controller;
@@ -76,7 +76,6 @@ public class ConfigurationPanel extends JPanel {
 
     private void init() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JSplitPane splitPane;
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createLeftPanel(), createRightPanel());
@@ -120,9 +119,9 @@ public class ConfigurationPanel extends JPanel {
 
     private JPanel createRightPanel() {
         rightPanel = new JPanel(new CardLayout());
-        defaultRootPanel = new DefaultRootPanel(DEFAULT_ROOT_PANEL);
-        rootNode.setUserObject(defaultRootPanel);
-        rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
+        rootPanel = new RootPanel(ROOT_PANEL);
+        rootNode.setUserObject(rootPanel);
+        rightPanel.add(rootPanel, rootPanel.getName());
         networkInterfacePanel = new NetworkInterfacePanel(NETWORK_INTERFACE_PANEL);
 
         JScrollPane niScrollPane = new JScrollPane(networkInterfacePanel);
@@ -245,7 +244,7 @@ public class ConfigurationPanel extends JPanel {
         String name = ((ConfigTreeNode) path.getLastPathComponent()).getName();
 
         switch (object) {
-            case DefaultRootPanel rootPanel -> {
+            case RootPanel rootPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REFRESH);
                 rightPanelCards.show(rightPanel, rootPanel.getName());
                 rootPanel.update();
@@ -356,7 +355,7 @@ public class ConfigurationPanel extends JPanel {
             }
         }
 
-        rightPanel.add(defaultRootPanel, defaultRootPanel.getName());
+        rightPanel.add(rootPanel, rootPanel.getName());
         rightPanel.add(networkInterfacePanel, networkInterfacePanel.getName());
 
         SwingUtilities.invokeLater(() -> {
