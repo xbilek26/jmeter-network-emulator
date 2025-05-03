@@ -71,7 +71,9 @@ public class TrafficControl {
                     .replace("bit", "bps")
                     .replaceAll("\\s+", " ");
 
-            output.append("    ").append(qdiscLine).append("\n");
+            qdiscLine = String.format("%s: %s", dev, qdiscLine);
+
+            output.append(qdiscLine).append("\n");
 
             // find parent x:y
             String parent = null;
