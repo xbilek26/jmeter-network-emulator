@@ -15,7 +15,7 @@ public class Rate extends Parameter {
     public static final boolean IS_VALUE_DOUBLE = true;
     public static final boolean IS_OVERHEAD_DOUBLE = false;
 
-    private String overhead;
+    private final String overhead;
 
     public Rate(String value, String overhead) {
         super(value);
@@ -42,14 +42,6 @@ public class Rate extends Parameter {
             }
             tableModel.addRow(new Object[] { EmulatorUtils.getString("table_rate"), sb.toString() });
         }
-    }
-
-    public String getOverhead() {
-        return overhead;
-    }
-
-    public void setOverhead(String overhead) {
-        this.overhead = overhead;
     }
 
     @Override

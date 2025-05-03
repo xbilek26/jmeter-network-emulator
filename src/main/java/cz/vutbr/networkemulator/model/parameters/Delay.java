@@ -18,9 +18,9 @@ public class Delay extends Parameter {
     public static final boolean IS_JITTER_DOUBLE = true;
     public static final boolean IS_CORRELATION_DOUBLE = true;
 
-    private String jitter;
-    private String correlation;
-    private String distribution;
+    private final String jitter;
+    private final String correlation;
+    private final String distribution;
 
     public Delay(String delay, String jitter, String correlation, String distribution) {
         super(delay);
@@ -62,30 +62,6 @@ public class Delay extends Parameter {
 
             tableModel.addRow(new Object[] { EmulatorUtils.getString("table_delay"), sb.toString() });
         }
-    }
-
-    public String getJitter() {
-        return jitter;
-    }
-
-    public void setJitter(String jitter) {
-        this.jitter = jitter;
-    }
-
-    public String getCorrelation() {
-        return correlation;
-    }
-
-    public void setCorrelation(String correlation) {
-        this.correlation = correlation;
-    }
-
-    public String getDistribution() {
-        return distribution;
-    }
-
-    public void setDistribution(String distribution) {
-        this.distribution = distribution;
     }
 
     @Override

@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 public abstract class Parameter {
 
-    private String value;
+    private final String value;
 
     protected Parameter(String value) {
         this.value = value;
@@ -12,10 +12,6 @@ public abstract class Parameter {
 
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public abstract boolean isValueValid();

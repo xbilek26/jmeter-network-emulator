@@ -15,7 +15,7 @@ public class Corruption extends Parameter {
     public static final boolean IS_VALUE_DOUBLE = true;
     public static final boolean IS_CORRELATION_DOUBLE = true;
 
-    private String correlation;
+    private final String correlation;
 
     public Corruption(String value, String correlation) {
         super(value);

@@ -15,7 +15,7 @@ public class Reordering extends Parameter {
     public static final boolean IS_VALUE_DOUBLE = true;
     public static final boolean IS_CORRELATION_DOUBLE = true;
 
-    private String correlation;
+    private final String correlation;
 
     public Reordering(String value, String correlation) {
         super(value);
@@ -43,14 +43,6 @@ public class Reordering extends Parameter {
 
             tableModel.addRow(new Object[] { EmulatorUtils.getString("table_reordering"), sb.toString() });
         }
-    }
-
-    public String getCorrelation() {
-        return correlation;
-    }
-
-    public void setCorrelation(String correlation) {
-        this.correlation = correlation;
     }
 
     @Override
