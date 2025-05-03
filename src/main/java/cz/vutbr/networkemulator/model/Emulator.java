@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Frantisek Bilek (xbilek26)
  */
-public class NetworkEmulator {
+public class Emulator {
 
-    private static final Logger log = LoggerFactory.getLogger(NetworkEmulator.class);
+    private static final Logger log = LoggerFactory.getLogger(Emulator.class);
 
     private final List<NetworkInterface> networkInterfaces;
 
-    public NetworkEmulator() {
+    public Emulator() {
         this.networkInterfaces = new ArrayList<>();
         log.info("Created network emulator");
     }

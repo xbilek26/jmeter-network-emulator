@@ -27,17 +27,17 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
-import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.EmulatorTestElement;
+import cz.vutbr.networkemulator.controller.EmulatorController;
 import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import net.miginfocom.swing.MigLayout;
 
-public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
+public class EmulatorMainGui extends AbstractJMeterGuiComponent {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorGui.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulatorMainGui.class);
 
-    private final NetworkEmulatorController controller;
+    private final EmulatorController controller;
     private boolean isRunning;
 
     private ConfigurationPanel configurationPanel;
@@ -46,8 +46,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     // private JLabel emulatorState;
     private JSyntaxTextArea currentSettings;
 
-    public NetworkEmulatorGui() {
-        controller = NetworkEmulatorController.getInstance();
+    public EmulatorMainGui() {
+        controller = EmulatorController.getInstance();
         controller.initialize();
         isRunning = false;
         init();
@@ -149,7 +149,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public static void registerIcon() {
         ImageIcon icon = EmulatorUtils.getImage("network_emulator.gif");
         icon = EmulatorUtils.getScaledIcon(icon, 16, 16);
-        GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
+        GUIFactory.registerIcon(EmulatorMainGui.class.getName(), icon);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     @Override
     public TestElement makeTestElement() {
-        NetworkEmulatorTestElement element = new NetworkEmulatorTestElement();
+        EmulatorTestElement element = new EmulatorTestElement();
         configureTestElement(element);
 
         element.setEmulationRunning(false);
@@ -176,8 +176,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         super.modifyTestElement(element);
         configurationPanel.modifyTestElement(element);
 
-        if (element instanceof NetworkEmulatorTestElement networkEmulatorTestElement) {
-            networkEmulatorTestElement.setEmulationRunning(isRunning);
+        if (element instanceof EmulatorTestElement emulatorTestElement) {
+            emulatorTestElement.setEmulationRunning(isRunning);
         }
     }
 
@@ -186,7 +186,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         super.configure(element);
         configurationPanel.configure(element);
 
-        boolean running = ((NetworkEmulatorTestElement) element).isEmulationRunning();
+        boolean running = ((EmulatorTestElement) element).isEmulationRunning();
 
         btnStart.setEnabled(!running);
         btnStop.setEnabled(running);

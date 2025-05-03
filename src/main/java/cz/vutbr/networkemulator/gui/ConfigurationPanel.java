@@ -29,7 +29,7 @@ import org.apache.jmeter.testelement.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.controller.EmulatorController;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTree;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNode;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNodeRenderer;
@@ -67,10 +67,10 @@ public class ConfigurationPanel extends JPanel {
     private RootPanel rootPanel;
     private NetworkInterfacePanel networkInterfacePanel;
 
-    private final NetworkEmulatorController controller;
+    private final EmulatorController controller;
 
     public ConfigurationPanel() {
-        controller = NetworkEmulatorController.getInstance();
+        controller = EmulatorController.getInstance();
         init();
     }
 

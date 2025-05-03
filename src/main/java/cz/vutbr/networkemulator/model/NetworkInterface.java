@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents a network interface that holds emulationRules.
+ * Represents a network interface that holds emulation rules.
  *
  * @author Frantisek Bilek (xbilek26)
  */

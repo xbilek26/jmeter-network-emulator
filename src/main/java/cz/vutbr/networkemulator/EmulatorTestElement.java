@@ -27,14 +27,14 @@ import cz.vutbr.networkemulator.utils.EmulatorUtils;
  *
  * @author Frantisek Bilek (xbilek26)
  */
-public class NetworkEmulatorTestElement extends AbstractTestElement {
+public class EmulatorTestElement extends AbstractTestElement {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorTestElement.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulatorTestElement.class);
 
-    private static final String PROP_EMULATION_RUNNING = "NetworkEmulator.emulationRunning";
+    private static final String PROP_EMULATION_RUNNING = "Emulator.emulationRunning";
 
-    public NetworkEmulatorTestElement() {
+    public EmulatorTestElement() {
         System.out.println("creating network emulator test element");
         registerAddToTreeListener();
         registerDuplicateListener();
@@ -57,11 +57,11 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
             setEmulationRunning(false);
             ActionRouter.getInstance().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "stop_emulation"));
             GuiPackage guiPack = GuiPackage.getInstance();
-            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
-            if (networkEmulatorNodes.size() > 1) {
-                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
-                TestElement testElement = networkEmulator.getTestElement();
-                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+            List<JMeterTreeNode> emulatorNodes = guiPack.getTreeModel().getNodesOfType(EmulatorTestElement.class);
+            if (emulatorNodes.size() > 1) {
+                JMeterTreeNode emulator = emulatorNodes.getLast();
+                TestElement testElement = emulator.getTestElement();
+                guiPack.getTreeModel().removeNodeFromParent(emulator);
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
@@ -77,11 +77,11 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
             setEmulationRunning(false);
             ActionRouter.getInstance().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "stop_emulation"));
             GuiPackage guiPack = GuiPackage.getInstance();
-            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
-            if (networkEmulatorNodes.size() > 1) {
-                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
-                TestElement testElement = networkEmulator.getTestElement();
-                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+            List<JMeterTreeNode> emulatorNodes = guiPack.getTreeModel().getNodesOfType(EmulatorTestElement.class);
+            if (emulatorNodes.size() > 1) {
+                JMeterTreeNode emulator = emulatorNodes.getLast();
+                TestElement testElement = emulator.getTestElement();
+                guiPack.getTreeModel().removeNodeFromParent(emulator);
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();
@@ -97,11 +97,11 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
             setEmulationRunning(false);
             ActionRouter.getInstance().actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "stop_emulation"));
             GuiPackage guiPack = GuiPackage.getInstance();
-            List<JMeterTreeNode> networkEmulatorNodes = guiPack.getTreeModel().getNodesOfType(NetworkEmulatorTestElement.class);
-            if (networkEmulatorNodes.size() > 1) {
-                JMeterTreeNode networkEmulator = networkEmulatorNodes.getLast();
-                TestElement testElement = networkEmulator.getTestElement();
-                guiPack.getTreeModel().removeNodeFromParent(networkEmulator);
+            List<JMeterTreeNode> emulatorNodes = guiPack.getTreeModel().getNodesOfType(EmulatorTestElement.class);
+            if (emulatorNodes.size() > 1) {
+                JMeterTreeNode emulator = emulatorNodes.getLast();
+                TestElement testElement = emulator.getTestElement();
+                guiPack.getTreeModel().removeNodeFromParent(emulator);
                 guiPack.removeNode(testElement);
                 testElement.removed();
                 guiPack.updateCurrentGui();

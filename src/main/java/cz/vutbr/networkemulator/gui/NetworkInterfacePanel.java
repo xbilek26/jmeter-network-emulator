@@ -14,19 +14,19 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
+import cz.vutbr.networkemulator.controller.EmulatorController;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
 import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class NetworkInterfacePanel extends JPanel {
 
-    private final NetworkEmulatorController controller;
+    private final EmulatorController controller;
     private final JPanel contentPanel;
 
     public NetworkInterfacePanel(String name) {
         setName(name);
-        controller = NetworkEmulatorController.getInstance();
+        controller = EmulatorController.getInstance();
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(0, 5, 5, 5));
 
