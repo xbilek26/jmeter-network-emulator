@@ -1,10 +1,6 @@
 package cz.vutbr.networkemulator.gui.parameters;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +8,7 @@ import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
+import net.miginfocom.swing.MigLayout;
 
 public class DelayPanel extends JPanel {
 
@@ -36,39 +33,40 @@ public class DelayPanel extends JPanel {
     private final JComboBox<String> distributionsBox;
 
     public DelayPanel() {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        // layout and border
+        setLayout(new MigLayout("insets 5", "[][grow][][grow][][grow][][grow]", "grow"));
         setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_delay")));
 
-        valueField = new JTextField(8);
-        jitterField = new JTextField(8);
-        correlationField = new JTextField(8);
+        // initialisations
+        valueField = new JTextField(10);
+        jitterField = new JTextField(10);
+        correlationField = new JTextField(10);
         distributionsBox = new JComboBox<>(DISTRIBUTIONS);
-        distributionsBox.setPreferredSize(new Dimension(180, correlationField.getPreferredSize().height));
 
+        // labels
         JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_value"));
-        valueLabel.setLabelFor(valueField);
         JLabel jitterLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_jitter"));
-        jitterLabel.setLabelFor(jitterField);
         JLabel correlationLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_correlation"));
-        correlationLabel.setLabelFor(correlationField);
         JLabel distributionsLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_distribution"));
+        valueLabel.setLabelFor(valueField);
+        jitterLabel.setLabelFor(jitterField);
+        correlationLabel.setLabelFor(correlationField);
         distributionsLabel.setLabelFor(distributionsBox);
 
+        // verifiers
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
         jitterField.setInputVerifier(new RangeVerifier(MIN_JITTER, MAX_JITTER, true));
         correlationField.setInputVerifier(new RangeVerifier(MIN_CORRELATION, MAX_CORRELATION, true));
 
+        // add components
         add(valueLabel);
-        add(valueField);
-        add(Box.createHorizontalStrut(5));
+        add(valueField, "growx, growy, gapright 5");
         add(jitterLabel);
-        add(jitterField);
-        add(Box.createHorizontalStrut(5));
+        add(jitterField, "growx, growy, gapright 5");
         add(correlationLabel);
-        add(correlationField);
-        add(Box.createHorizontalStrut(5));
+        add(correlationField, "growx, growy, gapright 5");
         add(distributionsLabel);
-        add(distributionsBox);
+        add(distributionsBox, "growx, growy");
     }
 
     public String getValue() {

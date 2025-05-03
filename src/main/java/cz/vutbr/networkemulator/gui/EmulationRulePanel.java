@@ -5,7 +5,7 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import org.apache.jmeter.testelement.TestElement;
@@ -29,11 +29,12 @@ import cz.vutbr.networkemulator.model.parameters.Loss;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
 import cz.vutbr.networkemulator.model.parameters.Rate;
 import cz.vutbr.networkemulator.model.parameters.Reordering;
+import net.miginfocom.swing.MigLayout;
 
-public class TrafficClassPanel extends JPanel {
+public class EmulationRulePanel extends JPanel {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(TrafficClassPanel.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulationRulePanel.class);
 
     private final String PROPERTY_FILTER = "filter_";
     private final String PROPERTY_PARAMETERS = "parameters_";
@@ -46,7 +47,7 @@ public class TrafficClassPanel extends JPanel {
     private DuplicationPanel duplicationPanel;
     private CorruptionPanel corruptionPanel;
 
-    public TrafficClassPanel(String niName, String classId) {
+    public EmulationRulePanel(String niName, String classId) {
         setName(String.format("%s_%s", niName, classId));
         init();
     }
@@ -67,6 +68,8 @@ public class TrafficClassPanel extends JPanel {
         filter.setDstPort(filterPanel.getDstPort());
         filter.setIcmpType(filterPanel.getIcmpType());
         filter.setIcmpCode(filterPanel.getIcmpCode());
+        filter.setDscp(filterPanel.getDscp());
+        filter.setEcn(filterPanel.getEcn());
 
         return filter;
     }
@@ -77,33 +80,28 @@ public class TrafficClassPanel extends JPanel {
                 delayPanel.getValue(),
                 delayPanel.getJitter(),
                 delayPanel.getCorrelation(),
-                delayPanel.getDistribution()
-        ));
+                delayPanel.getDistribution()));
         parameters.add(new Reordering(
                 reorderingPanel.getValue(),
-                reorderingPanel.getCorrelation()
-        ));
+                reorderingPanel.getCorrelation()));
         parameters.add(new Loss(
                 lossPanel.getValue(),
-                lossPanel.getCorrelation()
-        ));
+                lossPanel.getCorrelation()));
         parameters.add(new Rate(
                 ratePanel.getValue(),
-                ratePanel.getOverhead()
-        ));
+                ratePanel.getOverhead()));
         parameters.add(new Duplication(
                 duplicationPanel.getValue(),
-                duplicationPanel.getCorrelation()
-        ));
+                duplicationPanel.getCorrelation()));
         parameters.add(new Corruption(
-                corruptionPanel.getValue()
-        ));
+                corruptionPanel.getValue()));
 
         return parameters;
     }
 
     private void init() {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        setLayout(new MigLayout("", "grow", "grow"));
+
         filterPanel = new FilterPanel();
         delayPanel = new DelayPanel();
         reorderingPanel = new ReorderingPanel();
@@ -112,13 +110,20 @@ public class TrafficClassPanel extends JPanel {
         duplicationPanel = new DuplicationPanel();
         corruptionPanel = new CorruptionPanel();
 
-        add(filterPanel);
-        add(delayPanel);
-        add(reorderingPanel);
-        add(lossPanel);
-        add(ratePanel);
-        add(duplicationPanel);
-        add(corruptionPanel);
+        JPanel parametersPanel = new JPanel(new MigLayout("", "[grow][grow]", "grow"));
+        parametersPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
+
+        parametersPanel.add(filterPanel, "growx, growy, span");
+        parametersPanel.add(delayPanel, "growx, growy, span");
+        parametersPanel.add(reorderingPanel, "growx, growy");
+        parametersPanel.add(lossPanel, "growx, growy, wrap");
+        parametersPanel.add(ratePanel, "growx, growy");
+        parametersPanel.add(duplicationPanel, "growx, growy, wrap");
+        parametersPanel.add(corruptionPanel, "growx, growy, span");
+
+        add(filterPanel, "growx, growy, wrap");
+        add(parametersPanel, "growx, growy");
+
     }
 
     @Override
@@ -152,6 +157,8 @@ public class TrafficClassPanel extends JPanel {
         filter.addItem(filterPanel.getDstPort());
         filter.addItem(filterPanel.getIcmpType());
         filter.addItem(filterPanel.getIcmpCode());
+        filter.addItem(filterPanel.getDscp());
+        filter.addItem(filterPanel.getEcn());
         te.setProperty(filter);
 
         CollectionProperty parameters = new CollectionProperty(PROPERTY_PARAMETERS + getName(), new ArrayList<>());
@@ -188,6 +195,8 @@ public class TrafficClassPanel extends JPanel {
             filterPanel.setDstPort(filter.get(11).getStringValue());
             filterPanel.setIcmpType(filter.get(12).getStringValue());
             filterPanel.setIcmpCode(filter.get(13).getStringValue());
+            filterPanel.setDscp(filter.get(14).getStringValue());
+            filterPanel.setEcn(filter.get(15).getStringValue());
         }
 
         JMeterProperty parametersProperty = te.getProperty(PROPERTY_PARAMETERS + getName());

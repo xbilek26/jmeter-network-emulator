@@ -42,7 +42,7 @@ public class ConfigurationPanel extends JPanel {
     private static final Logger log = LoggerFactory.getLogger(ConfigurationPanel.class);
 
     private final String PROPERTY_NETWORK_INTERFACES = "network_interfaces";
-    private final String PROPERTY_TRAFFIC_CLASSES = "traffic_classes_";
+    private final String PROPERTY_EMULATION_RULES = "emulation_rules_";
     private final String PROPERTY_EXPANDED_PATHS = "expanded_paths";
     private final String PROPERTY_SELECTED_PATH = "selected_path";
 
@@ -99,9 +99,9 @@ public class ConfigurationPanel extends JPanel {
         btnRefresh = new JButton(NetworkEmulatorUtils.getString("button_refresh"));
         btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
         btnAdd = new JButton(NetworkEmulatorUtils.getString("button_add"));
-        btnAdd.addActionListener(_ -> addTrafficClass());
+        btnAdd.addActionListener(_ -> addEmulationRule());
         btnRemove = new JButton(NetworkEmulatorUtils.getString("button_remove"));
-        btnRemove.addActionListener(_ -> removeTrafficClass());
+        btnRemove.addActionListener(_ -> removeEmulationRule());
 
         buttonPanel = new JPanel(new CardLayout());
         buttonPanel.add(btnRefresh, BTN_REFRESH);
@@ -166,7 +166,7 @@ public class ConfigurationPanel extends JPanel {
         tree.setSelectionPath(new TreePath(rootNode));
     }
 
-    private void addTrafficClass() {
+    private void addEmulationRule() {
         Enumeration<TreePath> expandedEnum = tree.getExpandedDescendants(new TreePath(rootNode));
         List<TreePath> expandedPaths = Collections.list(expandedEnum);
 
@@ -183,7 +183,7 @@ public class ConfigurationPanel extends JPanel {
         }
         String classId = String.format("1:%s", newTcNodeNumber);
 
-        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, classId);
+        EmulationRulePanel tcPanel = new EmulationRulePanel(niName, classId);
         JScrollPane tcScrollPane = new JScrollPane(tcPanel);
         tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -205,7 +205,7 @@ public class ConfigurationPanel extends JPanel {
         tree.setSelectionPath(new TreePath(treeModel.getPathToRoot(tcNode)));
     }
 
-    private void removeTrafficClass() {
+    private void removeEmulationRule() {
         Enumeration<TreePath> expandedEnum = tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()));
         List<TreePath> expandedPaths = Collections.list(expandedEnum);
 
@@ -220,7 +220,7 @@ public class ConfigurationPanel extends JPanel {
 
         niNode.remove(tcNode);
 
-        TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+        EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
         rightPanel.remove(tcPanel);
         SwingUtilities.invokeLater(() -> {
             rightPanel.revalidate();
@@ -256,7 +256,7 @@ public class ConfigurationPanel extends JPanel {
                 rightPanelCards.show(rightPanel, niPanel.getName());
                 niPanel.update(name);
             }
-            case TrafficClassPanel tcPanel -> {
+            case EmulationRulePanel tcPanel -> {
                 buttonPanelCards.show(buttonPanel, BTN_REMOVE);
                 rightPanelCards.show(rightPanel, tcPanel.getName());
             }
@@ -276,9 +276,9 @@ public class ConfigurationPanel extends JPanel {
                 ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
                 String classId = tcNode.getName();
 
-                controller.addTrafficClass(niName, classId);
+                controller.addEmulationRule(niName, classId);
 
-                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+                EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
                 controller.setFilter(niName, classId, tcPanel.getFilter());
                 controller.setParameters(niName, classId, tcPanel.getParameters());
             }
@@ -301,10 +301,10 @@ public class ConfigurationPanel extends JPanel {
             String niName = niNode.getName();
             niNames.addItem(niName);
 
-            CollectionProperty classIds = new CollectionProperty(PROPERTY_TRAFFIC_CLASSES + niName, new ArrayList<>());
+            CollectionProperty classIds = new CollectionProperty(PROPERTY_EMULATION_RULES + niName, new ArrayList<>());
             for (int j = 0; j < niNode.getChildCount(); j++) {
                 ConfigTreeNode tcNode = (ConfigTreeNode) niNode.getChildAt(j);
-                TrafficClassPanel tcPanel = (TrafficClassPanel) tcNode.getUserObject();
+                EmulationRulePanel tcPanel = (EmulationRulePanel) tcNode.getUserObject();
                 String classId = tcNode.getName();
                 classIds.addItem(classId);
 
@@ -334,11 +334,11 @@ public class ConfigurationPanel extends JPanel {
                 niNode.setName(niName);
                 rootNode.add(niNode);
 
-                JMeterProperty classIdsPropery = te.getProperty(PROPERTY_TRAFFIC_CLASSES + niName);
+                JMeterProperty classIdsPropery = te.getProperty(PROPERTY_EMULATION_RULES + niName);
                 if (classIdsPropery instanceof CollectionProperty classIds) {
                     for (int j = 0; j < classIds.size(); j++) {
                         String classId = classIds.get(j).getStringValue();
-                        TrafficClassPanel tcPanel = new TrafficClassPanel(niName, classId);
+                        EmulationRulePanel tcPanel = new EmulationRulePanel(niName, classId);
                         JScrollPane tcScrollPane = new JScrollPane(tcPanel);
                         tcScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
                         tcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

@@ -44,12 +44,12 @@ public class NetworkInterfacePanel extends JPanel {
     public void update(String niName) {
         contentPanel.removeAll();
 
-        List<String> classIds = controller.getTrafficClasses(niName);
+        List<String> classIds = controller.getEmulationRule(niName);
         classIds.forEach(classId -> {
             Filter filter = controller.getFilter(niName, classId);
             List<Parameter> parameters = controller.getParameters(niName, classId);
             if (filter != null) {
-                JLabel label = new JLabel(NetworkEmulatorUtils.getString("label_traffic_class") + " " + classId);
+                JLabel label = new JLabel(NetworkEmulatorUtils.getString("label_emulation_rule") + " " + classId);
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 contentPanel.add(label);
 

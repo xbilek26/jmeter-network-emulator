@@ -1,14 +1,12 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -32,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import net.miginfocom.swing.MigLayout;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
@@ -44,7 +43,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
     private JButton btnStop;
-    private JLabel emulatorState;
+    // private JLabel emulatorState;
     private JSyntaxTextArea currentSettings;
 
     public NetworkEmulatorGui() {
@@ -65,8 +64,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private JSplitPane createTopPanel() {
         JSplitPane topPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSettingsPanel(), createControlPanel());
-        topPanel.setResizeWeight(0.98);
-        topPanel.setDividerLocation(0.98);
+        topPanel.setResizeWeight(0.92);
+        topPanel.setDividerLocation(0.92);
         topPanel.setOneTouchExpandable(true);
 
         return topPanel;
@@ -78,28 +77,29 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private JPanel createSettingsPanel() {
-        JPanel settingsPanel = new JPanel(new BorderLayout());
+        JPanel settingsPanel = new JPanel(new MigLayout("insets 0", "grow", "grow"));
         settingsPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_network_settings")));
 
-        currentSettings = JSyntaxTextArea.getInstance(20, 80, true);
+        currentSettings = JSyntaxTextArea.getInstance(80, 30, true);
         currentSettings.setEditable(false);
         currentSettings.setLineWrap(true);
         currentSettings.setWrapStyleWord(true);
         currentSettings.setSyntaxEditingStyle("text/css");
+        currentSettings.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         JScrollPane scrollPane = JTextScrollPane.getInstance(currentSettings);
 
         scrollPane.setPreferredSize(scrollPane.getMinimumSize());
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         currentSettings.setText(controller.getNetworkConfiguration());
 
-        settingsPanel.add(scrollPane, BorderLayout.CENTER);
+        settingsPanel.add(scrollPane, "growx, growy, gap 0, pad 0");
 
         return settingsPanel;
     }
 
     private JPanel createControlPanel() {
-        JPanel controlPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+        JPanel controlPanel = new JPanel(new MigLayout("insets 10", "grow", ""));
         controlPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_controls")));
 
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
@@ -120,11 +120,8 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStop.addActionListener(ActionRouter.getInstance());
         btnStop.setActionCommand("stop_emulation");
 
-        emulatorState = new JLabel(NetworkEmulatorUtils.getString("msg_emulation_stopped"), JLabel.CENTER);
-
-        controlPanel.add(btnStart);
-        controlPanel.add(btnStop);
-        controlPanel.add(emulatorState);
+        controlPanel.add(btnStart, "growx, wrap");
+        controlPanel.add(btnStop, "growx");
 
         return controlPanel;
     }
@@ -132,7 +129,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public void onEmulationStarted() {
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);
-        emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_running"));
         currentSettings.setText(controller.getNetworkConfiguration());
         configurationPanel.setEditable(false);
         isRunning = true;
@@ -141,7 +137,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     public void onEmulationStopped() {
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
-        emulatorState.setText(NetworkEmulatorUtils.getString("msg_emulation_stopped"));
         currentSettings.setText(controller.getNetworkConfiguration());
         configurationPanel.setEditable(true);
         isRunning = false;
@@ -196,9 +191,6 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
         btnStart.setEnabled(!running);
         btnStop.setEnabled(running);
         configurationPanel.setEditable(!running);
-        emulatorState.setText(running
-                ? NetworkEmulatorUtils.getString("msg_emulation_running")
-                : NetworkEmulatorUtils.getString("msg_emulation_stopped"));
     }
 
     @Override

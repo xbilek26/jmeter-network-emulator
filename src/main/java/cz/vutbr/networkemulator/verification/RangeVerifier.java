@@ -68,7 +68,7 @@ public class RangeVerifier extends InputVerifier {
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         null,
-                        NetworkEmulatorUtils.getString("msg_enter_valid_value"),
+                        NetworkEmulatorUtils.getString("msg_enter_valid_number"),
                         NetworkEmulatorUtils.getString("msg_bad_value"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;

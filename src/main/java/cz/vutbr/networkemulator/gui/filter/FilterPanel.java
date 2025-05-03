@@ -1,13 +1,9 @@
 package cz.vutbr.networkemulator.gui.filter;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -21,6 +17,7 @@ import cz.vutbr.networkemulator.utils.enums.IpVersion;
 import cz.vutbr.networkemulator.utils.enums.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
+import net.miginfocom.swing.MigLayout;
 
 public class FilterPanel extends JPanel {
 
@@ -30,6 +27,10 @@ public class FilterPanel extends JPanel {
     private static final int MAX_ICMP_TYPE_VALUE = 255;
     private static final int MIN_ICMP_CODE_VALUE = 0;
     private static final int MAX_ICMP_CODE_VALUE = 255;
+    private static final int MIN_DSCP_VALUE = 0;
+    private static final int MAX_DSCP_VALUE = 63;
+    private static final int MIN_ECN_VALUE = 0;
+    private static final int MAX_ECN_VALUE = 3;
 
     private static final String[] PREFIX_LENGTHS_IPV4 = {
             "/32", "/31", "/30", "/29", "/28", "/27", "/26", "/25",
@@ -62,25 +63,6 @@ public class FilterPanel extends JPanel {
             "SMTP", 25,
             "POP3", 110,
             "IMAP", 143);
-    
-    private static final String[] ICMP_TYPES = {
-                "",
-                "Echo Reply",
-                "Destination Unreachable",
-                "Redirect",
-                "Echo Request",
-                "Time Exceeded",
-                "Parameter Problem",
-        };
-
-    private static final Map<String, Integer> ICMP_TYPE_NAMES = Map.of(
-        "Echo Reply", 0,
-        "Destination Unreachable", 3,
-        "Redirect", 5,
-        "Echo Request", 8,
-        "Time Exceeded", 11,
-        "Parameter Problem", 12
-    );
 
     private final JRadioButton ipv4Button;
     private final JRadioButton ipv6Button;
@@ -95,111 +77,82 @@ public class FilterPanel extends JPanel {
     private final JComboBox<String> ipv6SrcSubnetPrefixBox;
     private final JTextField ipv6DstAddressField;
     private final JComboBox<String> ipv6DstSubnetPrefixBox;
-    private final JTextField srcPortField;
-    private final JTextField dstPortField;
-    private final JComboBox<String> l4protocolsBox;
-    private final JTextField icmpTypeField;
-    private final JComboBox<String> icmpTypeBox;
-    private final JTextField icmpCodeField;
     private final JPanel ipVersionCards;
+    private final JTextField srcPortField;
+    private final JComboBox<String> srcL4ProtocolBox;
+    private final JTextField dstPortField;
+    private final JComboBox<String> dstL4protocolBox;
+    private final JTextField icmpTypeField;
+    private final JTextField icmpCodeField;
     private final JPanel protocolCards;
-
-    private final IpAddressVerifier iPv4AddressVerifier;
-    private final IpAddressVerifier iPv6AddressVerifier;
+    private final JPanel diffServPanel;
+    private final JTextField dscpField;
+    private final JTextField ecnField;
 
     public FilterPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        // layout and border
+        setLayout(new MigLayout("insets 5", "grow", "grow"));
         setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_filter")));
 
+        // initialisations
         ipv4Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv4"));
         ipv6Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv6"));
-        ipv4Button.setSelected(true);
         ButtonGroup ipVersionGroup = new ButtonGroup();
-        ipVersionGroup.add(ipv4Button);
-        ipVersionGroup.add(ipv6Button);
-
         tcpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_tcp"));
         udpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_udp"));
         icmpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_icmp"));
-        tcpButton.setSelected(true);
         ButtonGroup protocolGroup = new ButtonGroup();
+        ipv4SrcAddressField = new JTextField(10);
+        ipv4SrcSubnetPrefixBox = new JComboBox<>();
+        ipv4DstAddressField = new JTextField(10);
+        ipv4DstSubnetPrefixBox = new JComboBox<>();
+        ipv6SrcAddressField = new JTextField(10);
+        ipv6SrcSubnetPrefixBox = new JComboBox<>();
+        ipv6DstAddressField = new JTextField(10);
+        ipv6DstSubnetPrefixBox = new JComboBox<>();
+        srcPortField = new JTextField(10);
+        srcL4ProtocolBox = new JComboBox<>(PROTOCOLS);
+        dstPortField = new JTextField(10);
+        dstL4protocolBox = new JComboBox<>(PROTOCOLS);
+        icmpTypeField = new JTextField(10);
+        icmpCodeField = new JTextField(10);
+        dscpField = new JTextField(10);
+        ecnField = new JTextField(10);
+
+        // labels
+        JLabel ipv4SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
+        JLabel ipv4DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
+        JLabel ipv6SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
+        JLabel ipv6DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
+        JLabel srcPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_port"));
+        JLabel dstPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_port"));
+        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_type"));
+        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_code"));
+        JLabel dscpLabel = new JLabel(NetworkEmulatorUtils.getString("label_dscp"));
+        JLabel ecnLabel = new JLabel(NetworkEmulatorUtils.getString("label_ecn"));
+        ipv4SrcAddressLabel.setLabelFor(ipv4SrcAddressField);
+        ipv4DstAddressLabel.setLabelFor(ipv4DstAddressField);
+        ipv6SrcAddressLabel.setLabelFor(ipv6SrcAddressField);
+        ipv6DstAddressLabel.setLabelFor(ipv6DstAddressField);
+        srcPortLabel.setLabelFor(srcPortField);
+        dstPortLabel.setLabelFor(dstPortField);
+        icmpTypeLabel.setLabelFor(icmpTypeField);
+        icmpCodeLabel.setLabelFor(icmpCodeField);
+        dscpLabel.setLabelFor(dscpField);
+        ecnLabel.setLabelFor(ecnField);
+
+        ipv4Button.setSelected(true);
+        tcpButton.setSelected(true);
+        ipv4SrcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
+        ipv4DstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
+        ipv6SrcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
+        ipv6DstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
+
+        ipVersionGroup.add(ipv4Button);
+        ipVersionGroup.add(ipv6Button);
         protocolGroup.add(tcpButton);
         protocolGroup.add(udpButton);
         protocolGroup.add(icmpButton);
-
-        icmpTypeField = new JTextField(8);
-        icmpCodeField = new JTextField(8);
-
-        ipv4SrcAddressField = new JTextField(10);
-        ipv4SrcSubnetPrefixBox = new JComboBox<>();
-        ipv4SrcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
-        ipv4DstAddressField = new JTextField(10);
-        ipv4DstSubnetPrefixBox = new JComboBox<>();
-        ipv4DstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV4));
-        
-        ipv6SrcAddressField = new JTextField(20);
-        ipv6SrcSubnetPrefixBox = new JComboBox<>();
-        ipv6SrcSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
-        ipv6DstAddressField = new JTextField(20);
-        ipv6DstSubnetPrefixBox = new JComboBox<>();
-        ipv6DstSubnetPrefixBox.setModel(new DefaultComboBoxModel<>(PREFIX_LENGTHS_IPV6));
-
-        srcPortField = new JTextField(7);
-        dstPortField = new JTextField(7);
-
-        JLabel ipVersionLabel = new JLabel(NetworkEmulatorUtils.getString("label_ip_version"));
-        JLabel protocolLabel = new JLabel(NetworkEmulatorUtils.getString("label_protocol"));
-        JLabel ipv4SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
-        ipv4SrcAddressLabel.setLabelFor(ipv4SrcAddressField);
-        JLabel ipv4DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
-        ipv4DstAddressLabel.setLabelFor(ipv4DstAddressField);
-        JLabel ipv6SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
-        ipv6SrcAddressLabel.setLabelFor(ipv6SrcAddressField);
-        JLabel ipv6DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
-        ipv6DstAddressLabel.setLabelFor(ipv6DstAddressField);
-        JLabel srcPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_port"));
-        srcPortLabel.setLabelFor(srcPortField);
-        JLabel dstPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_port"));
-        dstPortLabel.setLabelFor(dstPortField);
-        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_type"));
-        icmpTypeLabel.setLabelFor(icmpTypeField);
-        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_code"));
-        icmpCodeLabel.setLabelFor(icmpCodeField);
-
-        ipv4SrcSubnetPrefixBox.setPreferredSize(new Dimension(90,
-                ipv4SrcAddressField.getPreferredSize().height));
-        ipv4DstSubnetPrefixBox.setPreferredSize(new Dimension(90,
-                ipv4DstAddressField.getPreferredSize().height));
-
-        ipv6SrcSubnetPrefixBox.setPreferredSize(new Dimension(90,
-                ipv6SrcAddressField.getPreferredSize().height));
-        ipv6DstSubnetPrefixBox.setPreferredSize(new Dimension(90,
-                ipv6DstAddressField.getPreferredSize().height));
-
-        l4protocolsBox = new JComboBox<>(PROTOCOLS);
-        l4protocolsBox.setPreferredSize(new Dimension(110, srcPortField.getPreferredSize().height));
-
-        l4protocolsBox.addActionListener(_ -> {
-            String selectedL4Protocol = (String) l4protocolsBox.getSelectedItem();
-            Integer port = PROTOCOL_PORTS.get(selectedL4Protocol);
-            if (!selectedL4Protocol.isEmpty()) {
-                dstPortField.setText(port.toString());
-            } else {
-                dstPortField.setText("");
-            }
-        });
-
-        icmpTypeBox = new JComboBox<>(ICMP_TYPES);
-        icmpTypeBox.setPreferredSize(new Dimension(240, icmpTypeField.getPreferredSize().height));
-        icmpTypeBox.addActionListener(_ -> {
-            String selectedIcmpTypeName = (String) icmpTypeBox.getSelectedItem();
-            Integer icmpType = ICMP_TYPE_NAMES.get(selectedIcmpTypeName);
-            if (!selectedIcmpTypeName.isEmpty()) {
-                icmpTypeField.setText(icmpType.toString());
-            } else {
-                icmpTypeField.setText("");
-            }
-        });
 
         ipv4Button.addItemListener(_ -> updateIpVersion());
         ipv6Button.addItemListener(_ -> updateIpVersion());
@@ -207,87 +160,116 @@ public class FilterPanel extends JPanel {
         udpButton.addItemListener(_ -> updateProtocol());
         icmpButton.addItemListener(_ -> updateProtocol());
 
-        iPv4AddressVerifier = new IpAddressVerifier(IpVersion.IPv4);
-        iPv6AddressVerifier = new IpAddressVerifier(IpVersion.IPv6);
+        // listeners
+        srcL4ProtocolBox.addActionListener(_ -> {
+            String selected = (String) srcL4ProtocolBox.getSelectedItem();
+            Integer port = PROTOCOL_PORTS.get(selected);
+            if (!selected.isEmpty()) {
+                srcPortField.setText(port.toString());
+            } else {
+                srcPortField.setText("");
+            }
+        });
 
-        ipv4SrcAddressField.setInputVerifier(iPv4AddressVerifier);
-        ipv4DstAddressField.setInputVerifier(iPv4AddressVerifier);
-        ipv6SrcAddressField.setInputVerifier(iPv6AddressVerifier);
-        ipv6DstAddressField.setInputVerifier(iPv6AddressVerifier);
+        dstL4protocolBox.addActionListener(_ -> {
+            String selected = (String) dstL4protocolBox.getSelectedItem();
+            Integer port = PROTOCOL_PORTS.get(selected);
+            if (!selected.isEmpty()) {
+                dstPortField.setText(port.toString());
+            } else {
+                dstPortField.setText("");
+            }
+        });
+
+        // verifiers
+        ipv4SrcAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv4));
+        ipv4DstAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv4));
+        ipv6SrcAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv6));
+        ipv6DstAddressField.setInputVerifier(new IpAddressVerifier(IpVersion.IPv6));
         srcPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         dstPortField.setInputVerifier(new RangeVerifier(MIN_PORT_VALUE, MAX_PORT_VALUE, false));
         icmpTypeField.setInputVerifier(new RangeVerifier(MIN_ICMP_TYPE_VALUE, MAX_ICMP_TYPE_VALUE, false));
         icmpCodeField.setInputVerifier(new RangeVerifier(MIN_ICMP_CODE_VALUE, MAX_ICMP_CODE_VALUE, false));
+        dscpField.setInputVerifier(new RangeVerifier(MIN_DSCP_VALUE, MAX_DSCP_VALUE, false));
+        ecnField.setInputVerifier(new RangeVerifier(MIN_ECN_VALUE, MAX_ECN_VALUE, false));
 
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topPanel.add(ipVersionLabel);
-        topPanel.add(ipv4Button);
-        topPanel.add(ipv6Button);
-        topPanel.add(Box.createHorizontalStrut(20));
-        topPanel.add(protocolLabel);
-        topPanel.add(tcpButton);
-        topPanel.add(udpButton);
-        topPanel.add(icmpButton);
+        // panels
+        JPanel ipVersionPanel = new JPanel(new MigLayout("align center"));
+        ipVersionPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ip_version")));
+        ipVersionPanel.add(ipv4Button);
+        ipVersionPanel.add(ipv6Button);
 
-        JPanel ipv4AddressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel protocolPanel = new JPanel(new MigLayout("align center"));
+        protocolPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_protocol")));
+        protocolPanel.add(tcpButton);
+        protocolPanel.add(udpButton);
+        protocolPanel.add(icmpButton);
+
+        JPanel ipv4AddressPanel = new JPanel(new MigLayout("", "[][grow][][][grow][]", "grow"));
+        ipv4AddressPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv4_address")));
         ipv4AddressPanel.add(ipv4SrcAddressLabel);
-        ipv4AddressPanel.add(ipv4SrcAddressField);
-        ipv4AddressPanel.add(ipv4SrcSubnetPrefixBox);
-        ipv4AddressPanel.add(Box.createHorizontalStrut(5));
+        ipv4AddressPanel.add(ipv4SrcAddressField, "growx, growy");
+        ipv4AddressPanel.add(ipv4SrcSubnetPrefixBox, "growx, growy, gapright 5");
         ipv4AddressPanel.add(ipv4DstAddressLabel);
-        ipv4AddressPanel.add(ipv4DstAddressField);
-        ipv4AddressPanel.add(ipv4DstSubnetPrefixBox);
+        ipv4AddressPanel.add(ipv4DstAddressField, "growx, growy");
+        ipv4AddressPanel.add(ipv4DstSubnetPrefixBox, "growx, growy");
 
-        JPanel ipv6AddressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ipv6AddressPanel = new JPanel(new MigLayout("", "[][grow][][][grow][]", "grow"));
+        ipv6AddressPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv6_address")));
         ipv6AddressPanel.add(ipv6SrcAddressLabel);
-        ipv6AddressPanel.add(ipv6SrcAddressField);
-        ipv6AddressPanel.add(ipv6SrcSubnetPrefixBox);
-        ipv6AddressPanel.add(Box.createHorizontalStrut(5));
+        ipv6AddressPanel.add(ipv6SrcAddressField, "growx, growy");
+        ipv6AddressPanel.add(ipv6SrcSubnetPrefixBox, "growx, growy, gapright 5");
         ipv6AddressPanel.add(ipv6DstAddressLabel);
-        ipv6AddressPanel.add(ipv6DstAddressField);
-        ipv6AddressPanel.add(ipv6DstSubnetPrefixBox);
+        ipv6AddressPanel.add(ipv6DstAddressField, "growx, growy");
+        ipv6AddressPanel.add(ipv6DstSubnetPrefixBox, "growx, growy");
 
         ipVersionCards = new JPanel(new CardLayout());
         ipVersionCards.add(ipv4AddressPanel, "ipv4");
         ipVersionCards.add(ipv6AddressPanel, "ipv6");
 
-        JPanel ipVersionCardsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        ipVersionCardsWrapper.add(ipVersionCards);
-
-        JPanel portPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel portPanel = new JPanel(new MigLayout("", "[][grow][grow]", "grow"));
+        portPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_port")));
         portPanel.add(srcPortLabel);
-        portPanel.add(srcPortField);
-        portPanel.add(Box.createHorizontalStrut(5));
+        portPanel.add(srcPortField, "growx, growy");
+        portPanel.add(srcL4ProtocolBox, "growx, growy, wrap");
         portPanel.add(dstPortLabel);
-        portPanel.add(dstPortField);
-        portPanel.add(l4protocolsBox);
+        portPanel.add(dstPortField, "growx, growy");
+        portPanel.add(dstL4protocolBox, "growx, growy");
 
-        JPanel icmpPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel icmpPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
+        icmpPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_icmp")));
         icmpPanel.add(icmpTypeLabel);
-        icmpPanel.add(icmpTypeField);
-        icmpPanel.add(icmpTypeBox);
-        icmpPanel.add(Box.createHorizontalStrut(5));
+        icmpPanel.add(icmpTypeField, "growx, growy, wrap");
         icmpPanel.add(icmpCodeLabel);
-        icmpPanel.add(icmpCodeField);
+        icmpPanel.add(icmpCodeField, "growx, growy");
 
         protocolCards = new JPanel(new CardLayout());
         protocolCards.add(portPanel, "port");
         protocolCards.add(icmpPanel, "icmp");
 
-        JPanel protocolCardsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        protocolCardsWrapper.add(protocolCards);
+        diffServPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
+        diffServPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv4_diffserv_name")));
+        diffServPanel.add(dscpLabel);
+        diffServPanel.add(dscpField, "growx, growy, wrap");
+        diffServPanel.add(ecnLabel);
+        diffServPanel.add(ecnField, "growx, growy");
 
-        add(topPanel);
-        add(ipVersionCardsWrapper);
-        add(protocolCardsWrapper);
+        // add components
+        add(ipVersionPanel, "growx, growy");
+        add(protocolPanel, "growx, growy, span, wrap");
+        add(ipVersionCards, "growx, growy, span, wrap");
+        add(protocolCards, "growx, growy");
+        add(diffServPanel, "growx, growy");
     }
 
     private void updateIpVersion() {
         CardLayout cards = (CardLayout) ipVersionCards.getLayout();
         if (isIpv4Selected()) {
             cards.show(ipVersionCards, "ipv4");
+            diffServPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv4_diffserv_name")));
         } else {
             cards.show(ipVersionCards, "ipv6");
+            diffServPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv6_diffserv_name")));
         }
     }
 
@@ -438,6 +420,22 @@ public class FilterPanel extends JPanel {
 
     public void setIcmpCode(String icmpCode) {
         icmpCodeField.setText(icmpCode);
+    }
+
+    public String getDscp() {
+        return dscpField.getText().trim();
+    }
+
+    public void setDscp(String dscp) {
+        dscpField.setText(dscp);
+    }
+
+    public String getEcn() {
+        return ecnField.getText().trim();
+    }
+
+    public void setEcn(String ecn) {
+        ecnField.setText(ecn);
     }
 
 }

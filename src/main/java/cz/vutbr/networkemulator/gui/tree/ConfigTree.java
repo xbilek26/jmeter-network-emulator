@@ -9,7 +9,7 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import cz.vutbr.networkemulator.gui.TrafficClassPanel;
+import cz.vutbr.networkemulator.gui.EmulationRulePanel;
 
 public class ConfigTree extends JTree {
 
@@ -37,11 +37,11 @@ public class ConfigTree extends JTree {
 
             int classCount = treeModel.getChildCount(networkInterface);
             for (int j = 0; j < classCount; j++) {
-                Object trafficClass = treeModel.getChild(networkInterface, j);
-                TreePath classPath = niPath.pathByAddingChild(trafficClass);
+                Object emulationRule = treeModel.getChild(networkInterface, j);
+                TreePath classPath = niPath.pathByAddingChild(emulationRule);
 
                 if (isExpanded(classPath)) {
-                    expanded.add(networkInterface.toString() + "/" + trafficClass.toString());
+                    expanded.add(networkInterface.toString() + "/" + emulationRule.toString());
                 }
             }
         }
@@ -114,13 +114,13 @@ public class ConfigTree extends JTree {
         scrollPathToVisible(path);
     }
 
-    public Set<TrafficClassPanel> getTcPanels() {
-        Set<TrafficClassPanel> tcPanels = new HashSet<>();
+    public Set<EmulationRulePanel> getTcPanels() {
+        Set<EmulationRulePanel> tcPanels = new HashSet<>();
         ConfigTreeNode rootNode = (ConfigTreeNode) getModel().getRoot();
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             ConfigTreeNode niNode = (ConfigTreeNode) rootNode.getChildAt(i);
             for (int j = 0; j < niNode.getChildCount(); j++) {
-                tcPanels.add((TrafficClassPanel) ((ConfigTreeNode) niNode.getChildAt(j)).getUserObject());
+                tcPanels.add((EmulationRulePanel) ((ConfigTreeNode) niNode.getChildAt(j)).getUserObject());
             }
         }
 

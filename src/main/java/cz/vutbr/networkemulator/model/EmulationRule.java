@@ -9,20 +9,21 @@ import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
 
 /**
- * Represents a traffic class that holds network parameters.
+ * Represents a network emulation rule with its identifier (classID), filter,
+ * and a list of parameters.
  *
  * @author Frantisek Bilek (xbilek26)
  */
-public class TrafficClass {
+public class EmulationRule {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(TrafficClass.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulationRule.class);
 
     String classId;
     Filter filter;
     List<Parameter> parameters;
 
-    public TrafficClass(String classId) {
+    public EmulationRule(String classId) {
         this.classId = classId;
     }
 

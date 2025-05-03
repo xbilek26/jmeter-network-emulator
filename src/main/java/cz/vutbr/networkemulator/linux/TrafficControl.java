@@ -15,7 +15,7 @@ public class TrafficControl {
         CommandRunner.runCommand(String.format("tc class add dev %s parent 1: classid 1:1 htb rate 4gbps quantum 1514", dev));
     }
 
-    public static void setupTrafficClass(String dev, String classId, String handleId, List<Parameter> parameters) {
+    public static void setupEmulationRule(String dev, String classId, String handleId, List<Parameter> parameters) {
         CommandRunner.runCommand(String.format("tc class add dev %s parent 1:1 classid %s htb rate 4gbps quantum 1514", dev, classId));
 
         StringBuilder cmd = new StringBuilder();

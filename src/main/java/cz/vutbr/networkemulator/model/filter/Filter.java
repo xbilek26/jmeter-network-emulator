@@ -22,6 +22,8 @@ public class Filter {
     private String dstPort;
     private String icmpType;
     private String icmpCode;
+    private String dscp;
+    private String ecn;
 
     public String getIpVersion() {
         return ipVersion.getName();
@@ -191,13 +193,56 @@ public class Filter {
         return icmpCode != null && !icmpCode.isEmpty();
     }
 
+    public String getDscp() {
+        return dscp;
+    }
+
+    public void setDscp(String dscp) {
+        this.dscp = dscp;
+    }
+
+    public boolean isDscpSet() {
+        return dscp != null && !dscp.isEmpty();
+    }
+
+    public String getEcn() {
+        return ecn;
+    }
+
+    public void setEcn(String ecn) {
+        this.ecn = ecn;
+    }
+
+    public boolean isEcnSet() {
+        return ecn != null && !ecn.isEmpty();
+    }
+
+    private String calculateDiffServValue() {
+        int dscpInt;
+        int ecnInt;
+
+        try {
+            dscpInt = Integer.parseInt(dscp);
+        } catch (NumberFormatException e) {
+            dscpInt = 0;
+        }
+
+        try {
+            ecnInt = Integer.parseInt(ecn);
+        } catch (NumberFormatException e) {
+            ecnInt = 0;
+        }
+
+        return Integer.toString(dscpInt * 4 + ecnInt);
+    }
+
     public void appendToCommand(StringBuilder cmd) {
         String ipCmd = this.ipVersion.getTcCommand();
         if (ipVersion.equals(IpVersion.IPv4)) {
             if (isIpv4SrcAddressSet() && isIpv4SrcsubnetPrefixSet()) {
                 cmd.append(String.format(" match %s src %s%s", ipCmd, ipv4SrcAddress, ipv4SrcSubnetPrefix));
             }
-    
+
             if (isIpv4DstAddressSet() && isIpv4DstsubnetPrefixSet()) {
                 cmd.append(String.format(" match %s dst %s%s", ipCmd, ipv4DstAddress, ipv4DstSubnetPrefix));
             }
@@ -205,12 +250,11 @@ public class Filter {
             if (isIpv6SrcAddressSet() && isIpv6SrcSubnetPrefixSet()) {
                 cmd.append(String.format(" match %s src %s%s", ipCmd, ipv6SrcAddress, ipv6SrcSubnetPrefix));
             }
-    
+
             if (isIpv6DstAddressSet() && isIpv6DstSubnetPrefixSet()) {
                 cmd.append(String.format(" match %s dst %s%s", ipCmd, ipv6DstAddress, ipv6DstSubnetPrefix));
             }
         }
-        
 
         if (isProtocolSet()) {
             cmd.append(String.format(" match %s protocol %d 0xff", ipCmd, protocol.getNumber()));
@@ -234,41 +278,49 @@ public class Filter {
                 }
             }
         }
+
+        if (isDscpSet() || isEcnSet()) {
+            if (ipVersion.equals(IpVersion.IPv4)) {
+                cmd.append(String.format(" match %s dsfield %s 0xff", ipCmd, calculateDiffServValue()));
+            } else if (ipVersion.equals(IpVersion.IPv6)) {
+                cmd.append(String.format(" match %s priority %s 0xff", ipCmd, calculateDiffServValue()));
+            }
+        }
     }
 
     public void appendToTable(DefaultTableModel model) {
         if (isProtocolSet()) {
-            model.addRow(new Object[]{
-                NetworkEmulatorUtils.getString("table_protocol"),
-                this.protocol
+            model.addRow(new Object[] {
+                    NetworkEmulatorUtils.getString("table_protocol"),
+                    this.protocol
             });
 
             switch (this.protocol) {
                 case Protocol.TCP, Protocol.UDP -> {
                     if (isSrcPortSet()) {
-                        model.addRow(new Object[]{
-                            NetworkEmulatorUtils.getString("table_src_port"),
-                            this.srcPort
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_src_port"),
+                                this.srcPort
                         });
                     }
                     if (isDstPortSet()) {
-                        model.addRow(new Object[]{
-                            NetworkEmulatorUtils.getString("table_dst_port"),
-                            this.dstPort
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_dst_port"),
+                                this.dstPort
                         });
                     }
                 }
                 case Protocol.ICMP -> {
                     if (isIcmpTypeSet()) {
-                        model.addRow(new Object[]{
-                            NetworkEmulatorUtils.getString("table_icmp_type"),
-                            this.icmpType
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_icmp_type"),
+                                this.icmpType
                         });
                     }
                     if (isIcmpCodeSet()) {
-                        model.addRow(new Object[]{
-                            NetworkEmulatorUtils.getString("table_icmp_code"),
-                            this.icmpCode
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_icmp_code"),
+                                this.icmpCode
                         });
                     }
                 }
@@ -277,33 +329,32 @@ public class Filter {
 
         if (ipVersion.equals(IpVersion.IPv4)) {
             if (isIpv4SrcAddressSet()) {
-                model.addRow(new Object[]{
-                    NetworkEmulatorUtils.getString("table_src_address"),
-                    ipv4SrcAddress + ipv4SrcSubnetPrefix
+                model.addRow(new Object[] {
+                        NetworkEmulatorUtils.getString("table_src_address"),
+                        ipv4SrcAddress + ipv4SrcSubnetPrefix
                 });
             }
             if (isIpv4DstAddressSet()) {
-                model.addRow(new Object[]{
-                    NetworkEmulatorUtils.getString("table_dst_address"),
-                    ipv4DstAddress + ipv4DstSubnetPrefix
+                model.addRow(new Object[] {
+                        NetworkEmulatorUtils.getString("table_dst_address"),
+                        ipv4DstAddress + ipv4DstSubnetPrefix
                 });
             }
         } else if (ipVersion.equals(IpVersion.IPv6)) {
             if (isIpv6SrcAddressSet()) {
-                model.addRow(new Object[]{
-                    NetworkEmulatorUtils.getString("table_src_address"),
-                    ipv6SrcAddress + ipv6SrcSubnetPrefix
+                model.addRow(new Object[] {
+                        NetworkEmulatorUtils.getString("table_src_address"),
+                        ipv6SrcAddress + ipv6SrcSubnetPrefix
                 });
             }
             if (isIpv6DstAddressSet()) {
-                model.addRow(new Object[]{
-                    NetworkEmulatorUtils.getString("table_dst_address"),
-                    ipv6DstAddress + ipv6DstSubnetPrefix
+                model.addRow(new Object[] {
+                        NetworkEmulatorUtils.getString("table_dst_address"),
+                        ipv6DstAddress + ipv6DstSubnetPrefix
                 });
             }
         }
 
-        
     }
 
 }

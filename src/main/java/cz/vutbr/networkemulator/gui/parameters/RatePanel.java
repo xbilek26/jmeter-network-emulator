@@ -1,15 +1,13 @@
 package cz.vutbr.networkemulator.gui.parameters;
 
-import java.awt.FlowLayout;
-
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
+import net.miginfocom.swing.MigLayout;
 
 public class RatePanel extends JPanel {
 
@@ -22,25 +20,29 @@ public class RatePanel extends JPanel {
     private final JTextField overheadField;
 
     public RatePanel() {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        // layout and border
+        setLayout(new MigLayout("insets 5", "[][grow][][grow]", "grow"));
         setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_rate")));
 
-        valueField = new JTextField(8);
-        overheadField = new JTextField(8);
+        // initialisations
+        valueField = new JTextField(10);
+        overheadField = new JTextField(10);
 
+        // labels
         JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_rate"));
-        valueLabel.setLabelFor(valueLabel);
         JLabel overheadLabel = new JLabel(NetworkEmulatorUtils.getString("label_overhead"));
+        valueLabel.setLabelFor(valueLabel);
         overheadLabel.setLabelFor(overheadField);
 
+        // verifiers
         valueField.setInputVerifier(new RangeVerifier(MIN_VALUE, MAX_VALUE, true));
         overheadField.setInputVerifier(new RangeVerifier(MIN_OVERHEAD, MAX_OVERHEAD, false));
 
+        // add components
         add(valueLabel);
-        add(valueField);
-        add(Box.createHorizontalStrut(5));
+        add(valueField, "growx, growy, gapright 5");
         add(overheadLabel);
-        add(overheadField);
+        add(overheadField, "growx, growy");
     }
 
     public String getValue() {
