@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class RangeVerifier extends InputVerifier {
 
@@ -60,16 +60,16 @@ public class RangeVerifier extends InputVerifier {
                 } else {
                     JOptionPane.showMessageDialog(
                             null,
-                            NetworkEmulatorUtils.getString("msg_enter_valid_number"),
-                            NetworkEmulatorUtils.getString("msg_bad_value"),
+                            EmulatorUtils.getString("msg_enter_valid_number"),
+                            EmulatorUtils.getString("msg_bad_value"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         null,
-                        NetworkEmulatorUtils.getString("msg_enter_valid_number"),
-                        NetworkEmulatorUtils.getString("msg_bad_value"),
+                        EmulatorUtils.getString("msg_enter_valid_number"),
+                        EmulatorUtils.getString("msg_bad_value"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }

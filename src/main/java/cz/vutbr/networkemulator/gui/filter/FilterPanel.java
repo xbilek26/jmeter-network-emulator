@@ -13,7 +13,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.utils.enums.IpVersion;
 import cz.vutbr.networkemulator.utils.enums.Protocol;
 import cz.vutbr.networkemulator.verification.IpAddressVerifier;
@@ -100,15 +100,15 @@ public class FilterPanel extends JPanel {
     public FilterPanel() {
         // layout and border
         setLayout(new MigLayout("insets 5", "grow", "grow"));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_filter")));
+        setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_filter")));
 
         // initialisations
-        ipv4Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv4"));
-        ipv6Button = new JRadioButton(NetworkEmulatorUtils.getString("label_ip_version_ipv6"));
+        ipv4Button = new JRadioButton(EmulatorUtils.getString("label_ip_version_ipv4"));
+        ipv6Button = new JRadioButton(EmulatorUtils.getString("label_ip_version_ipv6"));
         ButtonGroup ipVersionGroup = new ButtonGroup();
-        tcpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_tcp"));
-        udpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_udp"));
-        icmpButton = new JRadioButton(NetworkEmulatorUtils.getString("label_protocol_icmp"));
+        tcpButton = new JRadioButton(EmulatorUtils.getString("label_protocol_tcp"));
+        udpButton = new JRadioButton(EmulatorUtils.getString("label_protocol_udp"));
+        icmpButton = new JRadioButton(EmulatorUtils.getString("label_protocol_icmp"));
         ButtonGroup protocolGroup = new ButtonGroup();
         ipv4SrcAddressField = new JTextField(10);
         ipv4SrcSubnetPrefixBox = new JComboBox<>();
@@ -138,19 +138,19 @@ public class FilterPanel extends JPanel {
         ipv6EcnField.setDocument(ecnShared);
 
         // labels
-        JLabel ipv4SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
-        JLabel ipv4DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
-        JLabel ipv6SrcAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_address"));
-        JLabel ipv6DstAddressLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_address"));
-        JLabel srcPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_src_port"));
-        JLabel dstPortLabel = new JLabel(NetworkEmulatorUtils.getString("label_dst_port"));
-        JLabel icmpTypeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_type"));
-        JLabel icmpCodeLabel = new JLabel(NetworkEmulatorUtils.getString("label_icmp_code"));
-        JLabel ipv4DscpLabel = new JLabel(NetworkEmulatorUtils.getString("label_dscp"));
-        JLabel ipv6DscpLabel = new JLabel(NetworkEmulatorUtils.getString("label_dscp"));
-        JLabel ipv4EcnLabel = new JLabel(NetworkEmulatorUtils.getString("label_ecn"));
-        JLabel ipv6EcnLabel = new JLabel(NetworkEmulatorUtils.getString("label_ecn"));
-        JLabel flowLabelLabel = new JLabel(NetworkEmulatorUtils.getString("label_flow_label"));
+        JLabel ipv4SrcAddressLabel = new JLabel(EmulatorUtils.getString("label_src_address"));
+        JLabel ipv4DstAddressLabel = new JLabel(EmulatorUtils.getString("label_dst_address"));
+        JLabel ipv6SrcAddressLabel = new JLabel(EmulatorUtils.getString("label_src_address"));
+        JLabel ipv6DstAddressLabel = new JLabel(EmulatorUtils.getString("label_dst_address"));
+        JLabel srcPortLabel = new JLabel(EmulatorUtils.getString("label_src_port"));
+        JLabel dstPortLabel = new JLabel(EmulatorUtils.getString("label_dst_port"));
+        JLabel icmpTypeLabel = new JLabel(EmulatorUtils.getString("label_icmp_type"));
+        JLabel icmpCodeLabel = new JLabel(EmulatorUtils.getString("label_icmp_code"));
+        JLabel ipv4DscpLabel = new JLabel(EmulatorUtils.getString("label_dscp"));
+        JLabel ipv6DscpLabel = new JLabel(EmulatorUtils.getString("label_dscp"));
+        JLabel ipv4EcnLabel = new JLabel(EmulatorUtils.getString("label_ecn"));
+        JLabel ipv6EcnLabel = new JLabel(EmulatorUtils.getString("label_ecn"));
+        JLabel flowLabelLabel = new JLabel(EmulatorUtils.getString("label_flow_label"));
         ipv4SrcAddressLabel.setLabelFor(ipv4SrcAddressField);
         ipv4DstAddressLabel.setLabelFor(ipv4DstAddressField);
         ipv6SrcAddressLabel.setLabelFor(ipv6SrcAddressField);
@@ -222,18 +222,18 @@ public class FilterPanel extends JPanel {
 
         // panels
         JPanel ipVersionPanel = new JPanel(new MigLayout("flowx, alignx center, aligny center"));
-        ipVersionPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ip_version")));
+        ipVersionPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_ip_version")));
         ipVersionPanel.add(ipv4Button);
         ipVersionPanel.add(ipv6Button);
 
         JPanel protocolPanel = new JPanel(new MigLayout("flowx, alignx center, aligny center"));
-        protocolPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_protocol")));
+        protocolPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_protocol")));
         protocolPanel.add(tcpButton);
         protocolPanel.add(udpButton);
         protocolPanel.add(icmpButton);
 
         JPanel ipv4AddressPanel = new JPanel(new MigLayout("", "[][grow][][][grow][]", "grow"));
-        ipv4AddressPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv4_address")));
+        ipv4AddressPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_ipv4_address")));
         ipv4AddressPanel.add(ipv4SrcAddressLabel);
         ipv4AddressPanel.add(ipv4SrcAddressField, "growx, growy");
         ipv4AddressPanel.add(ipv4SrcSubnetPrefixBox, "growx, growy, gapright 5");
@@ -242,7 +242,7 @@ public class FilterPanel extends JPanel {
         ipv4AddressPanel.add(ipv4DstSubnetPrefixBox, "growx, growy");
 
         JPanel ipv6AddressPanel = new JPanel(new MigLayout("", "[][grow][][][grow][]", "grow"));
-        ipv6AddressPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_ipv6_address")));
+        ipv6AddressPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_ipv6_address")));
         ipv6AddressPanel.add(ipv6SrcAddressLabel);
         ipv6AddressPanel.add(ipv6SrcAddressField, "growx, growy");
         ipv6AddressPanel.add(ipv6SrcSubnetPrefixBox, "growx, growy, gapright 5");
@@ -255,7 +255,7 @@ public class FilterPanel extends JPanel {
         ipAddressCards.add(ipv6AddressPanel, "ipv6");
 
         JPanel portPanel = new JPanel(new MigLayout("", "[][grow][grow]", "grow"));
-        portPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_port")));
+        portPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_port")));
         portPanel.add(srcPortLabel);
         portPanel.add(srcPortField, "growx, growy");
         portPanel.add(srcL4ProtocolBox, "growx, growy, wrap");
@@ -264,7 +264,7 @@ public class FilterPanel extends JPanel {
         portPanel.add(dstL4protocolBox, "growx, growy");
 
         JPanel icmpPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
-        icmpPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_icmp")));
+        icmpPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_icmp")));
         icmpPanel.add(icmpTypeLabel);
         icmpPanel.add(icmpTypeField, "growx, growy, wrap");
         icmpPanel.add(icmpCodeLabel);
@@ -275,21 +275,21 @@ public class FilterPanel extends JPanel {
         protocolCards.add(icmpPanel, "icmp");
 
         JPanel tosPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
-        tosPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_tos")));
+        tosPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_tos")));
         tosPanel.add(ipv4DscpLabel);
         tosPanel.add(ipv4DscpField, "growx, growy, wrap");
         tosPanel.add(ipv4EcnLabel);
         tosPanel.add(ipv4EcnField, "growx, growy");
 
         JPanel trafficClassPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
-        trafficClassPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_traffic_class")));
+        trafficClassPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_traffic_class")));
         trafficClassPanel.add(ipv6DscpLabel);
         trafficClassPanel.add(ipv6DscpField, "growx, growy, wrap");
         trafficClassPanel.add(ipv6EcnLabel);
         trafficClassPanel.add(ipv6EcnField, "growx, growy");
 
         JPanel flowLabelPanel = new JPanel(new MigLayout("", "[][grow]", "grow"));
-        flowLabelPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_flow_label")));
+        flowLabelPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_flow_label")));
         flowLabelPanel.add(flowLabelLabel);
         flowLabelPanel.add(flowLabelField, "growx, growy");
 

@@ -8,10 +8,10 @@ import org.apache.jmeter.testelement.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NetworkEmulatorConverter {
+public class EmulatorConverter {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(NetworkEmulatorConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulatorConverter.class);
 
     public static List<String> convertToList(CollectionProperty property) {
         List<String> list = new ArrayList<>();

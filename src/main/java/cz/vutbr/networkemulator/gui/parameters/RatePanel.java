@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.model.parameters.Rate;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
@@ -18,15 +18,15 @@ public class RatePanel extends JPanel {
     public RatePanel() {
         // layout and border
         setLayout(new MigLayout("insets 5", "[][grow][][grow]", "grow"));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_rate")));
+        setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_rate")));
 
         // initialisations
         valueField = new JTextField(10);
         overheadField = new JTextField(10);
 
         // labels
-        JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_rate"));
-        JLabel overheadLabel = new JLabel(NetworkEmulatorUtils.getString("label_overhead"));
+        JLabel valueLabel = new JLabel(EmulatorUtils.getString("label_rate"));
+        JLabel overheadLabel = new JLabel(EmulatorUtils.getString("label_overhead"));
         valueLabel.setLabelFor(valueLabel);
         overheadLabel.setLabelFor(overheadField);
 

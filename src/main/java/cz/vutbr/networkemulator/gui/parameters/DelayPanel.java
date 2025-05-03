@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import cz.vutbr.networkemulator.model.parameters.Delay;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.verification.RangeVerifier;
 import net.miginfocom.swing.MigLayout;
 
@@ -29,7 +29,7 @@ public class DelayPanel extends JPanel {
     public DelayPanel() {
         // layout and border
         setLayout(new MigLayout("insets 5", "[][grow][][grow][][grow][][grow]", "grow"));
-        setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_delay")));
+        setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_delay")));
 
         // initialisations
         valueField = new JTextField(10);
@@ -38,10 +38,10 @@ public class DelayPanel extends JPanel {
         distributionsBox = new JComboBox<>(DISTRIBUTIONS);
 
         // labels
-        JLabel valueLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_value"));
-        JLabel jitterLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_jitter"));
-        JLabel correlationLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_correlation"));
-        JLabel distributionsLabel = new JLabel(NetworkEmulatorUtils.getString("label_delay_distribution"));
+        JLabel valueLabel = new JLabel(EmulatorUtils.getString("label_delay_value"));
+        JLabel jitterLabel = new JLabel(EmulatorUtils.getString("label_delay_jitter"));
+        JLabel correlationLabel = new JLabel(EmulatorUtils.getString("label_delay_correlation"));
+        JLabel distributionsLabel = new JLabel(EmulatorUtils.getString("label_delay_distribution"));
         valueLabel.setLabelFor(valueField);
         jitterLabel.setLabelFor(jitterField);
         correlationLabel.setLabelFor(correlationField);

@@ -33,8 +33,8 @@ import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTree;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNode;
 import cz.vutbr.networkemulator.gui.tree.EmulatorTreeNodeRenderer;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorConverter;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorConverter;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class ConfigurationPanel extends JPanel {
 
@@ -79,14 +79,14 @@ public class ConfigurationPanel extends JPanel {
 
         JSplitPane splitPane;
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createLeftPanel(), createRightPanel());
-        splitPane.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_configuration")));
+        splitPane.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_configuration")));
         splitPane.setOneTouchExpandable(true);
         add(splitPane);
     }
 
     private JPanel createLeftPanel() {
         rootNode = new EmulatorTreeNode();
-        rootNode.setName(NetworkEmulatorUtils.getString("root_node_name"));
+        rootNode.setName(EmulatorUtils.getString("root_node_name"));
         treeModel = new DefaultTreeModel(rootNode);
         tree = new EmulatorTree(treeModel);
         tree.setRootVisible(true);
@@ -95,11 +95,11 @@ public class ConfigurationPanel extends JPanel {
         tree.setCellRenderer(new EmulatorTreeNodeRenderer());
         tree.addTreeSelectionListener(this::updateView);
 
-        btnRefresh = new JButton(NetworkEmulatorUtils.getString("button_refresh"));
+        btnRefresh = new JButton(EmulatorUtils.getString("button_refresh"));
         btnRefresh.addActionListener(_ -> refreshNetworkInterfaces());
-        btnAdd = new JButton(NetworkEmulatorUtils.getString("button_add"));
+        btnAdd = new JButton(EmulatorUtils.getString("button_add"));
         btnAdd.addActionListener(_ -> addEmulationRule());
-        btnRemove = new JButton(NetworkEmulatorUtils.getString("button_remove"));
+        btnRemove = new JButton(EmulatorUtils.getString("button_remove"));
         btnRemove.addActionListener(_ -> removeEmulationRule());
 
         buttonPanel = new JPanel(new CardLayout());
@@ -366,10 +366,10 @@ public class ConfigurationPanel extends JPanel {
         treeModel.reload();
 
         CollectionProperty expandedPaths = (CollectionProperty) te.getPropertyOrNull(PROPERTY_EXPANDED_PATHS);
-        tree.expandPaths(NetworkEmulatorConverter.convertToList(expandedPaths));
+        tree.expandPaths(EmulatorConverter.convertToList(expandedPaths));
 
         StringProperty selectedPath = (StringProperty) te.getPropertyOrNull(PROPERTY_SELECTED_PATH);
-        tree.selectPath(NetworkEmulatorConverter.convertToString(selectedPath));
+        tree.selectPath(EmulatorConverter.convertToString(selectedPath));
 
         applySettings();
     }

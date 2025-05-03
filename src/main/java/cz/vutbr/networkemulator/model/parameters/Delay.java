@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class Delay extends Parameter {
 
@@ -91,7 +91,7 @@ public class Delay extends Parameter {
                 }
             }
 
-            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_delay"), sb.toString() });
+            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_delay"), sb.toString() });
         }
     }
 }

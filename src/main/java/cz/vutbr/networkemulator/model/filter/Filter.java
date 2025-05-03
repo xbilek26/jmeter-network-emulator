@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.filter;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.utils.enums.IpVersion;
 import cz.vutbr.networkemulator.utils.enums.Protocol;
 
@@ -311,26 +311,26 @@ public class Filter {
         if (ipVersion.equals(IpVersion.IPv4)) {
             if (isIpv4SrcAddressSet()) {
                 model.addRow(new Object[] {
-                        NetworkEmulatorUtils.getString("table_src_address"),
+                        EmulatorUtils.getString("table_src_address"),
                         ipv4SrcAddress + ipv4SrcSubnetPrefix
                 });
             }
             if (isIpv4DstAddressSet()) {
                 model.addRow(new Object[] {
-                        NetworkEmulatorUtils.getString("table_dst_address"),
+                        EmulatorUtils.getString("table_dst_address"),
                         ipv4DstAddress + ipv4DstSubnetPrefix
                 });
             }
         } else if (ipVersion.equals(IpVersion.IPv6)) {
             if (isIpv6SrcAddressSet()) {
                 model.addRow(new Object[] {
-                        NetworkEmulatorUtils.getString("table_src_address"),
+                        EmulatorUtils.getString("table_src_address"),
                         ipv6SrcAddress + ipv6SrcSubnetPrefix
                 });
             }
             if (isIpv6DstAddressSet()) {
                 model.addRow(new Object[] {
-                        NetworkEmulatorUtils.getString("table_dst_address"),
+                        EmulatorUtils.getString("table_dst_address"),
                         ipv6DstAddress + ipv6DstSubnetPrefix
                 });
             }
@@ -338,7 +338,7 @@ public class Filter {
 
         if (isProtocolSet()) {
             model.addRow(new Object[] {
-                    NetworkEmulatorUtils.getString("table_protocol"),
+                    EmulatorUtils.getString("table_protocol"),
                     protocol
             });
 
@@ -346,13 +346,13 @@ public class Filter {
                 case Protocol.TCP, Protocol.UDP -> {
                     if (isSrcPortSet()) {
                         model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_src_port"),
+                                EmulatorUtils.getString("table_src_port"),
                                 srcPort
                         });
                     }
                     if (isDstPortSet()) {
                         model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_dst_port"),
+                                EmulatorUtils.getString("table_dst_port"),
                                 dstPort
                         });
                     }
@@ -360,13 +360,13 @@ public class Filter {
                 case Protocol.ICMP -> {
                     if (isIcmpTypeSet()) {
                         model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_icmp_type"),
+                                EmulatorUtils.getString("table_icmp_type"),
                                 icmpType
                         });
                     }
                     if (isIcmpCodeSet()) {
                         model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_icmp_code"),
+                                EmulatorUtils.getString("table_icmp_code"),
                                 icmpCode
                         });
                     }
@@ -376,20 +376,20 @@ public class Filter {
 
         if (isDscpSet()) {
             model.addRow(new Object[] {
-                    NetworkEmulatorUtils.getString("table_dscp"), dscp
+                    EmulatorUtils.getString("table_dscp"), dscp
             });
         }
 
         if (isEcnSet()) {
             model.addRow(new Object[] {
-                    NetworkEmulatorUtils.getString("table_ecn"), ecn
+                    EmulatorUtils.getString("table_ecn"), ecn
             });
         }
 
         if (isFlowLabelSet()) {
             if (ipVersion.equals(IpVersion.IPv6)) {
                 model.addRow(new Object[] {
-                        NetworkEmulatorUtils.getString("table_flow_label"), flowLabel
+                        EmulatorUtils.getString("table_flow_label"), flowLabel
                 });
             }
         }

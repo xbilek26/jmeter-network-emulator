@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 
-public class NetworkEmulatorUtils {
+public class EmulatorUtils {
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("cz.vutbr.networkemulator.messages");
 
     public static String getString(String key) {
@@ -14,7 +14,7 @@ public class NetworkEmulatorUtils {
     }
 
     public static ImageIcon getImage(String name) {
-        URL url = NetworkEmulatorUtils.class.getClassLoader().getResource("cz/vutbr/networkemulator/images/" + name.trim());
+        URL url = EmulatorUtils.class.getClassLoader().getResource("cz/vutbr/networkemulator/images/" + name.trim());
         if (url != null) {
             return new ImageIcon(url);
         } else {

@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class Corruption extends Parameter {
 
@@ -23,7 +23,7 @@ public class Corruption extends Parameter {
     @Override
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueSet()) {
-            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_corruption"), getValue() + "%" });
+            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_corruption"), getValue() + "%" });
         }
     }
 }

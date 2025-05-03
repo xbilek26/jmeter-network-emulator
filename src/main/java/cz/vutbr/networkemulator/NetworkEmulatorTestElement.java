@@ -18,7 +18,7 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 /**
  * Represents a Network Emulator test element in JMeter. This class ensures that
@@ -66,8 +66,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 testElement.removed();
                 guiPack.updateCurrentGui();
                 JMeterUtils.reportInfoToUser(
-                        NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
+                        EmulatorUtils.getString("msg_one_instance_allowed"),
+                        EmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }
@@ -86,8 +86,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 testElement.removed();
                 guiPack.updateCurrentGui();
                 JMeterUtils.reportInfoToUser(
-                        NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
+                        EmulatorUtils.getString("msg_one_instance_allowed"),
+                        EmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }
@@ -106,8 +106,8 @@ public class NetworkEmulatorTestElement extends AbstractTestElement {
                 testElement.removed();
                 guiPack.updateCurrentGui();
                 JMeterUtils.reportInfoToUser(
-                        NetworkEmulatorUtils.getString("msg_one_instance_allowed"),
-                        NetworkEmulatorUtils.getString("msg_unsupported_action"));
+                        EmulatorUtils.getString("msg_one_instance_allowed"),
+                        EmulatorUtils.getString("msg_unsupported_action"));
             }
         });
     }

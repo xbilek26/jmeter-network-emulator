@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.vutbr.networkemulator.NetworkEmulatorTestElement;
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import net.miginfocom.swing.MigLayout;
 
 public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
@@ -78,7 +78,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private JPanel createSettingsPanel() {
         JPanel settingsPanel = new JPanel(new MigLayout("insets 0", "grow", "grow"));
-        settingsPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_network_settings")));
+        settingsPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_network_settings")));
 
         currentSettings = JSyntaxTextArea.getInstance(80, 30, true);
         currentSettings.setEditable(false);
@@ -100,19 +100,19 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
 
     private JPanel createControlPanel() {
         JPanel controlPanel = new JPanel(new MigLayout("insets 5", "grow", ""));
-        controlPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_controls")));
+        controlPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_controls")));
 
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
                 JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE);
         ImageIcon startImage = JMeterUtils.getImage("toolbar/" + iconSize + "/arrow-right-3.png");
-        btnStart = new JButton(NetworkEmulatorUtils.getString("button_start"));
+        btnStart = new JButton(EmulatorUtils.getString("button_start"));
         btnStart.setIcon(startImage);
         btnStart.setFocusable(false);
         btnStart.setEnabled(true);
         btnStart.addActionListener(ActionRouter.getInstance());
         btnStart.setActionCommand("start_emulation");
 
-        btnStop = new JButton(NetworkEmulatorUtils.getString("button_stop"));
+        btnStop = new JButton(EmulatorUtils.getString("button_stop"));
         ImageIcon stopImage = JMeterUtils.getImage("toolbar/" + iconSize + "/process-stop-4.png");
         btnStop.setIcon(stopImage);
         btnStop.setFocusable(false);
@@ -147,19 +147,19 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     public static void registerIcon() {
-        ImageIcon icon = NetworkEmulatorUtils.getImage("network_emulator.gif");
-        icon = NetworkEmulatorUtils.getScaledIcon(icon, 16, 16);
+        ImageIcon icon = EmulatorUtils.getImage("network_emulator.gif");
+        icon = EmulatorUtils.getScaledIcon(icon, 16, 16);
         GUIFactory.registerIcon(NetworkEmulatorGui.class.getName(), icon);
     }
 
     @Override
     public String getLabelResource() {
-        return NetworkEmulatorUtils.getString("network_emulator_label_resource");
+        return EmulatorUtils.getString("network_emulator_label_resource");
     }
 
     @Override
     public String getStaticLabel() {
-        return NetworkEmulatorUtils.getString("network_emulator_static_label");
+        return EmulatorUtils.getString("network_emulator_static_label");
     }
 
     @Override

@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import cz.vutbr.networkemulator.utils.enums.IpVersion;
 
 public class IpAddressVerifier extends InputVerifier {
@@ -41,8 +41,8 @@ public class IpAddressVerifier extends InputVerifier {
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(
-                            null, NetworkEmulatorUtils.getString("msg_enter_valid_ipv4_address"),
-                            NetworkEmulatorUtils.getString("msg_bad_ipv4_address"),
+                            null, EmulatorUtils.getString("msg_enter_valid_ipv4_address"),
+                            EmulatorUtils.getString("msg_bad_ipv4_address"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -52,8 +52,8 @@ public class IpAddressVerifier extends InputVerifier {
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(
-                            null, NetworkEmulatorUtils.getString("msg_enter_valid_ipv6_address"),
-                            NetworkEmulatorUtils.getString("msg_bad_ipv6_address"),
+                            null, EmulatorUtils.getString("msg_enter_valid_ipv6_address"),
+                            EmulatorUtils.getString("msg_bad_ipv6_address"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
                 }

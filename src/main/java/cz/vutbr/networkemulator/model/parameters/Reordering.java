@@ -2,7 +2,7 @@ package cz.vutbr.networkemulator.model.parameters;
 
 import javax.swing.table.DefaultTableModel;
 
-import cz.vutbr.networkemulator.utils.NetworkEmulatorUtils;
+import cz.vutbr.networkemulator.utils.EmulatorUtils;
 
 public class Reordering extends Parameter {
 
@@ -49,7 +49,7 @@ public class Reordering extends Parameter {
                 sb.append(String.format(", corr=%s%%", correlation));
             }
 
-            tableModel.addRow(new Object[] { NetworkEmulatorUtils.getString("table_reordering"), sb.toString() });
+            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_reordering"), sb.toString() });
         }
     }
 
