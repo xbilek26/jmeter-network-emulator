@@ -308,44 +308,6 @@ public class Filter {
     }
 
     public void appendToTable(DefaultTableModel model) {
-        if (isProtocolSet()) {
-            model.addRow(new Object[] {
-                    NetworkEmulatorUtils.getString("table_protocol"),
-                    this.protocol
-            });
-
-            switch (this.protocol) {
-                case Protocol.TCP, Protocol.UDP -> {
-                    if (isSrcPortSet()) {
-                        model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_src_port"),
-                                this.srcPort
-                        });
-                    }
-                    if (isDstPortSet()) {
-                        model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_dst_port"),
-                                this.dstPort
-                        });
-                    }
-                }
-                case Protocol.ICMP -> {
-                    if (isIcmpTypeSet()) {
-                        model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_icmp_type"),
-                                this.icmpType
-                        });
-                    }
-                    if (isIcmpCodeSet()) {
-                        model.addRow(new Object[] {
-                                NetworkEmulatorUtils.getString("table_icmp_code"),
-                                this.icmpCode
-                        });
-                    }
-                }
-            }
-        }
-
         if (ipVersion.equals(IpVersion.IPv4)) {
             if (isIpv4SrcAddressSet()) {
                 model.addRow(new Object[] {
@@ -374,6 +336,62 @@ public class Filter {
             }
         }
 
-    }
+        if (isProtocolSet()) {
+            model.addRow(new Object[] {
+                    NetworkEmulatorUtils.getString("table_protocol"),
+                    protocol
+            });
 
+            switch (protocol) {
+                case Protocol.TCP, Protocol.UDP -> {
+                    if (isSrcPortSet()) {
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_src_port"),
+                                srcPort
+                        });
+                    }
+                    if (isDstPortSet()) {
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_dst_port"),
+                                dstPort
+                        });
+                    }
+                }
+                case Protocol.ICMP -> {
+                    if (isIcmpTypeSet()) {
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_icmp_type"),
+                                icmpType
+                        });
+                    }
+                    if (isIcmpCodeSet()) {
+                        model.addRow(new Object[] {
+                                NetworkEmulatorUtils.getString("table_icmp_code"),
+                                icmpCode
+                        });
+                    }
+                }
+            }
+        }
+
+        if (isDscpSet()) {
+            model.addRow(new Object[] {
+                    NetworkEmulatorUtils.getString("table_dscp"), dscp
+            });
+        }
+
+        if (isEcnSet()) {
+            model.addRow(new Object[] {
+                    NetworkEmulatorUtils.getString("table_ecn"), ecn
+            });
+        }
+
+        if (isFlowLabelSet()) {
+            if (ipVersion.equals(IpVersion.IPv6)) {
+                model.addRow(new Object[] {
+                        NetworkEmulatorUtils.getString("table_flow_label"), flowLabel
+                });
+            }
+        }
+    }
 }
