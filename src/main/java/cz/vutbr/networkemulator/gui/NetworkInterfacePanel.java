@@ -1,16 +1,20 @@
 package cz.vutbr.networkemulator.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import cz.vutbr.networkemulator.controller.NetworkEmulatorController;
@@ -27,6 +31,7 @@ public class NetworkInterfacePanel extends JPanel {
         setName(name);
         controller = NetworkEmulatorController.getInstance();
         setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(0, 5, 5, 5));
 
         contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -53,16 +58,16 @@ public class NetworkInterfacePanel extends JPanel {
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 contentPanel.add(label);
 
-                JTable table = new JTable(buildTableModel(filter, parameters));
-                table.setFillsViewportHeight(true);
-                table.setAlignmentX(Component.LEFT_ALIGNMENT);
+                JTable emulationRuleTable = new JTable(buildTableModel(filter, parameters));
+                emulationRuleTable.setFillsViewportHeight(true);
+                emulationRuleTable.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                JPanel tableContainer = new JPanel(new BorderLayout());
-                tableContainer.add(table, BorderLayout.CENTER);
-                tableContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
-                tableContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, table.getPreferredSize().height));
+                JPanel emulationRulePanel = new JPanel(new BorderLayout());
+                emulationRulePanel.add(emulationRuleTable, BorderLayout.CENTER);
+                emulationRulePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                emulationRulePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, emulationRuleTable.getPreferredSize().height));
 
-                contentPanel.add(tableContainer);
+                contentPanel.add(emulationRulePanel);
                 contentPanel.add(Box.createVerticalStrut(10));
             }
         });
