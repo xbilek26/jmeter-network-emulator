@@ -99,7 +99,7 @@ public class NetworkEmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private JPanel createControlPanel() {
-        JPanel controlPanel = new JPanel(new MigLayout("insets 10", "grow", ""));
+        JPanel controlPanel = new JPanel(new MigLayout("insets 5", "grow", ""));
         controlPanel.setBorder(BorderFactory.createTitledBorder(NetworkEmulatorUtils.getString("title_controls")));
 
         String iconSize = JMeterUtils.getPropDefault(JMeterToolBar.TOOLBAR_ICON_SIZE,
