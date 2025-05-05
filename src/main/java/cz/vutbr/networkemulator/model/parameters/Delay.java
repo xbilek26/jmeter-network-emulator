@@ -32,7 +32,7 @@ public class Delay extends Parameter {
     @Override
     public void appendToCommand(StringBuilder cmd) {
         if (isValueValid()) {
-            cmd.append(String.format(" delay %sms", getValue()));
+            cmd.append(String.format(" delay %sms", value));
             if (isJitterValid()) {
                 cmd.append(String.format(" %sms", jitter));
                 if (isCorrelationValid()) {
@@ -49,7 +49,7 @@ public class Delay extends Parameter {
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueValid()) {
             StringBuilder sb = new StringBuilder();
-            sb.append(getValue()).append("ms");
+            sb.append(value).append("ms");
             if (isJitterValid()) {
                 sb.append(String.format(" ±%sms", jitter));
                 if (isCorrelationValid()) {
@@ -66,7 +66,7 @@ public class Delay extends Parameter {
 
     @Override
     public boolean isValueValid() {
-        return RangeVerifier.isValid(getValue(), MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
+        return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 
     public boolean isJitterValid() {

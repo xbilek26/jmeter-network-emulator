@@ -19,19 +19,19 @@ public class Limit extends Parameter {
     @Override
     public void appendToCommand(StringBuilder cmd) {
         if (isValueValid()) {
-            cmd.append(String.format(" limit %s", getValue()));
+            cmd.append(String.format(" limit %s", value));
         }
     }
 
     @Override
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueValid()) {
-            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_limit"), String.format("%spackets", getValue()) });
+            tableModel.addRow(new Object[] { EmulatorUtils.getString("table_limit"), String.format("%spackets", value) });
         }
     }
 
     @Override
     public boolean isValueValid() {
-        return RangeVerifier.isValid(getValue(), MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
+        return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 }

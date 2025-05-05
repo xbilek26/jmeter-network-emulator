@@ -25,7 +25,7 @@ public class Corruption extends Parameter {
     @Override
     public void appendToCommand(StringBuilder cmd) {
         if (isValueValid()) {
-            cmd.append(String.format(" corrupt %s%%", getValue()));
+            cmd.append(String.format(" corrupt %s%%", value));
             if (isCorrelationValid()) {
                 cmd.append(String.format(" %s%%", correlation));
             }
@@ -36,7 +36,7 @@ public class Corruption extends Parameter {
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueValid()) {
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format("%s%%", getValue()));
+            sb.append(String.format("%s%%", value));
             if (isCorrelationValid()) {
                 sb.append(String.format(", corr=%s%%", correlation));
             }
@@ -47,7 +47,7 @@ public class Corruption extends Parameter {
 
     @Override
     public boolean isValueValid() {
-        return RangeVerifier.isValid(getValue(), MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
+        return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 
     public boolean isCorrelationValid() {

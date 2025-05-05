@@ -25,7 +25,7 @@ public class Rate extends Parameter {
     @Override
     public void appendToCommand(StringBuilder cmd) {
         if (isValueValid()) {
-            cmd.append(String.format(" rate %skbit", getValue()));
+            cmd.append(String.format(" rate %skbit", value));
             if (isOverheadValid()) {
                 cmd.append(String.format(" %s", overhead));
             }
@@ -36,7 +36,7 @@ public class Rate extends Parameter {
     public void appendToTable(DefaultTableModel tableModel) {
         if (isValueValid()) {
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format("%skbps", getValue()));
+            sb.append(String.format("%skbps", value));
             if (isOverheadValid()) {
                 sb.append(String.format(", overhead=%sB", overhead));
             }
@@ -46,7 +46,7 @@ public class Rate extends Parameter {
 
     @Override
     public boolean isValueValid() {
-        return RangeVerifier.isValid(getValue(), MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
+        return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 
     public boolean isOverheadValid() {
