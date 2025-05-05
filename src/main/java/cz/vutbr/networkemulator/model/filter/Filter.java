@@ -349,71 +349,67 @@ public class Filter {
         this.flowLabel = flowLabel;
     }
 
-    public boolean isIpVersionValid() {
-        return ipVersion != null;
-    }
-
-    public boolean isProtocolValid() {
+    private boolean isProtocolValid() {
         return protocol != null;
     }
 
-    public boolean isIpv4SrcAddressValid() {
+    private boolean isIpv4SrcAddressValid() {
         return IpAddressVerifier.isValid(ipv4SrcAddress, IpVersion.IPv4);
     }
 
-    public boolean isIpv4SrcsubnetPrefixValid() {
+    private boolean isIpv4SrcsubnetPrefixValid() {
         return ipv4SrcSubnetPrefix != null && !ipv4SrcSubnetPrefix.isEmpty();
     }
 
-    public boolean isIpv4DstAddressValid() {
+    private boolean isIpv4DstAddressValid() {
         return IpAddressVerifier.isValid(ipv4DstAddress, IpVersion.IPv4);
     }
 
-    public boolean isIpv4DstsubnetPrefixValid() {
+    private boolean isIpv4DstsubnetPrefixValid() {
         return ipv4DstSubnetPrefix != null && !ipv4DstSubnetPrefix.isEmpty();
     }
 
-    public boolean isIpv6SrcAddressValid() {
+    private boolean isIpv6SrcAddressValid() {
         return IpAddressVerifier.isValid(ipv6SrcAddress, IpVersion.IPv6);
     }
 
-    public boolean isIpv6SrcSubnetPrefixValid() {
+    private boolean isIpv6SrcSubnetPrefixValid() {
         return ipv6SrcSubnetPrefix != null && !ipv6SrcSubnetPrefix.isEmpty();
     }
 
-    public boolean isIpv6DstAddressValid() {
+    private boolean isIpv6DstAddressValid() {
         return IpAddressVerifier.isValid(ipv6DstAddress, IpVersion.IPv6);
     }
 
-    public boolean isIpv6DstSubnetPrefixValid() {
+    private boolean isIpv6DstSubnetPrefixValid() {
         return ipv6DstSubnetPrefix != null && !ipv6DstSubnetPrefix.isEmpty();
     }
 
-    public boolean isSrcPortValid() {
+    private boolean isSrcPortValid() {
         return RangeVerifier.isValid(srcPort, MIN_PORT, MAX_PORT, IS_PORT_DOUBLE);
     }
 
-    public boolean isDstPortValid() {
+    private boolean isDstPortValid() {
         return RangeVerifier.isValid(dstPort, MIN_PORT, MAX_PORT, IS_PORT_DOUBLE);
     }
 
-    public boolean isIcmpTypeValid() {
+    private boolean isIcmpTypeValid() {
         return RangeVerifier.isValid(icmpType, MIN_ICMP_TYPE, MAX_ICMP_TYPE, IS_ICMP_TYPE_DOUBLE);
     }
 
-    public boolean isIcmpCodeValid() {
+    private boolean isIcmpCodeValid() {
         return RangeVerifier.isValid(icmpCode, MIN_ICMP_CODE, MAX_ICMP_CODE, IS_ICMP_CODE_DOUBLE);
     }
 
-    public boolean isDscpValid() {
+    private boolean isDscpValid() {
         return RangeVerifier.isValid(dscp, MIN_DSCP, MAX_DSCP, IS_DSCP_DOUBLE);
     }
 
-    public boolean isEcnValid() {
+    private boolean isEcnValid() {
         return RangeVerifier.isValid(ecn, MIN_ECN, MAX_ECN, IS_ECN_DOUBLE);
     }
 
-    public boolean isFlowLabelValid() {
+    private boolean isFlowLabelValid() {
         return RangeVerifier.isValid(flowLabel, MIN_FLOW_LABEL, MAX_FLOW_LABEL, IS_FLOW_LABEL_DOUBLE);
     }
 }
