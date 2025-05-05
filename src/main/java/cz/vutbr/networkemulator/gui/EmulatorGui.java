@@ -32,10 +32,10 @@ import cz.vutbr.networkemulator.controller.EmulatorController;
 import cz.vutbr.networkemulator.utils.EmulatorUtils;
 import net.miginfocom.swing.MigLayout;
 
-public class EmulatorMainGui extends AbstractJMeterGuiComponent {
+public class EmulatorGui extends AbstractJMeterGuiComponent {
 
     @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(EmulatorMainGui.class);
+    private static final Logger log = LoggerFactory.getLogger(EmulatorGui.class);
 
     private final EmulatorController controller;
     private boolean isRunning;
@@ -43,10 +43,9 @@ public class EmulatorMainGui extends AbstractJMeterGuiComponent {
     private ConfigurationPanel configurationPanel;
     private JButton btnStart;
     private JButton btnStop;
-    // private JLabel emulatorState;
     private JSyntaxTextArea currentSettings;
 
-    public EmulatorMainGui() {
+    public EmulatorGui() {
         controller = EmulatorController.getInstance();
         controller.initialize();
         isRunning = false;
@@ -149,7 +148,7 @@ public class EmulatorMainGui extends AbstractJMeterGuiComponent {
     public static void registerIcon() {
         ImageIcon icon = EmulatorUtils.getImage("network_emulator.gif");
         icon = EmulatorUtils.getScaledIcon(icon, 16, 16);
-        GUIFactory.registerIcon(EmulatorMainGui.class.getName(), icon);
+        GUIFactory.registerIcon(EmulatorGui.class.getName(), icon);
     }
 
     @Override

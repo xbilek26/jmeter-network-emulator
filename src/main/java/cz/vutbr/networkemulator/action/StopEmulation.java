@@ -13,7 +13,7 @@ import com.google.auto.service.AutoService;
 
 import cz.vutbr.networkemulator.EmulatorTestElement;
 import cz.vutbr.networkemulator.controller.EmulatorController;
-import cz.vutbr.networkemulator.gui.EmulatorMainGui;
+import cz.vutbr.networkemulator.gui.EmulatorGui;
 
 @AutoService(Command.class)
 public class StopEmulation extends AbstractAction {
@@ -26,10 +26,10 @@ public class StopEmulation extends AbstractAction {
 
     @Override
     public void doAction(ActionEvent e) {
-        EmulatorController controller = EmulatorController.getInstance();
-        controller.stopEmulation();
         JMeterGUIComponent gui = GuiPackage.getInstance().getCurrentGui();
-        if (gui instanceof EmulatorMainGui emulatorGui) {
+        if (gui instanceof EmulatorGui emulatorGui) {
+            EmulatorController emulatorController = EmulatorController.getInstance();
+            emulatorController.stopEmulation();
             emulatorGui.onEmulationStopped();
             ((EmulatorTestElement) GuiPackage.getInstance().getCurrentElement()).setEmulationRunning(false);
         }

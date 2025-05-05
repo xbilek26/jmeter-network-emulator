@@ -1,6 +1,7 @@
 package cz.vutbr.networkemulator.gui.filter;
 
 import java.awt.CardLayout;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -45,15 +46,23 @@ public class FilterPanel extends JPanel {
             "IMAP"
     };
 
-    private static final Map<String, Integer> PROTOCOL_PORTS = Map.of(
-            "HTTP", 80,
-            "HTTPS", 443,
-            "FTP", 21,
-            "SSH", 22,
-            "DNS", 53,
-            "SMTP", 25,
-            "POP3", 110,
-            "IMAP", 143);
+    private static final Map<String, String> PROTOCOL_PORTS = Map.of(
+            "HTTP", "80",
+            "HTTPS", "443",
+            "FTP", "21",
+            "SSH", "22",
+            "DNS", "53",
+            "SMTP", "25",
+            "POP3", "110",
+            "IMAP", "143");
+
+    private static final Map<String, String> PORT_PROTOCOLS = new HashMap<>();
+
+    static {
+        for (Map.Entry<String, String> entry : PROTOCOL_PORTS.entrySet()) {
+            PORT_PROTOCOLS.put(entry.getValue(), entry.getKey());
+        }
+    }
 
     private final JRadioButton ipv4Button;
     private final JRadioButton ipv6Button;
@@ -174,22 +183,16 @@ public class FilterPanel extends JPanel {
 
         // listeners
         srcL4ProtocolBox.addActionListener(_ -> {
-            String selected = (String) srcL4ProtocolBox.getSelectedItem();
-            Integer port = PROTOCOL_PORTS.get(selected);
-            if (!selected.isEmpty()) {
-                srcPortField.setText(port.toString());
-            } else {
-                srcPortField.setText("");
+            String protocol = (String) srcL4ProtocolBox.getSelectedItem();
+            if (PROTOCOL_PORTS.containsKey(protocol)) {
+                srcPortField.setText(String.valueOf(PROTOCOL_PORTS.get(protocol)));
             }
         });
-
+        
         dstL4ProtocolBox.addActionListener(_ -> {
-            String selected = (String) dstL4ProtocolBox.getSelectedItem();
-            Integer port = PROTOCOL_PORTS.get(selected);
-            if (!selected.isEmpty()) {
-                dstPortField.setText(port.toString());
-            } else {
-                dstPortField.setText("");
+            String protocol = (String) dstL4ProtocolBox.getSelectedItem();
+            if (PROTOCOL_PORTS.containsKey(protocol)) {
+                dstPortField.setText(String.valueOf(PROTOCOL_PORTS.get(protocol)));
             }
         });
 
@@ -423,15 +426,8 @@ public class FilterPanel extends JPanel {
     }
 
     public void setSrcPort(String port) {
-        srcPortField.setText(port);
-    }
-
-    public String getSrcL4Protocol() {
-        return (String) srcL4ProtocolBox.getSelectedItem();
-    }
-
-    public void setSrcL4Protocol(String l4Protocol) {
-        srcL4ProtocolBox.setSelectedItem(l4Protocol);
+        this.srcPortField.setText(port);
+        srcL4ProtocolBox.setSelectedItem(PORT_PROTOCOLS.containsKey(port) ? PORT_PROTOCOLS.get(port) : "");
     }
 
     public String getDstPort() {
@@ -439,15 +435,12 @@ public class FilterPanel extends JPanel {
     }
 
     public void setDstPort(String port) {
-        dstPortField.setText(port);
+        this.dstPortField.setText(port);
+        dstL4ProtocolBox.setSelectedItem(PORT_PROTOCOLS.containsKey(port) ? PORT_PROTOCOLS.get(port) : "");
     }
 
-    public String getDstL4Protocol() {
-        return (String) dstL4ProtocolBox.getSelectedItem();
-    }
-
-    public void setDstL4Protocol(String l4Protocol) {
-        dstL4ProtocolBox.setSelectedItem(l4Protocol);
+    public static String getProtocolName(int port) {
+        return PROTOCOL_PORTS.getOrDefault(port, "Unknown");
     }
 
     public String getIcmpType() {
