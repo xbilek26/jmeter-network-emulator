@@ -46,11 +46,11 @@ public class Reordering extends Parameter {
     }
 
     @Override
-    public boolean isValueValid() {
+    protected boolean isValueValid() {
         return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 
-    public boolean isCorrelationValid() {
+    private boolean isCorrelationValid() {
         return RangeVerifier.isValid(correlation, MIN_CORRELATION, MAX_CORRELATION, IS_CORRELATION_DOUBLE);
     }
 }

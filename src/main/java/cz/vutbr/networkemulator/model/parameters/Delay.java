@@ -65,19 +65,19 @@ public class Delay extends Parameter {
     }
 
     @Override
-    public boolean isValueValid() {
+    protected boolean isValueValid() {
         return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 
-    public boolean isJitterValid() {
+    private boolean isJitterValid() {
         return RangeVerifier.isValid(jitter, MIN_JITTER, MAX_JITTER, IS_JITTER_DOUBLE);
     }
 
-    public boolean isCorrelationValid() {
+    private boolean isCorrelationValid() {
         return RangeVerifier.isValid(correlation, MIN_CORRELATION, MAX_CORRELATION, IS_CORRELATION_DOUBLE);
     }
 
-    public boolean isDistributionValid() {
+    private boolean isDistributionValid() {
         return distribution != null && !distribution.isEmpty();
     }
 }

@@ -10,7 +10,7 @@ public abstract class Parameter {
         this.value = value;
     }
 
-    public abstract boolean isValueValid();
+    protected abstract boolean isValueValid();
 
     public abstract void appendToCommand(StringBuilder cmd);
 

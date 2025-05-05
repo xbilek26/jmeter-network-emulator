@@ -31,7 +31,7 @@ public class Limit extends Parameter {
     }
 
     @Override
-    public boolean isValueValid() {
+    protected boolean isValueValid() {
         return RangeVerifier.isValid(value, MIN_VALUE, MAX_VALUE, IS_VALUE_DOUBLE);
     }
 }
