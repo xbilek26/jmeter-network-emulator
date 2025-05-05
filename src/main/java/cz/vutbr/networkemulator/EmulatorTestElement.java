@@ -35,7 +35,6 @@ public class EmulatorTestElement extends AbstractTestElement {
     private static final String PROP_EMULATION_RUNNING = "Emulator.emulationRunning";
 
     public EmulatorTestElement() {
-        System.out.println("creating network emulator test element");
         registerAddToTreeListener();
         registerDuplicateListener();
         registerPasteListener();

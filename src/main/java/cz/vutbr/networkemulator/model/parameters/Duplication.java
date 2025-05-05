@@ -17,8 +17,8 @@ public class Duplication extends Parameter {
 
     private final String correlation;
 
-    public Duplication(String value, String correlation) {
-        super(value);
+    public Duplication(String duplication, String correlation) {
+        super(duplication);
         this.correlation = correlation;
     }
 

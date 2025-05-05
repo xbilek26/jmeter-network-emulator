@@ -17,8 +17,8 @@ public class Rate extends Parameter {
 
     private final String overhead;
 
-    public Rate(String value, String overhead) {
-        super(value);
+    public Rate(String rate, String overhead) {
+        super(rate);
         this.overhead = overhead;
     }
 

@@ -17,8 +17,8 @@ public class Loss extends Parameter {
 
     private final String correlation;
 
-    public Loss(String value, String correlation) {
-        super(value);
+    public Loss(String loss, String correlation) {
+        super(loss);
         this.correlation = correlation;
     }
 

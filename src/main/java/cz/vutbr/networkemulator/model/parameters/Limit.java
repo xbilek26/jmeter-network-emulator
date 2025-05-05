@@ -12,8 +12,8 @@ public class Limit extends Parameter {
 
     public static final boolean IS_VALUE_DOUBLE = false;
 
-    public Limit(String value) {
-        super(value);
+    public Limit(String limit) {
+        super(limit);
     }
 
     @Override

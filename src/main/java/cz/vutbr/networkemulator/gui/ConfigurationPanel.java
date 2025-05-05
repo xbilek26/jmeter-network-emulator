@@ -188,8 +188,6 @@ public class ConfigurationPanel extends JPanel {
         ruleScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         ruleScrollPane.setPreferredSize(new Dimension(rightPanel.getWidth(), rightPanel.getHeight()));
         rightPanel.add(ruleScrollPane, rulePanel.getName());
-        System.out.println("comp count=" + rightPanel.getComponentCount());
-        System.out.println("component at 1 is = " + rightPanel.getComponent(1));
 
         SwingUtilities.invokeLater(() -> {
             rightPanel.revalidate();

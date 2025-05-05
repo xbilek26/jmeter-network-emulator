@@ -17,8 +17,8 @@ public class Corruption extends Parameter {
 
     private final String correlation;
 
-    public Corruption(String value, String correlation) {
-        super(value);
+    public Corruption(String corruption, String correlation) {
+        super(corruption);
         this.correlation = correlation;
     }
 

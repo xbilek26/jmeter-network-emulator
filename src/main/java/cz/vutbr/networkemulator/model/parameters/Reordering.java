@@ -17,8 +17,8 @@ public class Reordering extends Parameter {
 
     private final String correlation;
 
-    public Reordering(String value, String correlation) {
-        super(value);
+    public Reordering(String reordering, String correlation) {
+        super(reordering);
         this.correlation = correlation;
     }
 
