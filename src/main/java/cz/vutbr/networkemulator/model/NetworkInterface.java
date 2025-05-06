@@ -37,7 +37,7 @@ public class NetworkInterface {
     }
 
     public void addEmulationRule(String classId) {
-        if (classId != null && !hasEmulationRule(classId)) {
+        if (classId != null && !containsEmulationRule(classId)) {
             emulationRules.add(new EmulationRule(classId));
         }
     }
@@ -48,7 +48,7 @@ public class NetworkInterface {
         }
     }
 
-    public boolean hasEmulationRule(String classId) {
+    private boolean containsEmulationRule(String classId) {
         return emulationRules.stream().anyMatch(tc -> tc.getClassId().equals(classId));
     }
 
