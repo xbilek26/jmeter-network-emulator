@@ -1,4 +1,4 @@
-package cz.vutbr.networkemulator.linux;
+package cz.vutbr.networkemulator.tc;
 
 import java.util.List;
 import java.util.regex.Matcher;

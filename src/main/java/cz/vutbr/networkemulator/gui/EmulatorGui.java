@@ -62,7 +62,7 @@ public class EmulatorGui extends AbstractJMeterGuiComponent {
     }
 
     private JSplitPane createTopPanel() {
-        JSplitPane topPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSettingsPanel(), createControlPanel());
+        JSplitPane topPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createStatePanel(), createControlPanel());
         topPanel.setResizeWeight(0.92);
         topPanel.setDividerLocation(0.92);
         topPanel.setOneTouchExpandable(true);
@@ -75,9 +75,9 @@ public class EmulatorGui extends AbstractJMeterGuiComponent {
         return configurationPanel;
     }
 
-    private JPanel createSettingsPanel() {
-        JPanel settingsPanel = new JPanel(new MigLayout("insets 0", "grow", "grow"));
-        settingsPanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_network_settings")));
+    private JPanel createStatePanel() {
+        JPanel statePanel = new JPanel(new MigLayout("insets 0", "grow", "grow"));
+        statePanel.setBorder(BorderFactory.createTitledBorder(EmulatorUtils.getString("title_state_panel")));
 
         currentSettings = JSyntaxTextArea.getInstance(80, 30, true);
         currentSettings.setEditable(false);
@@ -92,9 +92,9 @@ public class EmulatorGui extends AbstractJMeterGuiComponent {
 
         currentSettings.setText(controller.getNetworkConfiguration());
 
-        settingsPanel.add(scrollPane, "growx, growy, gap 0, pad 0");
+        statePanel.add(scrollPane, "growx, growy, gap 0, pad 0");
 
-        return settingsPanel;
+        return statePanel;
     }
 
     private JPanel createControlPanel() {

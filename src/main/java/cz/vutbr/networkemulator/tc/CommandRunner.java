@@ -1,4 +1,4 @@
-package cz.vutbr.networkemulator.linux;
+package cz.vutbr.networkemulator.tc;
 
 import java.io.BufferedReader;
 import java.io.IOException;

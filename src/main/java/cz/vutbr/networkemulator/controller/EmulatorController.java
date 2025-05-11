@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.vutbr.networkemulator.linux.TrafficControl;
 import cz.vutbr.networkemulator.model.EmulationRule;
 import cz.vutbr.networkemulator.model.Emulator;
 import cz.vutbr.networkemulator.model.NetworkInterface;
 import cz.vutbr.networkemulator.model.filter.Filter;
 import cz.vutbr.networkemulator.model.parameters.Parameter;
+import cz.vutbr.networkemulator.tc.TrafficControl;
 
 public class EmulatorController {
 
