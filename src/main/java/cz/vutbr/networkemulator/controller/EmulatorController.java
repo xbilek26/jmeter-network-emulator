@@ -41,7 +41,7 @@ public class EmulatorController {
         emulator.clearNetworkInterfaces();
 
         Pattern pattern = Pattern.compile("dev\\s+(\\S+)");
-        Matcher matcher = pattern.matcher(TrafficControl.showQDiscs());
+        Matcher matcher = pattern.matcher(TrafficControl.getAllQDiscs());
         while (matcher.find()) {
             // if (!matcher.group(1).equals("lo")) {
             addNetworkInterface(matcher.group(1));
@@ -148,7 +148,7 @@ public class EmulatorController {
         StringBuilder sb = new StringBuilder();
         for (NetworkInterface ni : emulator.getNetworkInterfaces()) {
             String dev = ni.getName();
-            sb.append(TrafficControl.showQdiscAndFilters(dev));
+            sb.append(TrafficControl.getQDiscAndFilters(dev));
         }
 
         return sb.toString();
@@ -159,14 +159,14 @@ public class EmulatorController {
             if (ni.getEmulationRules().isEmpty()) {
                 continue;
             }
-            TrafficControl.setupRootQdisc(ni.getName());
+            TrafficControl.initRootQdisc(ni.getName());
             for (EmulationRule er : ni.getEmulationRules()) {
                 String dev = ni.getName();
                 String classId = er.getClassId();
                 String handleId = er.getHandleId();
                 List<Parameter> parameters = er.getParameters();
                 Filter filter = er.getFilter();
-                TrafficControl.setupEmulationRule(dev, classId, handleId, parameters);
+                TrafficControl.setupParameters(dev, classId, handleId, parameters);
                 TrafficControl.setupFilter(dev, classId, handleId, filter);
             }
         }

@@ -9,13 +9,13 @@ import cz.vutbr.networkemulator.model.parameters.Parameter;
 
 public class TrafficControl {
 
-    public static void setupRootQdisc(String dev) {
+    public static void initRootQdisc(String dev) {
         CommandRunner.runCommand(String.format("tc qdisc del dev %s root", dev));
         CommandRunner.runCommand(String.format("tc qdisc add dev %s root handle 1: htb", dev));
         CommandRunner.runCommand(String.format("tc class add dev %s parent 1: classid 1:1 htb rate 4gbps quantum 1514", dev));
     }
 
-    public static void setupEmulationRule(String dev, String classId, String handleId, List<Parameter> parameters) {
+    public static void setupParameters(String dev, String classId, String handleId, List<Parameter> parameters) {
         CommandRunner.runCommand(String.format("tc class add dev %s parent 1:1 classid %s htb rate 4gbps quantum 1514", dev, classId));
 
         StringBuilder cmd = new StringBuilder();
@@ -36,15 +36,15 @@ public class TrafficControl {
         CommandRunner.runCommand(cmd.toString());
     }
 
-    public static String showQDiscs() {
+    public static String getAllQDiscs() {
         return CommandRunner.runCommand("tc qdisc show");
     }
 
-    public static String showQDisc(String dev) {
+    public static String getQDisc(String dev) {
         return CommandRunner.runCommand(String.format("tc qdisc show dev %s", dev));
     }
 
-    public static String showFilter(String dev) {
+    public static String getFilter(String dev) {
         return CommandRunner.runCommand(String.format("tc filter show dev %s", dev));
     }
 
@@ -52,12 +52,12 @@ public class TrafficControl {
         CommandRunner.runCommand(String.format("tc qdisc del dev %s root", dev));
     }
 
-    public static String showQdiscAndFilters(String dev) {
+    public static String getQDiscAndFilters(String dev) {
         StringBuilder output = new StringBuilder();
 
-        String qdiscOutput = showQDisc(dev);
+        String qdiscOutput = getQDisc(dev);
         String[] qdiscLines = qdiscOutput.split("\\r?\\n");
-        String filterOutput = showFilter(dev);
+        String filterOutput = getFilter(dev);
         String[] filterLines = filterOutput.split("\\r?\\n");
 
         for (String qdiscLine : qdiscLines) {
