@@ -27,17 +27,3 @@ java {
         languageVersion = JavaLanguageVersion.of(23)
     }
 }
-
-task copyJar(type: Copy) {
-    dependsOn build
-    from "$buildDir/libs/jmeter-network-emulator.jar"
-    into file(System.getProperty("user.home") + "/apache-jmeter-5.6.3/lib/ext")
-}
-
-task runJMeter(type: Exec) {
-    dependsOn copyJar
-    commandLine 'bash', '-c', 'sudo ./bin/jmeter -t testSave.jmx'
-    workingDir System.getProperty("user.home") + "/apache-jmeter-5.6.3"
-}
-
-build.finalizedBy(runJMeter)
