@@ -1,6 +1,6 @@
 
 # JMeter Network Emulator
-Control network parameters like delay, jitter corruption or reordering directly in JMeter environment. This plugin is basicly GUI wrapper for `netem` tool.
+Control network parameters like delay, jitter, corruption or reordering directly in Apache JMeter environment. This plugin is basically a GUI wrapper for [`tc`](https://man7.org/linux/man-pages/man8/tc.8.html)'s [`netem`](https://man7.org/linux/man-pages/man8/tc-netem.8.html) tool.
 
 ## Screenshots
 ![Network Emulator](docs/screen_1.png)
