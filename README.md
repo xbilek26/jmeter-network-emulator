@@ -3,7 +3,7 @@
 Control network parameters like delay, jitter corruption or reordering directly in JMeter environment. This plugin is basicly GUI wrapper for `netem` tool.
 
 # Screenshots
-![Network Emulator](screen_1.png)
+![Network Emulator](docs/screen_1.png)
 
 ## Set up
 
